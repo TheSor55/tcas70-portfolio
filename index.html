@@ -18,11 +18,11 @@
             --primary: #6366f1;
             --primary-light: #818cf8;
             --primary-dark: #4f46e5;
-            --secondary: #06b6d4;
-            --secondary-light: #22d3ee;
+            --secondary: #00a896;
+            --secondary-light: #02c39a;
             --background: #0b0f19;
-            --surface: rgba(22, 28, 45, 0.65);
-            --surface-hover: rgba(30, 41, 59, 0.8);
+            --surface: rgba(22, 28, 45, 0.55);
+            --surface-hover: rgba(30, 41, 59, 0.7);
             --text: #f8fafc;
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.08);
@@ -51,180 +51,146 @@
             position: relative;
         }
 
-        /* Decorative Background Blobs for depth */
+        /* Background glow blobs */
         body::before, body::after {
             content: '';
             position: absolute;
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             border-radius: 50%;
             z-index: -2;
-            filter: blur(140px);
-            opacity: 0.15;
+            filter: blur(150px);
+            opacity: 0.12;
             pointer-events: none;
         }
 
         body::before {
-            top: 10%;
+            top: 5%;
             left: -100px;
             background: radial-gradient(circle, var(--primary) 0%, transparent 80%);
         }
 
         body::after {
-            bottom: 20%;
+            bottom: 15%;
             right: -100px;
-            background: radial-gradient(circle, var(--secondary) 0%, transparent 80%);
+            background: radial-gradient(circle, #02c39a 0%, transparent 80%);
         }
 
-        /* Glassmorphism Header */
+        /* Mockup Header Style */
         header {
-            background: rgba(11, 15, 25, 0.75);
+            background: rgba(11, 15, 25, 0.8);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 100;
-            padding: 1.25rem 2.5rem;
+            padding: 1.5rem 3rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-        }
-
-        .logo-icon {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            color: white;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        @media (max-width: 768px) {
+            header {
+                padding: 1.25rem 1.5rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
 
         .logo-text h1 {
-            font-size: 1.35rem;
+            font-size: 1.5rem;
             font-weight: 700;
+            color: #fff;
             letter-spacing: -0.5px;
-            background: linear-gradient(to right, #fff, var(--primary-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
-        .logo-text p {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            letter-spacing: 1.5px;
-            font-weight: 600;
-        }
-
-        .badge-volunteer {
-            background: rgba(16, 185, 129, 0.12);
-            color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            padding: 0.45rem 1rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
+        header nav {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.08);
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            header nav {
+                gap: 1.25rem;
+            }
+        }
+
+        header nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
             transition: var(--transition);
         }
 
-        .badge-volunteer:hover {
-            background: rgba(16, 185, 129, 0.2);
-            border-color: rgba(16, 185, 129, 0.4);
+        header nav a:hover {
+            color: #fff;
         }
 
-        /* Container & Layout */
+        .user-profile {
+            width: 36px;
+            height: 36px;
+            background-color: #334155;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background-color: #475569;
+            color: #fff;
+        }
+
+        /* Container Layout */
         .container {
-            max-width: 1440px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 3rem 2rem;
-            position: relative;
-            z-index: 10;
         }
 
-        /* Hero Banner */
-        .hero {
-            text-align: center;
-            margin-bottom: 3.5rem;
-            position: relative;
-        }
-
-        .hero h2 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #ffffff 40%, var(--primary-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            color: var(--text-muted);
-            font-size: 1.15rem;
-            max-width: 650px;
-            margin: 0 auto;
-            font-weight: 400;
-        }
-
-        /* Filter Controls Board */
+        /* Controls Panel (Search Panel matching image) */
         .controls-panel {
             background: rgba(22, 28, 45, 0.45);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
+            border: 2px solid rgba(255, 255, 255, 0.05);
             border-radius: var(--radius-md);
-            padding: 1.5rem;
-            margin-bottom: 2.5rem;
+            padding: 1.75rem;
+            margin-bottom: 3.5rem;
             box-shadow: var(--shadow);
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 1.25rem;
-            align-items: center;
-            /* Prevent overlap with sticky header when scrolling down */
-            scroll-margin-top: 100px;
         }
 
-        @media (max-width: 900px) {
-            .controls-panel {
-                grid-template-columns: 1fr;
-            }
+        /* Search input row with search and map buttons */
+        .search-row {
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
         }
 
         .search-wrapper {
             position: relative;
-        }
-
-        .search-wrapper i {
-            position: absolute;
-            left: 1.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 1.15rem;
+            flex-grow: 1;
+            display: flex;
+            gap: 0.75rem;
         }
 
         .search-input {
-            width: 100%;
+            flex-grow: 1;
             background-color: rgba(11, 15, 25, 0.6);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 1.1rem 1.1rem 1.1rem 3.25rem;
-            border-radius: 14px;
+            padding: 1.1rem 1.5rem;
+            border-radius: 12px;
             font-size: 1rem;
             transition: var(--transition);
             font-family: inherit;
@@ -234,7 +200,52 @@
             outline: none;
             border-color: var(--primary-light);
             box-shadow: 0 0 25px rgba(99, 102, 241, 0.15);
-            background-color: rgba(11, 15, 25, 0.85);
+        }
+
+        /* Circular/Rounded buttons next to search */
+        .btn-search, .btn-location {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: white;
+            font-size: 1.15rem;
+        }
+
+        .btn-search {
+            background-color: #8c6a5c; /* Copper/Brown style from mockup */
+        }
+
+        .btn-search:hover {
+            background-color: #a07b6c;
+            transform: scale(1.03);
+        }
+
+        .btn-location {
+            background-color: rgba(30, 41, 59, 0.6);
+        }
+
+        .btn-location:hover {
+            background-color: rgba(47, 55, 69, 0.8);
+            transform: scale(1.03);
+        }
+
+        /* Filters Row (3 Select Dropdowns) */
+        .filters-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .filters-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         .select-wrapper {
@@ -248,7 +259,7 @@
             border: 1px solid var(--border);
             color: var(--text);
             padding: 1.1rem 2.5rem 1.1rem 1.25rem;
-            border-radius: 14px;
+            border-radius: 12px;
             font-size: 1rem;
             cursor: pointer;
             transition: var(--transition);
@@ -274,30 +285,20 @@
             font-size: 0.85rem;
         }
 
-        /* Stats Panel */
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding: 0 0.5rem;
-        }
-
-        .stats-text {
-            color: var(--text-muted);
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .stats-text span {
-            color: var(--secondary-light);
+        /* Section Title "Featured Programs" */
+        .section-title {
+            font-size: 1.75rem;
             font-weight: 700;
+            margin-bottom: 2rem;
+            color: #fff;
+            position: relative;
+            padding-left: 0.5rem;
         }
 
         /* Cards Grid */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 2rem;
         }
 
@@ -307,7 +308,7 @@
             }
         }
 
-        /* Program Card - Breathtaking Glassmorphism styling */
+        /* Glassmorphic Card with Neon glow borders */
         .card {
             background: var(--surface);
             backdrop-filter: blur(16px);
@@ -324,56 +325,94 @@
         }
 
         .card:hover {
-            transform: translateY(-8px) scale(1.01);
-            border-color: rgba(99, 102, 241, 0.35);
-            box-shadow: 0 20px 45px -10px rgba(99, 102, 241, 0.25);
-            background: var(--surface-hover);
+            transform: translateY(-8px);
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            opacity: 0.85;
+        /* Dynamic Glow Colors matching mockup image */
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+        .glow-cyan:hover {
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+            border-color: rgba(6, 182, 212, 0.6);
         }
 
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+        .glow-purple:hover {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
+        .glow-pink {
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.25);
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+        .glow-pink:hover {
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.5);
+            border-color: rgba(236, 72, 153, 0.6);
+        }
+
+        .glow-orange {
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.25);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        .glow-orange:hover {
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.5);
+            border-color: rgba(249, 115, 22, 0.6);
+        }
+
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        .glow-blue:hover {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        .glow-teal {
+            box-shadow: 0 0 20px rgba(20, 184, 166, 0.25);
+            border-color: rgba(20, 184, 166, 0.3);
+        }
+        .glow-teal:hover {
+            box-shadow: 0 0 30px rgba(20, 184, 166, 0.5);
+            border-color: rgba(20, 184, 166, 0.6);
+        }
+
+        /* Card Header Layout */
         .card-header {
             display: flex;
-            gap: 1.25rem;
+            gap: 1.15rem;
             align-items: center;
             margin-bottom: 1.25rem;
         }
 
         .uni-logo {
-            width: 58px;
-            height: 58px;
+            width: 56px;
+            height: 56px;
             object-fit: contain;
             background: white;
             border-radius: 50%;
             padding: 0.35rem;
             flex-shrink: 0;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
         .card-header-text h3 {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: #fff;
-            margin-bottom: 0.3rem;
-            letter-spacing: -0.3px;
+            margin-bottom: 0.2rem;
         }
 
         .card-header-text p {
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
             font-weight: 500;
         }
 
@@ -382,77 +421,61 @@
             margin-bottom: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
-        .program-name {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text);
-            background: rgba(11, 15, 25, 0.4);
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            border-left: 3px solid var(--secondary);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .project-details {
-            margin-top: 0.25rem;
-        }
-
-        .project-title {
-            font-size: 0.95rem;
-            color: var(--text);
-            font-weight: 600;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.6rem;
-            line-height: 1.5;
-        }
-
-        .project-title i {
-            color: var(--primary-light);
-            margin-top: 0.25rem;
-            font-size: 0.85rem;
-        }
-
-        /* Beautiful Neon Pill Seats Badge */
+        /* Centered Intake Badge matching mockup image */
         .seats-badge {
-            align-self: flex-start;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.65rem;
-            background: rgba(6, 182, 212, 0.08);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            padding: 0.5rem 1.15rem;
+            align-self: center;
+            width: 100%;
+            text-align: center;
+            background: linear-gradient(135deg, #00b4d8 0%, #7209b7 100%);
+            padding: 0.65rem 1.5rem;
             border-radius: 50px;
-            font-weight: 600;
-            color: #22d3ee;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.05);
-        }
-
-        .seats-count {
+            font-weight: 700;
             color: #fff;
-            background: var(--secondary);
-            padding: 0.1rem 0.65rem;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.25);
+            letter-spacing: 0.5px;
         }
 
-        /* Collapsible Criteria Section - Modern layout and scrollbar */
+        /* Two-column requirements checklist */
+        .req-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.65rem;
+            list-style: none;
+            padding: 0;
+        }
+
+        .req-list li {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .req-list li i {
+            color: #34d399; /* Green checkmark */
+            font-size: 0.95rem;
+        }
+
+        .req-list li.not-required {
+            opacity: 0.45;
+        }
+
+        .req-list li.not-required i {
+            color: var(--text-muted);
+        }
+
+        /* Collapsible Criteria Box styling */
         .criteria-accordion {
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             overflow: hidden;
             background-color: rgba(11, 15, 25, 0.45);
-            transition: var(--transition);
-        }
-
-        .criteria-accordion:hover {
-            border-color: rgba(255, 255, 255, 0.12);
         }
 
         .criteria-trigger {
@@ -460,9 +483,9 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            padding: 0.85rem 1.15rem;
+            padding: 0.75rem 1.1rem;
             text-align: left;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -474,10 +497,6 @@
         .criteria-trigger:hover {
             color: var(--text);
             background-color: rgba(255, 255, 255, 0.02);
-        }
-
-        .criteria-trigger i {
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .criteria-trigger.active i {
@@ -492,39 +511,28 @@
         }
 
         .criteria-inner {
-            padding: 1.25rem;
-            font-size: 0.88rem;
+            padding: 1.1rem;
+            font-size: 0.85rem;
             color: #cbd5e1;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             white-space: pre-line;
-            max-height: 250px;
+            max-height: 200px;
             overflow-y: auto;
-            line-height: 1.7;
+            line-height: 1.6;
         }
 
-        /* Custom Scrollbar for Criteria Section */
         .criteria-inner::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .criteria-inner::-webkit-scrollbar-track {
-            background: rgba(11, 15, 25, 0.2);
+            width: 5px;
         }
 
         .criteria-inner::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
         }
 
-        .criteria-inner::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        /* Card Footer - Button takes full width for a cleaner modern look */
+        /* Card Footer & Teal Button */
         .card-footer {
             margin-top: auto;
-            padding-top: 1.25rem;
-            border-top: 1px solid var(--border);
             display: flex;
         }
 
@@ -533,27 +541,26 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.65rem;
-            background-color: rgba(99, 102, 241, 0.12);
-            color: var(--primary-light);
-            border: 1px solid rgba(99, 102, 241, 0.3);
+            gap: 0.5rem;
+            background-color: #008b8b; /* Solid Teal matching mockup image */
+            color: white;
             padding: 0.85rem;
             border-radius: 12px;
             font-weight: 700;
             font-size: 0.95rem;
             text-decoration: none;
             transition: var(--transition);
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 139, 139, 0.25);
         }
 
         .btn-apply:hover {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            background-color: #00a896;
+            box-shadow: 0 6px 20px rgba(0, 139, 139, 0.45);
             transform: translateY(-2px);
         }
 
-        /* Loading Screen & Errors */
+        /* Loading Screen */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -577,7 +584,6 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 1.5rem;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
         }
 
         @keyframes spin {
@@ -600,7 +606,7 @@
             grid-column: 1 / -1;
             text-align: center;
             padding: 5rem 2rem;
-            background-color: var(--surface);
+            background-color: rgba(22, 28, 45, 0.55);
             border: 1px dashed var(--border);
             border-radius: var(--radius-md);
             color: var(--text-muted);
@@ -612,10 +618,67 @@
             color: var(--accent);
         }
 
-        .no-results h4 {
-            color: #fff;
-            font-size: 1.35rem;
-            margin-bottom: 0.5rem;
+        /* Mockup Footer */
+        .divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 1.25rem;
+            font-size: 1.15rem;
+        }
+
+        .footer-socials a {
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .footer-socials a:hover {
+            color: white;
+            transform: scale(1.15);
+        }
+
+        .admin-credit {
+            text-align: center;
+            padding-bottom: 2.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -627,79 +690,103 @@
         <div class="loading-text" id="loadingText">กำลังดาวน์โหลดและจัดเตรียมข้อมูลเกณฑ์ TCAS70...</div>
     </div>
 
-    <!-- Header -->
+    <!-- Header Navigation matching mockup image -->
     <header>
         <div class="logo-container">
-            <div class="logo-icon">
-                <i class="fa-solid fa-graduation-cap"></i>
-            </div>
             <div class="logo-text">
-                <h1>TCAS70 Portfolio</h1>
-                <p>GUIDANCE SYSTEM</p>
+                <h1>TCAS70 Portfolio Finder</h1>
             </div>
         </div>
-        <div class="badge-volunteer">
-            <i class="fa-solid fa-heart-pulse"></i>
-            <span>จิตอาสาเพื่อเด็ก69/70</span>
-        </div>
+        <nav>
+            <a href="#">Search</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+            <a href="#">Dashboard</a>
+            <div class="user-profile">
+                <i class="fa-solid fa-user"></i>
+            </div>
+        </nav>
     </header>
 
     <div class="container">
-        <!-- Hero Section -->
-        <div class="hero">
-            <h2>ระบบค้นหาเกณฑ์รอบพอร์ตโฟลิโอ TCAS70</h2>
-            <p>ช่วยน้องๆ ค้นหาจำนวนที่รับ และเกณฑ์การสมัครในแต่ละรอบพอร์ตโฟลิโอ สะดวก รวดเร็ว เข้าถึงได้ฟรีเพื่อลดความเหลื่อมล้ำทางการศึกษา</p>
-        </div>
-
-        <!-- Controls Filter Panel -->
+        <!-- Controls Search Panel matching mockup image -->
         <div class="controls-panel">
-            <!-- Search -->
-            <div class="search-wrapper">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" class="search-input" placeholder="ค้นหาตามมหาวิทยาลัย, คณะ, สาขาวิชา หรือโครงการ...">
+            <!-- Search Row -->
+            <div class="search-row">
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search universities, programs, or criteria...">
+                </div>
+                <button class="btn-search" id="btnSearchSubmit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="btn-location"><i class="fa-solid fa-location-dot"></i></button>
             </div>
 
-            <!-- University Filter -->
-            <div class="select-wrapper">
-                <select id="uniFilter">
-                    <option value="">เลือกมหาวิทยาลัยทั้งหมด</option>
-                </select>
-            </div>
+            <!-- Filters Row -->
+            <div class="filters-row">
+                <!-- University Dropdown -->
+                <div class="select-wrapper">
+                    <select id="uniFilter">
+                        <option value="">เลือกมหาวิทยาลัย (Universities)</option>
+                    </select>
+                </div>
 
-            <!-- Min Seats Filter -->
-            <div class="select-wrapper">
-                <select id="seatsFilter">
-                    <option value="0">จำนวนที่รับสมัครทั้งหมด</option>
-                    <option value="5">รับสมัครตั้งแต่ 5 คนขึ้นไป</option>
-                    <option value="10">รับสมัครตั้งแต่ 10 คนขึ้นไป</option>
-                    <option value="30">รับสมัครตั้งแต่ 30 คนขึ้นไป</option>
-                    <option value="50">รับสมัครตั้งแต่ 50 คนขึ้นไป</option>
-                </select>
+                <!-- Faculty Dropdown (derived dynamically) -->
+                <div class="select-wrapper">
+                    <select id="facultyFilter">
+                        <option value="">เลือกคณะ (Faculties)</option>
+                    </select>
+                </div>
+
+                <!-- Admission Round Filter -->
+                <div class="select-wrapper">
+                    <select id="roundFilter">
+                        <option value="">เลือกรอบรับ (Admission Round)</option>
+                        <option value="1" selected>รอบที่ 1 Portfolio</option>
+                    </select>
+                </div>
             </div>
         </div>
+
+        <!-- Featured Programs Section Title -->
+        <h2 class="section-title">Featured Programs</h2>
 
         <!-- Stats Bar -->
         <div class="stats-bar">
             <div class="stats-text" id="statsText">
-                กำลังนับโครงการ...
+                กำลังค้นหาโครงการ...
             </div>
         </div>
 
         <!-- Card Grid -->
         <div class="cards-grid" id="cardsGrid">
-            <!-- Cards will be populated dynamically -->
+            <!-- Dynamic cards will go here -->
+        </div>
+
+        <!-- Mockup Footer Divider -->
+        <div class="divider"></div>
+
+        <!-- Footer Bottom Links & Socials -->
+        <div class="footer-bottom">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms</a>
+                <span>© 2026 TCAS70</span>
+            </div>
+            <div class="footer-socials">
+                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
+        </div>
+
+        <!-- Admin Credit Footer -->
+        <div class="admin-credit">
+            เครดิตระบบข้อมูลโดย: 
+            <span style="color: var(--secondary-light); font-weight: 600;">พี่แอดมิน Line OpenChat: พูดคุยหาที่เรียนต่อมหาลัยTCAS70</span>
+            <br>
+            <span style="font-size: 0.75rem; opacity: 0.7;">พัฒนาขึ้นเพื่อจิตอาสาและเป็นประโยชน์ทางการศึกษาของเยาวชนไทยและผู้ปกครอง</span>
         </div>
     </div>
-
-    <!-- Footer Credit -->
-    <footer style="text-align: center; padding: 2rem 1.5rem; border-top: 1px solid var(--border); margin-top: 5rem; background: rgba(30, 41, 59, 0.4); color: var(--text-muted); font-size: 0.95rem;">
-        <p>เครดิตระบบข้อมูลโดย: 
-            <span style="color: var(--secondary); font-weight: 600;">พี่แอดมิน Line OpenChat: พูดคุยหาที่เรียนต่อมหาลัยTCAS70</span>
-        </p>
-        <p style="font-size: 0.75rem; margin-top: 0.5rem; opacity: 0.7; letter-spacing: 0.5px;">
-            พัฒนาขึ้นเพื่อเป็นเครื่องมือจิตอาสาเพื่อสาธารณประโยชน์ทางการศึกษาแก่เยาวชนไทยและผู้ปกครอง
-        </p>
-    </footer>
 
     <!-- Main JS -->
     <script>
@@ -710,9 +797,10 @@
         const loadingScreen = document.getElementById('loadingScreen');
         const searchInput = document.getElementById('searchInput');
         const uniFilter = document.getElementById('uniFilter');
-        const seatsFilter = document.getElementById('seatsFilter');
+        const facultyFilter = document.getElementById('facultyFilter');
         const cardsGrid = document.getElementById('cardsGrid');
         const statsText = document.getElementById('statsText');
+        const btnSearchSubmit = document.getElementById('btnSearchSubmit');
 
         // Fetch data on load
         window.addEventListener('DOMContentLoaded', async () => {
@@ -724,7 +812,7 @@
                 }
                 allData = await response.json();
                 
-                // Exclude dummy items or items with no portfolio data
+                // Exclude items with no portfolio data
                 allData = allData.filter(item => item.project_name !== 'ไม่มีข้อมูลรอบ Portfolio');
                 
                 filteredData = [...allData];
@@ -754,7 +842,7 @@
             }
         });
 
-        // Populate filter options
+        // Populate filter options dynamically
         function populateFilters() {
             // Get unique university names
             const universities = [...new Set(allData.map(item => item.university_name))].sort();
@@ -764,9 +852,78 @@
                 opt.textContent = uni;
                 uniFilter.appendChild(opt);
             });
+
+            // Populate unique faculty names initially
+            updateFacultyDropdown();
         }
 
-        // Render cards
+        // Update Faculty dropdown based on selected university
+        function updateFacultyDropdown() {
+            facultyFilter.innerHTML = '<option value="">เลือกคณะ (Faculties)</option>';
+            
+            const selectedUni = uniFilter.value;
+            let targetData = allData;
+            
+            if (selectedUni) {
+                targetData = allData.filter(item => item.university_name === selectedUni);
+            }
+            
+            const faculties = [...new Set(targetData.map(item => item.faculty_name))].sort();
+            faculties.forEach(fac => {
+                const opt = document.createElement('option');
+                opt.value = fac;
+                opt.textContent = fac;
+                facultyFilter.appendChild(opt);
+            });
+        }
+
+        // Generate dynamic checklist of requirements from criteria text
+        function getRequirementsHTML(criteria) {
+            const text = criteria ? criteria.toLowerCase() : '';
+            const items = [];
+            
+            // 1. GPAX
+            if (text.includes('gpa') || text.includes('เกรด') || text.includes('เฉลี่ย')) {
+                // If contains specific grade requirements
+                const match = criteria.match(/ไม่ต่ำกว่า\s*(\d\.\d\d)/) || criteria.match(/gpax\s*.*?\s*(\d\.\d\d)/i);
+                const gpaText = match ? `GPAX ≥ ${match[1]}` : 'GPAX เกณฑ์ขั้นต่ำ';
+                items.push(`<li><i class="fa-solid fa-circle-check"></i> ${gpaText}</li>`);
+            } else {
+                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> GPAX (ไม่ระบุขั้นต่ำ)</li>');
+            }
+            
+            // 2. IELTS / English
+            if (text.includes('ielts') || text.includes('toefl') || text.includes('toeic') || text.includes('ภาษาอังกฤษ') || text.includes('english')) {
+                items.push('<li><i class="fa-solid fa-circle-check"></i> IELTS / English Req.</li>');
+            } else {
+                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> IELTS (ไม่ระบุเกณฑ์)</li>');
+            }
+
+            // 3. Portfolio
+            if (text.includes('portfolio') || text.includes('พอร์ต') || text.includes('ผลงาน') || text.includes('แฟ้มสะสม')) {
+                items.push('<li><i class="fa-solid fa-circle-check"></i> Portfolio required</li>');
+            } else {
+                items.push('<li><i class="fa-solid fa-circle-check"></i> Portfolio required</li>');
+            }
+
+            // 4. SAT/ACT
+            if (text.includes('sat') || text.includes('act') || text.includes('tpat') || text.includes('tgat') || text.includes('cutep') || text.includes('tu-get')) {
+                items.push('<li><i class="fa-solid fa-circle-check"></i> SAT / TGAT / TPAT</li>');
+            } else {
+                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> SAT/ACT (ไม่ใช้คะแนน)</li>');
+            }
+
+            // 5. SOP
+            if (text.includes('sop') || text.includes('เรียงความ') || text.includes('statement') || text.includes('จดหมายแนะนำ')) {
+                items.push('<li><i class="fa-solid fa-circle-check"></i> SOP (เรียงความแนะนำตัว)</li>');
+            } else {
+                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> SOP (ไม่ระบุส่ง)</li>');
+            }
+
+            return `<ul class="req-list">${items.join('')}</ul>`;
+        }
+
+        // Render cards with dynamic glows matching mockup image colors
         function renderCards() {
             cardsGrid.innerHTML = '';
             
@@ -777,24 +934,27 @@
                     <div class="no-results">
                         <i class="fa-solid fa-face-frown"></i>
                         <h4>ไม่พบข้อมูลการรับสมัคร</h4>
-                        <p>กรุณาลองเปลี่ยนคำค้นหา หรือเปลี่ยนตัวกรองมหาวิทยาลัย</p>
+                        <p>กรุณาลองเปลี่ยนคำค้นหา หรือเปลี่ยนตัวกรองมหาวิทยาลัย/คณะ</p>
                     </div>
                 `;
                 return;
             }
 
-            // Render limit to prevent browser crashing on 10,000 items
-            // We implement load-on-scroll or simply render the first 100, then let them filter
-            const displayLimit = 200;
+            // Render limit to prevent browser lag (first 150 items)
+            const displayLimit = 150;
             const toDisplay = filteredData.slice(0, displayLimit);
             
             if (filteredData.length > displayLimit) {
-                statsText.innerHTML += ` (แสดงผลเฉพาะ ${displayLimit} รายการแรก กรุณาค้นหาเพื่อตีกรอบข้อมูลให้แคบลง)`;
+                statsText.innerHTML += ` (แสดงผลเฉพาะ ${displayLimit} รายการแรก กรุณาค้นหาแบบเจาะจงเพิ่มเติม)`;
             }
+
+            // Dynamic glow classes matching mockup card color highlights
+            const glowClasses = ['glow-cyan', 'glow-purple', 'glow-pink', 'glow-orange', 'glow-blue', 'glow-teal'];
 
             toDisplay.forEach((item, index) => {
                 const card = document.createElement('div');
-                card.className = 'card';
+                const glowClass = glowClasses[index % glowClasses.length];
+                card.className = `card ${glowClass}`;
                 
                 // Get university logo from assets.mytcas.com
                 const logoUrl = `https://assets.mytcas.com/i/logo/${item.university_id}.png`;
@@ -804,7 +964,7 @@
                         <img class="uni-logo" src="${logoUrl}" alt="${item.university_name} Logo" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
                         <div class="card-header-text">
                             <h3>${item.university_name}</h3>
-                            <p><i class="fa-solid fa-building-columns"></i> ${item.faculty_name}</p>
+                            <p>${item.faculty_name}</p>
                         </div>
                     </div>
                     
@@ -818,14 +978,19 @@
                             </div>
                         </div>
 
+                        <!-- Intake Badge Centered -->
                         <div class="seats-badge">
                             จำนวนรับ: <span class="seats-count">&nbsp;${item.seats}&nbsp;</span> คน
                         </div>
                         
+                        <!-- Checklist Requirements dynamically parsed -->
+                        ${getRequirementsHTML(item.criteria)}
+                        
+                        <!-- Collapsible Criteria detail -->
                         ${item.criteria ? `
                         <div class="criteria-accordion">
                             <button class="criteria-trigger" onclick="toggleCriteria(this, ${index})">
-                                <span><i class="fa-solid fa-list-check"></i> รายละเอียดเกณฑ์รับสมัคร</span>
+                                <span><i class="fa-solid fa-list-check"></i> รายละเอียดเกณฑ์แบบเต็ม</span>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
                             <div class="criteria-content" id="crit-content-${index}">
@@ -846,7 +1011,7 @@
             });
         }
 
-        // Toggle collapsible criteria
+        // Toggle collapsible criteria section
         window.toggleCriteria = function(button, index) {
             const content = document.getElementById(`crit-content-${index}`);
             button.classList.toggle('active');
@@ -862,7 +1027,7 @@
         function filterData() {
             const query = searchInput.value.toLowerCase().trim();
             const selectedUni = uniFilter.value;
-            const minSeats = parseInt(seatsFilter.value);
+            const selectedFaculty = facultyFilter.value;
 
             filteredData = allData.filter(item => {
                 // 1. Search Query filter
@@ -876,19 +1041,25 @@
                 // 2. University filter
                 const matchesUni = !selectedUni || item.university_name === selectedUni;
 
-                // 3. Seats filter
-                const matchesSeats = item.seats >= minSeats;
+                // 3. Faculty filter
+                const matchesFaculty = !selectedFaculty || item.faculty_name === selectedFaculty;
 
-                return matchesQuery && matchesUni && matchesSeats;
+                return matchesQuery && matchesUni && matchesFaculty;
             });
 
             renderCards();
         }
 
-        // Event listeners for filters
+        // Event listeners
         searchInput.addEventListener('input', filterData);
-        uniFilter.addEventListener('change', filterData);
-        seatsFilter.addEventListener('change', filterData);
+        btnSearchSubmit.addEventListener('click', filterData);
+        
+        uniFilter.addEventListener('change', () => {
+            updateFacultyDropdown();
+            filterData();
+        });
+        
+        facultyFilter.addEventListener('change', filterData);
     </script>
 </body>
 </html>
