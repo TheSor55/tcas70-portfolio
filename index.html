@@ -1053,43 +1053,43 @@
         }
 
         // Generate dynamic checklist of requirements from criteria text
-        function getRequirementsHTML(criteria) {
-            const text = criteria ? criteria.toLowerCase() : '';
+        function getRequirementsHTML(criteria, condition) {
+            const combinedText = ((criteria || '') + ' ' + (condition || '')).toLowerCase();
             const items = [];
             
             // 1. GPAX
-            const gpaVal = extractGPAX(criteria);
+            const gpaVal = extractGPAX(combinedText);
             if (gpaVal) {
                 items.push(`<li><i class="fa-solid fa-circle-check"></i> <strong>GPAX ≥ ${gpaVal}</strong></li>`);
-            } else if (text.includes('gpa') || text.includes('เกรด') || text.includes('เฉลี่ย')) {
+            } else if (combinedText.includes('gpa') || combinedText.includes('เกรด') || combinedText.includes('เฉลี่ย')) {
                 items.push('<li><i class="fa-solid fa-circle-check"></i> GPAX เกณฑ์ขั้นต่ำ</li>');
             } else {
                 items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> GPAX (ไม่ระบุขั้นต่ำ)</li>');
             }
             
             // 2. IELTS / English
-            if (text.includes('ielts') || text.includes('toefl') || text.includes('toeic') || text.includes('ภาษาอังกฤษ') || text.includes('english')) {
+            if (combinedText.includes('ielts') || combinedText.includes('toefl') || combinedText.includes('toeic') || combinedText.includes('ภาษาอังกฤษ') || combinedText.includes('english')) {
                 items.push('<li><i class="fa-solid fa-circle-check"></i> IELTS / English Req.</li>');
             } else {
                 items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> IELTS (ไม่ระบุเกณฑ์)</li>');
             }
 
             // 3. Portfolio
-            if (text.includes('portfolio') || text.includes('พอร์ต') || text.includes('ผลงาน') || text.includes('แฟ้มสะสม')) {
+            if (combinedText.includes('portfolio') || combinedText.includes('พอร์ต') || combinedText.includes('ผลงาน') || combinedText.includes('แฟ้มสะสม')) {
                 items.push('<li><i class="fa-solid fa-circle-check"></i> Portfolio required</li>');
             } else {
                 items.push('<li><i class="fa-solid fa-circle-check"></i> Portfolio required</li>');
             }
 
             // 4. SAT/ACT
-            if (text.includes('sat') || text.includes('act') || text.includes('tpat') || text.includes('tgat') || text.includes('cutep') || text.includes('tu-get')) {
+            if (combinedText.includes('sat') || combinedText.includes('act') || combinedText.includes('tpat') || combinedText.includes('tgat') || combinedText.includes('cutep') || combinedText.includes('tu-get')) {
                 items.push('<li><i class="fa-solid fa-circle-check"></i> SAT / TGAT / TPAT</li>');
             } else {
                 items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> SAT/ACT (ไม่ใช้คะแนน)</li>');
             }
 
             // 5. SOP
-            if (text.includes('sop') || text.includes('เรียงความ') || text.includes('statement') || text.includes('จดหมายแนะนำ')) {
+            if (combinedText.includes('sop') || combinedText.includes('เรียงความ') || combinedText.includes('statement') || combinedText.includes('จดหมายแนะนำ')) {
                 items.push('<li><i class="fa-solid fa-circle-check"></i> SOP (เรียงความแนะนำตัว)</li>');
             } else {
                 items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> SOP (ไม่ระบุส่ง)</li>');
@@ -1161,7 +1161,7 @@
                         </div>
                         
                         <!-- Checklist Requirements dynamically parsed -->
-                        ${getRequirementsHTML(item.criteria)}
+                        ${getRequirementsHTML(item.criteria, item.condition)}
 
                         <!-- High School Curriculum Eligibility Tags (Match official site style) -->
                         <div class="eligibility-box">
@@ -1184,15 +1184,28 @@
                                 </span>
                             </div>
                         </div>
+
+                        <!-- Collapsible Conditions detail -->
+                        ${item.condition ? `
+                        <div class="criteria-accordion" style="margin-bottom: 0.5rem;">
+                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'cond-${index}')">
+                                <span><i class="fa-solid fa-circle-info"></i> เงื่อนไขการรับสมัคร (Conditions)</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="criteria-content" id="crit-content-cond-${index}">
+                                <div class="criteria-inner" style="border-top: 1px solid rgba(255, 255, 255, 0.05); color: #f8fafc; background-color: rgba(99, 102, 241, 0.03);">${item.condition}</div>
+                            </div>
+                        </div>
+                        ` : ''}
                         
                         <!-- Collapsible Criteria detail -->
                         ${item.criteria ? `
                         <div class="criteria-accordion">
-                            <button class="criteria-trigger" onclick="toggleCriteria(this, ${index})">
-                                <span><i class="fa-solid fa-list-check"></i> รายละเอียดเกณฑ์แบบเต็ม</span>
+                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'crit-${index}')">
+                                <span><i class="fa-solid fa-list-check"></i> เกณฑ์พอร์ตโฟลิโอแบบเต็ม (Criteria)</span>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
-                            <div class="criteria-content" id="crit-content-${index}">
+                            <div class="criteria-content" id="crit-content-crit-${index}">
                                 <div class="criteria-inner">${item.criteria}</div>
                             </div>
                         </div>
@@ -1235,7 +1248,8 @@
                     item.faculty_name.toLowerCase().includes(query) ||
                     item.program_name.toLowerCase().includes(query) ||
                     item.project_name.toLowerCase().includes(query) ||
-                    (item.criteria && item.criteria.toLowerCase().includes(query));
+                    (item.criteria && item.criteria.toLowerCase().includes(query)) ||
+                    (item.condition && item.condition.toLowerCase().includes(query));
 
                 // 2. University filter
                 const matchesUni = !selectedUni || item.university_name === selectedUni;
