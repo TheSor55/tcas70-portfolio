@@ -680,6 +680,61 @@
             font-size: 0.85rem;
             opacity: 0.8;
         }
+
+        /* High school curriculum tags */
+        .eligibility-box {
+            background: rgba(11, 15, 25, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        .eligibility-title {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            letter-spacing: 0.3px;
+        }
+
+        .eligibility-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+
+        .tag {
+            font-size: 0.76rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .tag-yes {
+            background: rgba(16, 185, 129, 0.08);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .tag-no {
+            background: rgba(244, 63, 94, 0.06);
+            color: #f43f5e;
+            border: 1px solid rgba(244, 63, 94, 0.15);
+            opacity: 0.6;
+        }
+
+        /* Focus Badge */
+        .focus-badge-wrapper {
+            margin-top: 0.25rem;
+        }
     </style>
 </head>
 <body>
@@ -877,17 +932,97 @@
             });
         }
 
+        // Dynamic GPAX extractor
+        function extractGPAX(criteria) {
+            if (!criteria) return null;
+            const text = criteria.replace(/\s+/g, ' ').toLowerCase();
+            
+            // Pattern 1: gpax ไม่ต่ำกว่า 3.00
+            const match1 = text.match(/gpax[^\d]*?ไม่ต่ำกว่า[^\d]*?(\d\.\d{2})/);
+            if (match1) return match1[1];
+            
+            // Pattern 2: gpax >= 3.00
+            const match2 = text.match(/gpax\s*?[>=]{1,2}\s*?(\d\.\d{2})/);
+            if (match2) return match2[1];
+
+            // Pattern 3: gpax ... 3.00
+            const match3 = text.match(/gpax[^\d]*?(\d\.\d{2})/);
+            if (match3) return match3[1];
+            
+            // Pattern 4: เกรดเฉลี่ยสะสม... 3.00
+            const match4 = text.match(/เฉลี่ยสะสม[^\d]*?(\d\.\d{2})/);
+            if (match4) return match4[1];
+            
+            // Pattern 5: เกรดเฉลี่ย... 3.00
+            const match5 = text.match(/เกรดเฉลี่ย[^\d]*?(\d\.\d{2})/);
+            if (match5) return match5[1];
+
+            // Pattern 6: ไม่ต่ำกว่า 3.00
+            const match6 = text.match(/ไม่ต่ำกว่า[^\d]*?(\d\.\d{2})/);
+            if (match6) return match6[1];
+
+            return null;
+        }
+
+        // Generate project focus highlight badge
+        function getFocusBadgeHTML(projectName, criteria) {
+            const text = (projectName + ' ' + (criteria || '')).toLowerCase();
+            
+            let focusText = "";
+            let icon = "";
+            let color = "";
+            
+            if (text.includes('โอลิมปิก') || text.includes('สอวน') || text.includes('olympic')) {
+                focusText = "เน้น: โอลิมปิกวิชาการ / สอวน.";
+                icon = "fa-trophy";
+                color = "#eab308"; // Gold
+            } else if (text.includes('กีฬา') || text.includes('sport')) {
+                focusText = "เน้น: ความสามารถด้านกีฬา";
+                icon = "fa-basketball";
+                color = "#f97316"; // Orange
+            } else if (text.includes('ภาษาอังกฤษ') || text.includes('english') || text.includes('นานาชาติ') || text.includes('inter') || text.includes('ielts')) {
+                focusText = "เน้น: ทักษะภาษา / นานาชาติ";
+                icon = "fa-language";
+                color = "#06b6d4"; // Cyan
+            } else if (text.includes('นวัตกรรม') || text.includes('sandbox') || text.includes('เทคโนโลยี') || text.includes('ict') || text.includes('ดิจิทัล') || text.includes('คอมพิวเตอร์')) {
+                focusText = "เน้น: เทคโนโลยีและนวัตกรรม";
+                icon = "fa-microchip";
+                color = "#10b981"; // Emerald
+            } else if (text.includes('ศิลปวัฒนธรรม') || text.includes('ดนตรี') || text.includes('กิจกรรม') || text.includes('ศิลปะ') || text.includes('วาดภาพ')) {
+                focusText = "เน้น: กิจกรรม / ศิลปะดนตรี";
+                icon = "fa-palette";
+                color = "#ec4899"; // Pink
+            } else if (text.includes('เรียนดี') || text.includes('ดีเด่น') || text.includes('เลิศ') || text.includes('คุณธรรม') || text.includes('กตัญญู')) {
+                focusText = "เน้น: ผลการเรียนดี / เด็กดี";
+                icon = "fa-award";
+                color = "#a855f7"; // Purple
+            } else {
+                focusText = "เน้น: พอร์ตผลงานทั่วไป";
+                icon = "fa-folder-open";
+                color = "#94a3b8"; // Slate
+            }
+            
+            return `
+                <div class="focus-badge-wrapper">
+                    <span class="focus-badge" style="border-left: 3px solid ${color}; background: ${color}12; color: ${color}; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem;">
+                        <i class="fa-solid ${icon}"></i>
+                        <span>${focusText}</span>
+                    </span>
+                </div>
+            `;
+        }
+
         // Generate dynamic checklist of requirements from criteria text
         function getRequirementsHTML(criteria) {
             const text = criteria ? criteria.toLowerCase() : '';
             const items = [];
             
             // 1. GPAX
-            if (text.includes('gpa') || text.includes('เกรด') || text.includes('เฉลี่ย')) {
-                // If contains specific grade requirements
-                const match = criteria.match(/ไม่ต่ำกว่า\s*(\d\.\d\d)/) || criteria.match(/gpax\s*.*?\s*(\d\.\d\d)/i);
-                const gpaText = match ? `GPAX ≥ ${match[1]}` : 'GPAX เกณฑ์ขั้นต่ำ';
-                items.push(`<li><i class="fa-solid fa-circle-check"></i> ${gpaText}</li>`);
+            const gpaVal = extractGPAX(criteria);
+            if (gpaVal) {
+                items.push(`<li><i class="fa-solid fa-circle-check"></i> <strong>GPAX ≥ ${gpaVal}</strong></li>`);
+            } else if (text.includes('gpa') || text.includes('เกรด') || text.includes('เฉลี่ย')) {
+                items.push('<li><i class="fa-solid fa-circle-check"></i> GPAX เกณฑ์ขั้นต่ำ</li>');
             } else {
                 items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> GPAX (ไม่ระบุขั้นต่ำ)</li>');
             }
@@ -976,6 +1111,8 @@
                                 <i class="fa-solid fa-star-of-life"></i>
                                 <span>${item.project_name}</span>
                             </div>
+                            <!-- Focus Highlight Badge -->
+                            ${getFocusBadgeHTML(item.project_name, item.criteria)}
                         </div>
 
                         <!-- Intake Badge Centered -->
@@ -985,6 +1122,28 @@
                         
                         <!-- Checklist Requirements dynamically parsed -->
                         ${getRequirementsHTML(item.criteria)}
+
+                        <!-- High School Curriculum Eligibility Tags (Match official site style) -->
+                        <div class="eligibility-box">
+                            <div class="eligibility-title"><i class="fa-solid fa-graduation-cap"></i> แผนการเรียนที่รับสมัคร:</div>
+                            <div class="eligibility-tags">
+                                <span class="tag ${item.only_formal === 1 ? 'tag-yes' : 'tag-no'}">
+                                    <i class="fa-solid ${item.only_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ม.ปลายสามัญ
+                                </span>
+                                <span class="tag ${item.only_vocational === 1 ? 'tag-yes' : 'tag-no'}">
+                                    <i class="fa-solid ${item.only_vocational === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> อาชีวะ / สายอาชีพ
+                                </span>
+                                <span class="tag ${item.only_ged === 1 ? 'tag-yes' : 'tag-no'}">
+                                    <i class="fa-solid ${item.only_ged === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> GED เทียบเท่า
+                                </span>
+                                <span class="tag ${item.only_international === 1 ? 'tag-yes' : 'tag-no'}">
+                                    <i class="fa-solid ${item.only_international === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> นานาชาติ
+                                </span>
+                                <span class="tag ${item.only_non_formal === 1 ? 'tag-yes' : 'tag-no'}">
+                                    <i class="fa-solid ${item.only_non_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> กศน.
+                                </span>
+                            </div>
+                        </div>
                         
                         <!-- Collapsible Criteria detail -->
                         ${item.criteria ? `
