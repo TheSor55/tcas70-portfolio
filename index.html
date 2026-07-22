@@ -11,8 +11,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- html2canvas for targets share card generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
         :root {
@@ -763,6 +765,486 @@
         .focus-badge-wrapper {
             margin-top: 0.25rem;
         }
+
+        /* Bookmark button inside card */
+        .bookmark-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+        .bookmark-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+            transform: scale(1.1);
+        }
+        .bookmark-btn.active {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+            animation: pulse-heart 0.3s ease-out;
+        }
+        @keyframes pulse-heart {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* Floating Target Badge */
+        .floating-targets-badge {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #ef4444;
+            font-size: 1.5rem;
+        }
+        .floating-targets-badge:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+            border-color: rgba(99, 102, 241, 0.8);
+        }
+        .floating-targets-badge .badge-count {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 50%;
+            min-width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+            border: 2px solid #0f172a;
+        }
+
+        /* Personalized Filter Panel */
+        .personalized-panel {
+            background: rgba(30, 41, 59, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+        }
+        .personalized-panel:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.1);
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .panel-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .panel-header h3 i {
+            color: #ef4444;
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            30% { transform: scale(1.15); }
+            45% { transform: scale(1.05); }
+            60% { transform: scale(1.15); }
+        }
+        .panel-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+            transition: all 0.3s ease;
+        }
+        .panel-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .panel-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .panel-group input[type="number"],
+        .panel-group select {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            color: white;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .panel-group input[type="number"]:focus,
+        .panel-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+        .checkbox-label input {
+            cursor: pointer;
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Targets Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-container {
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 650px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close-btn:hover {
+            color: white;
+        }
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        .modal-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            outline: none;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+        .saved-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1rem;
+            gap: 1rem;
+        }
+        .saved-item-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .saved-item-logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            padding: 2px;
+            object-fit: contain;
+        }
+        .saved-item-details h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.15rem;
+        }
+        .saved-item-details p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .remove-target-btn {
+            background: transparent;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+        .remove-target-btn:hover {
+            background: rgba(239, 68, 68, 0.15);
+        }
+        .empty-saved {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: var(--text-muted);
+        }
+        .empty-saved i {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Share Card Export Container (hidden off-screen) */
+        #shareCardTemplate {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: 420px;
+            padding: 2rem;
+            background: linear-gradient(135deg, #0b0f19 0%, #1e1b4b 100%);
+            color: white;
+            font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .share-header {
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1.25rem;
+        }
+        .share-header h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #a5b4fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }
+        .share-header p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+        }
+        .share-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .share-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        .share-item-logo {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            padding: 3px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .share-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            min-width: 0;
+        }
+        .share-item-uni {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #818cf8;
+        }
+        .share-item-program {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .share-item-project {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .share-item-meta {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        .share-meta-seats {
+            color: #34d399;
+            font-weight: 700;
+        }
+        .share-meta-gpa {
+            color: #f472b6;
+            font-weight: 700;
+        }
+        .share-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .share-footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .share-footer-tag {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        .share-footer-brand {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+        }
+        .share-qr-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .share-qr-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 4px;
+            background: white;
+            padding: 2px;
+        }
+        .share-qr-label {
+            font-size: 0.6rem;
+            color: #94a3b8;
+        }
     </style>
 </head>
 <body>
@@ -836,6 +1318,45 @@
             </div>
         </div>
 
+        <!-- Personalized Filter Panel (Collapsible Card) -->
+        <div class="personalized-panel">
+            <div class="panel-header" onclick="togglePersonalizedPanel()">
+                <h3><i class="fa-solid fa-heart-pulse"></i> 🎯 แผงคำนวณคุณสมบัติและกรองสิทธิ์ส่วนบุคคล (Personalized Matching)</h3>
+                <i class="fa-solid fa-chevron-down" id="panelChevron"></i>
+            </div>
+            <div class="panel-body" id="panelBody">
+                <div class="panel-group">
+                    <label for="studentGPAX">เกรดเฉลี่ยสะสม (GPAX 5 เทอม):</label>
+                    <input type="number" id="studentGPAX" placeholder="เช่น 3.25 (ปล่อยว่างถ้าไม่กรอง)" step="0.01" min="0" max="4">
+                </div>
+                <div class="panel-group">
+                    <label for="studentPlan">แผนการเรียน / วุฒิการศึกษา:</label>
+                    <select id="studentPlan">
+                        <option value="">เลือกแผนการเรียน (ทั้งหมด)</option>
+                        <option value="formal">ม.ปลายสายสามัญ (ทั่วไป)</option>
+                        <option value="vocational">อาชีวะ / สายอาชีพ (ปวช.)</option>
+                        <option value="ged">GED เทียบเท่า</option>
+                        <option value="inter">นานาชาติ</option>
+                        <option value="nonformal">กศน.</option>
+                    </select>
+                </div>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hasEnglish">
+                        <span>มีคะแนนภาษาอังกฤษ (IELTS / TOEIC / TOEFL)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hasAptitude">
+                        <span>มีคะแนน TGAT / TPAT</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hasALevel">
+                        <span>มีคะแนน A-Level</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <!-- Featured Programs Section Title -->
         <h2 class="section-title">Featured Programs</h2>
 
@@ -884,10 +1405,56 @@
         </div>
     </div>
 
+    <!-- Floating Targets Pulse Badge -->
+    <div class="floating-targets-badge" id="floatingTargetsBtn" onclick="toggleTargetsModal()">
+        <i class="fa-solid fa-heart"></i>
+        <span class="badge-count" id="targetCountBadge">0</span>
+    </div>
+
+    <!-- Targets List Modal Overlay -->
+    <div class="modal-overlay" id="targetsModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i> 💖 คณะเป้าหมายของฉัน (My Target List)</h2>
+                <button class="modal-close-btn" onclick="toggleTargetsModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Saved items list dynamically populated -->
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn btn-secondary" onclick="toggleTargetsModal()">ปิดหน้าต่าง</button>
+                <button class="modal-btn btn-primary" onclick="exportShareCard()"><i class="fa-solid fa-share-nodes"></i> สร้างรูปภาพสรุปเกณฑ์ (แชร์ต่อ LINE)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Export Card Template for html2canvas -->
+    <div id="shareCardTemplate">
+        <div class="share-header">
+            <h1>🎓 MY TCAS70 TARGET LIST</h1>
+            <p>คณะและเกณฑ์รอบ Portfolio ในฝันของฉัน</p>
+        </div>
+        <div class="share-list" id="shareCardList">
+            <!-- Share items dynamically populated -->
+        </div>
+        <div class="share-footer">
+            <div class="share-footer-left">
+                <span class="share-footer-brand">TCAS70 Portfolio Finder</span>
+                <span class="share-footer-tag">แนะแนวโดย พี่แอดมิน Line OpenChat</span>
+            </div>
+            <div class="share-qr-box">
+                <img class="share-qr-img" src="line_openchat_qrcode.png" alt="OpenChat QR">
+                <span class="share-qr-label">สแกนเข้า OpenChat</span>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Main JS -->
     <script>
         let allData = [];
         let filteredData = [];
+        let savedTargets = JSON.parse(localStorage.getItem('tcas70_targets') || '[]');
 
         // DOM elements
         const loadingScreen = document.getElementById('loadingScreen');
@@ -897,6 +1464,13 @@
         const cardsGrid = document.getElementById('cardsGrid');
         const statsText = document.getElementById('statsText');
         const btnSearchSubmit = document.getElementById('btnSearchSubmit');
+
+        // Personalized Filter elements
+        const studentGPAX = document.getElementById('studentGPAX');
+        const studentPlan = document.getElementById('studentPlan');
+        const hasEnglish = document.getElementById('hasEnglish');
+        const hasAptitude = document.getElementById('hasAptitude');
+        const hasALevel = document.getElementById('hasALevel');
 
         // Fetch data on load
         window.addEventListener('DOMContentLoaded', async () => {
@@ -918,6 +1492,9 @@
 
                 // Render Cards
                 renderCards();
+                 
+                // Update saved targets badge count
+                updateBadgeCount();
 
                 // Hide loading screen
                 loadingScreen.style.opacity = '0';
@@ -1135,7 +1712,12 @@
                 // Get university logo from assets.mytcas.com
                 const logoUrl = `https://assets.mytcas.com/i/logo/${item.university_id}.png`;
                 
+                const isBookmarked = savedTargets.some(t => t.program_id === item.program_id && t.project_id === item.project_id);
+                
                 card.innerHTML = `
+                    <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" id="bookmark-${item.program_id}-${item.project_id}" title="บันทึกคณะเป้าหมาย">
+                        <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                    </button>
                     <div class="card-header">
                         <img class="uni-logo" src="${logoUrl}" alt="${item.university_name} Logo" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
                         <div class="card-header-text">
@@ -1242,6 +1824,13 @@
             const selectedUni = uniFilter.value;
             const selectedFaculty = facultyFilter.value;
 
+            // Personalized parameters
+            const gpaxFilterVal = parseFloat(studentGPAX.value);
+            const plan = studentPlan.value;
+            const hasEng = hasEnglish.checked;
+            const hasApt = hasAptitude.checked;
+            const hasAL = hasALevel.checked;
+
             filteredData = allData.filter(item => {
                 // 1. Search Query filter
                 const matchesQuery = !query || 
@@ -1259,6 +1848,35 @@
                 // 3. Faculty filter
                 const matchesFaculty = !selectedFaculty || item.faculty_name === selectedFaculty;
 
+                // 4. Personalized filters: GPAX
+                if (!isNaN(gpaxFilterVal)) {
+                    const minGpa = extractGPAX((item.criteria || '') + ' ' + (item.condition || ''));
+                    if (minGpa && gpaxFilterVal < parseFloat(minGpa)) {
+                        return false;
+                    }
+                }
+
+                // 5. Personalized filters: Study Plan
+                if (plan) {
+                    if (plan === 'formal' && item.only_formal === 0) return false;
+                    if (plan === 'vocational' && item.only_vocational === 0) return false;
+                    if (plan === 'ged' && item.only_ged === 0) return false;
+                    if (plan === 'inter' && item.only_international === 0) return false;
+                    if (plan === 'nonformal' && item.only_non_formal === 0) return false;
+                }
+
+                // 6. Personalized filters: Exams
+                const text = ((item.criteria || '') + ' ' + (item.condition || '')).toLowerCase();
+                if (!hasEng && (text.includes('ielts') || text.includes('toefl') || text.includes('toeic'))) {
+                    return false;
+                }
+                if (!hasApt && (text.includes('tgat') || text.includes('tpat'))) {
+                    return false;
+                }
+                if (!hasAL && (text.includes('a-level') || text.includes('alevel') || text.includes('วิชาสามัญ'))) {
+                    return false;
+                }
+
                 return matchesQuery && matchesUni && matchesFaculty;
             });
 
@@ -1275,6 +1893,171 @@
         });
         
         facultyFilter.addEventListener('change', filterData);
+
+        // Personalized Filter Event Listeners
+        studentGPAX.addEventListener('input', filterData);
+        studentPlan.addEventListener('change', filterData);
+        hasEnglish.addEventListener('change', filterData);
+        hasAptitude.addEventListener('change', filterData);
+        hasALevel.addEventListener('change', filterData);
+
+        // Collapsible Personalized panel helper
+        window.togglePersonalizedPanel = function() {
+            const body = document.getElementById('panelBody');
+            const chevron = document.getElementById('panelChevron');
+            if (body.style.display === 'none') {
+                body.style.display = 'grid';
+                chevron.style.transform = 'rotate(0deg)';
+            } else {
+                body.style.display = 'none';
+                chevron.style.transform = 'rotate(-90deg)';
+            }
+        };
+
+        // Initialize panel collapsed by default
+        document.getElementById('panelBody').style.display = 'none';
+        document.getElementById('panelChevron').style.transform = 'rotate(-90deg)';
+
+        // Targets Bookmarking system functions
+        function updateBadgeCount() {
+            document.getElementById('targetCountBadge').textContent = savedTargets.length;
+        }
+
+        window.toggleBookmark = function(event, programId, projectId) {
+            event.stopPropagation();
+            const item = allData.find(d => d.program_id === programId && d.project_id === projectId);
+            if (!item) return;
+
+            const idx = savedTargets.findIndex(t => t.program_id === programId && t.project_id === projectId);
+            if (idx > -1) {
+                // Remove target
+                savedTargets.splice(idx, 1);
+                // Update UI button class
+                const btn = document.getElementById(`bookmark-${programId}-${projectId}`);
+                if (btn) {
+                    btn.classList.remove('active');
+                    btn.querySelector('i').className = 'fa-regular fa-heart';
+                }
+            } else {
+                // Add target
+                savedTargets.push(item);
+                // Update UI button class
+                const btn = document.getElementById(`bookmark-${programId}-${projectId}`);
+                if (btn) {
+                    btn.classList.add('active');
+                    btn.querySelector('i').className = 'fa-solid fa-heart';
+                }
+            }
+
+            // Save to localStorage
+            localStorage.setItem('tcas70_targets', JSON.stringify(savedTargets));
+            
+            // Sync counts
+            updateBadgeCount();
+            populateSavedTargets();
+        };
+
+        window.toggleTargetsModal = function() {
+            const modal = document.getElementById('targetsModal');
+            modal.classList.toggle('active');
+            populateSavedTargets();
+        };
+
+        function populateSavedTargets() {
+            const body = document.getElementById('modalBody');
+            body.innerHTML = '';
+
+            if (savedTargets.length === 0) {
+                body.innerHTML = `
+                    <div class="empty-saved">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <p style="font-size: 0.95rem; font-weight: 600;">ยังไม่มีคณะเป้าหมายที่บันทึกไว้</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">กดรูปหัวใจ 💖 บนการ์ดวิชาที่ชอบเพื่อเก็บรวบรวมเข้า Target List</p>
+                    </div>
+                `;
+                return;
+            }
+
+            savedTargets.forEach((item) => {
+                const logoUrl = `https://assets.mytcas.com/i/logo/${item.university_id}.png`;
+                const div = document.createElement('div');
+                div.className = 'saved-item';
+                div.innerHTML = `
+                    <div class="saved-item-info">
+                        <img class="saved-item-logo" src="${logoUrl}" alt="logo" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
+                        <div class="saved-item-details">
+                            <h4>${item.program_name}</h4>
+                            <p>${item.university_name} | ${item.faculty_name}</p>
+                            <p style="font-size: 0.75rem; color: var(--secondary-light); margin-top: 0.15rem;">${item.project_name} (รับ ${item.seats} คน)</p>
+                        </div>
+                    </div>
+                    <button class="remove-target-btn" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" title="ลบออก">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                body.appendChild(div);
+            });
+        }
+
+        window.exportShareCard = function() {
+            if (savedTargets.length === 0) {
+                alert('กรุณาบันทึกเป้าหมายอย่างน้อย 1 รายการก่อนสร้างการ์ดแชร์ครับ');
+                return;
+            }
+
+            const list = document.getElementById('shareCardList');
+            list.innerHTML = '';
+
+            // Populate top 5 targets in export card
+            savedTargets.slice(0, 5).forEach(item => {
+                const logoUrl = `https://assets.mytcas.com/i/logo/${item.university_id}.png`;
+                const gpaVal = extractGPAX((item.criteria || '') + ' ' + (item.condition || '')) || 'ไม่ระบุ';
+                const div = document.createElement('div');
+                div.className = 'share-item';
+                div.innerHTML = `
+                    <img class="share-item-logo" src="${logoUrl}" alt="logo" onerror="this.src='https://placehold.co/100x100/ffffff/000000?text=${item.university_name.substring(0, 2)}'">
+                    <div class="share-item-info">
+                        <div class="share-item-uni">${item.university_name}</div>
+                        <div class="share-item-program">${item.program_name}</div>
+                        <div class="share-item-project">${item.project_name}</div>
+                        <div class="share-item-meta">
+                            <span class="share-meta-seats">รับ: ${item.seats} คน</span>
+                            <span class="share-meta-gpa">GPAX: ${gpaVal}</span>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+
+            const btn = document.querySelector('.modal-footer .btn-primary');
+            const origText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังสร้างรูปภาพ...`;
+            btn.disabled = true;
+
+            const template = document.getElementById('shareCardTemplate');
+            
+            setTimeout(() => {
+                html2canvas(template, {
+                    useCORS: true,
+                    allowTaint: true,
+                    scale: 2,
+                    backgroundColor: null
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'tcas70_my_targets.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    
+                    btn.innerHTML = origText;
+                    btn.disabled = false;
+                }).catch(err => {
+                    console.error(err);
+                    alert('ไม่สามารถสร้างรูปภาพได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง');
+                    btn.innerHTML = origText;
+                    btn.disabled = false;
+                });
+            }, 800);
+        };
     </script>
 </body>
 </html>
