@@ -51,29 +51,56 @@
             position: relative;
         }
 
-        /* Background glow blobs */
-        body::before, body::after {
-            content: '';
+        /* Mockup Background Glow Tones */
+        .glow-blob {
             position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.32; /* Rich glow opacity */
+            mix-blend-mode: screen;
+        }
+
+        .blob-1 {
+            top: 60px;
+            left: -120px;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.45) 0%, transparent 70%);
+        }
+
+        .blob-2 {
+            top: 100px;
+            right: -120px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(235, 120, 40, 0.45) 0%, transparent 70%);
+        }
+
+        .blob-3 {
+            top: 500px;
+            left: -150px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%);
+        }
+
+        .blob-4 {
+            top: 850px;
+            right: -150px;
             width: 600px;
             height: 600px;
-            border-radius: 50%;
-            z-index: -2;
-            filter: blur(150px);
-            opacity: 0.12;
-            pointer-events: none;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.22) 0%, transparent 70%);
         }
 
-        body::before {
-            top: 5%;
-            left: -100px;
-            background: radial-gradient(circle, var(--primary) 0%, transparent 80%);
-        }
-
-        body::after {
-            bottom: 15%;
-            right: -100px;
-            background: radial-gradient(circle, #02c39a 0%, transparent 80%);
+        .blob-5 {
+            top: 1200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 750px;
+            height: 750px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
         }
 
         /* Mockup Header Style */
@@ -330,56 +357,56 @@
 
         /* Dynamic Glow Colors matching mockup image */
         .glow-cyan {
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
-            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.15), inset 0 0 15px rgba(6, 182, 212, 0.05);
+            border: 1px solid rgba(6, 182, 212, 0.3);
         }
         .glow-cyan:hover {
-            box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.55), inset 0 0 20px rgba(6, 182, 212, 0.15);
             border-color: rgba(6, 182, 212, 0.6);
         }
 
         .glow-purple {
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
-            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.15), inset 0 0 15px rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.3);
         }
         .glow-purple:hover {
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.55), inset 0 0 20px rgba(139, 92, 246, 0.15);
             border-color: rgba(139, 92, 246, 0.6);
         }
 
         .glow-pink {
-            box-shadow: 0 0 20px rgba(236, 72, 153, 0.25);
-            border-color: rgba(236, 72, 153, 0.3);
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.15), inset 0 0 15px rgba(236, 72, 153, 0.05);
+            border: 1px solid rgba(236, 72, 153, 0.3);
         }
         .glow-pink:hover {
-            box-shadow: 0 0 30px rgba(236, 72, 153, 0.5);
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.55), inset 0 0 20px rgba(236, 72, 153, 0.15);
             border-color: rgba(236, 72, 153, 0.6);
         }
 
         .glow-orange {
-            box-shadow: 0 0 20px rgba(249, 115, 22, 0.25);
-            border-color: rgba(249, 115, 22, 0.3);
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.15), inset 0 0 15px rgba(249, 115, 22, 0.05);
+            border: 1px solid rgba(249, 115, 22, 0.3);
         }
         .glow-orange:hover {
-            box-shadow: 0 0 30px rgba(249, 115, 22, 0.5);
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.55), inset 0 0 20px rgba(249, 115, 22, 0.15);
             border-color: rgba(249, 115, 22, 0.6);
         }
 
         .glow-blue {
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
-            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.15), inset 0 0 15px rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
         .glow-blue:hover {
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.55), inset 0 0 20px rgba(59, 130, 246, 0.15);
             border-color: rgba(59, 130, 246, 0.6);
         }
 
         .glow-teal {
-            box-shadow: 0 0 20px rgba(20, 184, 166, 0.25);
-            border-color: rgba(20, 184, 166, 0.3);
+            box-shadow: 0 0 15px rgba(20, 184, 166, 0.15), inset 0 0 15px rgba(20, 184, 166, 0.05);
+            border: 1px solid rgba(20, 184, 166, 0.3);
         }
         .glow-teal:hover {
-            box-shadow: 0 0 30px rgba(20, 184, 166, 0.5);
+            box-shadow: 0 0 30px rgba(20, 184, 166, 0.55), inset 0 0 20px rgba(20, 184, 166, 0.15);
             border-color: rgba(20, 184, 166, 0.6);
         }
 
@@ -738,6 +765,12 @@
     </style>
 </head>
 <body>
+    <!-- Glowing background blobs matching mockup gradient tones -->
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+    <div class="glow-blob blob-4"></div>
+    <div class="glow-blob blob-5"></div>
 
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
