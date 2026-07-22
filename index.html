@@ -1248,7 +1248,8 @@
                     item.university_name.toLowerCase().includes(query) ||
                     item.faculty_name.toLowerCase().includes(query) ||
                     item.program_name.toLowerCase().includes(query) ||
-                    item.project_name.toLowerCase().includes(query) ||
+                    (item.field_name && item.field_name.toLowerCase().includes(query)) ||
+                    (item.major_name && item.major_name.toLowerCase().includes(query)) ||
                     (item.criteria && item.criteria.toLowerCase().includes(query)) ||
                     (item.condition && item.condition.toLowerCase().includes(query));
 
