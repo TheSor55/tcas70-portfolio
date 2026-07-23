@@ -96,6 +96,11 @@ async function main() {
                     fullProgramName += ` (${course.field_name_th})`;
                 }
                 
+                // Clean and correct KMUTNB Mechanical 5-year teacher education degree name (which actually grants ค.อ.บ.)
+                if (course.university_id === "015" && fullProgramName.includes("วศ.บ.วิศวกรรมเครื่องกลและการศึกษา (หลักสูตร 5 ปี)")) {
+                    fullProgramName = fullProgramName.replace("วศ.บ.วิศวกรรมเครื่องกลและการศึกษา (หลักสูตร 5 ปี)", "ค.อ.บ. วิศวกรรมเครื่องกลและการศึกษา (หลักสูตร 5 ปี)");
+                }
+                
                 if (portfolioRounds.length > 0) {
                     for (const round of portfolioRounds) {
                         results.push({

@@ -1892,14 +1892,16 @@
         // Check for degree type (วศ.บ., ค.อ.บ., ทล.บ., อส.บ.) and render helper button
         function getProgramNameHTML(name) {
             let html = name;
+            const escapedName = name.replace(/'/g, "\\'").replace(/"/g, '\\"');
+            
             if (name.includes('ครุศาสตร์อุตสาหกรรม') || name.includes('ค.อ.บ.')) {
-                html += ` <span class="degree-info-btn degree-kob" onclick="showDegreeInfo('kob')" title="ข้อมูลปริญญา ค.อ.บ."><i class="fa-solid fa-circle-question"></i> ค.อ.บ.</span>`;
+                html += ` <span class="degree-info-btn degree-kob" onclick="showDegreeInfo('kob', '${escapedName}')" title="ข้อมูลปริญญา ค.อ.บ."><i class="fa-solid fa-circle-question"></i> ค.อ.บ.</span>`;
             } else if (name.includes('เทคโนโลยีบัณฑิต') || name.includes('ทล.บ.')) {
-                html += ` <span class="degree-info-btn degree-tolob" onclick="showDegreeInfo('tolob')" title="ข้อมูลปริญญา ทล.บ."><i class="fa-solid fa-circle-question"></i> ทล.บ.</span>`;
+                html += ` <span class="degree-info-btn degree-tolob" onclick="showDegreeInfo('tolob', '${escapedName}')" title="ข้อมูลปริญญา ทล.บ."><i class="fa-solid fa-circle-question"></i> ทล.บ.</span>`;
             } else if (name.includes('อุตสาหกรรมศาสตรบัณฑิต') || name.includes('อส.บ.')) {
-                html += ` <span class="degree-info-btn degree-osob" onclick="showDegreeInfo('osob')" title="ข้อมูลปริญญา อส.บ."><i class="fa-solid fa-circle-question"></i> อส.บ.</span>`;
+                html += ` <span class="degree-info-btn degree-osob" onclick="showDegreeInfo('osob', '${escapedName}')" title="ข้อมูลปริญญา อส.บ."><i class="fa-solid fa-circle-question"></i> อส.บ.</span>`;
             } else if (name.includes('วิศวกรรมศาสตรบัณฑิต') || name.includes('วศ.บ.') || (name.includes('วิศวกรรม') && !name.includes('เทคโนโลยีบัณฑิต') && !name.includes('อุตสาหกรรมศาสตรบัณฑิต'))) {
-                html += ` <span class="degree-info-btn degree-wosob" onclick="showDegreeInfo('wosob')" title="ข้อมูลปริญญา วศ.บ."><i class="fa-solid fa-circle-question"></i> วศ.บ.</span>`;
+                html += ` <span class="degree-info-btn degree-wosob" onclick="showDegreeInfo('wosob', '${escapedName}')" title="ข้อมูลปริญญา วศ.บ."><i class="fa-solid fa-circle-question"></i> วศ.บ.</span>`;
             }
             return html;
         }
@@ -2128,16 +2130,34 @@
         };
 
         // Degree Info Modal controllers
-        window.showDegreeInfo = function(type) {
+        window.showDegreeInfo = function(type, programName) {
             const title = document.getElementById('degreeModalTitle');
             const body = document.getElementById('degreeModalBody');
+            
+            // Check if it's a dual-qualification program (KMUTNB FTE 5-year)
+            const isDualQ = programName && 
+                            programName.includes('และการศึกษา') && 
+                            programName.includes('5 ปี') &&
+                            (programName.includes('เครื่องกล') || programName.includes('ไฟฟ้า') || programName.includes('โยธา') || programName.includes('แมคคาทรอนิกส์') || programName.includes('เมคคาทรอนิกส์'));
+            
+            const dualNotice = isDualQ ? `
+                <div style="background: rgba(99, 102, 241, 0.12); padding: 0.85rem; border-radius: 8px; font-size: 0.82rem; border: 1px solid rgba(99, 102, 241, 0.35); margin-bottom: 1.25rem; text-align: left; color: #a5b4fc; line-height: 1.5;">
+                    <strong style="color: #c7d2fe; display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.4rem;">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> 🌟 หลักสูตรควบ 2 คุณวุฒิวิชาชีพ (Dual Qualification):
+                    </strong>
+                    หลักสูตรครุศาสตร์อุตสาหกรรม 5 ปี นี้ ได้รับการรับรองให้ผู้สำเร็จการศึกษาได้รับสิทธิ์วิชาชีพ 2 ด้านพร้อมกัน:<br>
+                    1. ⚙️ <strong>สิทธิ์สอบใบ กว. (สภาวิศวกร):</strong> เพื่อทำงานเป็นวิศวกรวิชาชีพควบคุม (กว. เครื่องกล, ไฟฟ้า, โยธา ตามสาขา)<br>
+                    2. 🏫 <strong>สิทธิ์รับใบประกอบวิชาชีพครู (กค./คุรุสภา):</strong> เพื่อสอบบรรจุเป็นครูช่าง/อาจารย์ในสถาบันอาชีวศึกษา
+                </div>
+            ` : '';
             
             if (type === 'kob') {
                 title.innerHTML = `<i class="fa-solid fa-user-tie" style="color: var(--secondary-light);"></i> ปริญญา ค.อ.บ. คืออะไร?`;
                 body.innerHTML = `
+                    ${dualNotice}
                     <p style="margin-bottom: 1rem;"><strong>ค.อ.บ. (ครุศาสตร์อุตสาหกรรมบัณฑิต)</strong> คือ ปริญญาตรีที่ผสานระหว่าง <strong>"วิศวกรรมศาสตร์สายปฏิบัติการ"</strong> และ <strong>"จิตวิทยาการสอน/ครูช่าง"</strong> เข้าไว้ด้วยกันครับ</p>
                     <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
-                         <li>🎓 <strong>ระยะเวลาเรียน:</strong> 4 ปี</li>
+                         <li>🎓 <strong>ระยะเวลาเรียน:</strong> 4 ปี (หรือ 5 ปีสำหรับหลักสูตรควบวิชาชีพทางวิศวกรรมเครื่องกลที่ได้รับรองสิทธิ์ กว.)</li>
                          <li>💼 <strong>เส้นทางอาชีพ:</strong> สามารถสอบบรรจุเป็นครูสอนในสถาบันอาชีวศึกษา (วิทยาลัยเทคนิค/เทคโนโลยี) หรือทำงานเป็น <strong>วิศวกรสายปฏิบัติการ</strong>, นักเขียนแบบ, เจ้าหน้าที่เทคนิค และผู้วางระบบงานในอุตสาหกรรมได้เช่นกัน</li>
                          <li>📜 <strong>ใบอนุญาต:</strong> ได้รับใบอนุญาตประกอบวิชาชีพครู (ตามเกณฑ์ของคุรุสภา)</li>
                     </ul>
@@ -2174,9 +2194,10 @@
             } else if (type === 'wosob') {
                 title.innerHTML = `<i class="fa-solid fa-helmet-safety" style="color: var(--primary-light);"></i> ปริญญา วศ.บ. คืออะไร?`;
                 body.innerHTML = `
+                    ${dualNotice}
                     <p style="margin-bottom: 1rem;"><strong>วศ.บ. (วิศวกรรมศาสตรบัณฑิต)</strong> คือ ปริญญาตรีสายวิชาชีพวิศวกรรมศาสตร์โดยตรง มุ่งเน้นการคิดค้น วิเคราะห์ ออกแบบคำนวณ และควบคุมดูแลโครงการด้านวิศวกรรมครับ</p>
                     <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
-                         <li>🎓 <strong>ระยะเวลาเรียน:</strong> 4 ปี (เน้นวิทยาศาสตร์ ฟิสิกส์ คณิตศาสตร์ และการประยุกต์ออกแบบระบบ)</li>
+                         <li>🎓 <strong>ระยะเวลาเรียน:</strong> 4 ปี (หรือ 5 ปีสำหรับหลักสูตรควบการศึกษาครูช่างที่ได้รับรองสิทธิ์ กค./กว. คู่ขนาน)</li>
                          <li>💼 <strong>เส้นทางอาชีพ:</strong> ทำงานเป็น <strong>วิศวกรวิชาชีพ</strong> (เช่น วิศวกรไฟฟ้า, วิศวกรโยธา, วิศวกรเครื่องกล) ในภาคเอกชนและหน่วยงานรัฐ, ที่ปรึกษาโครงการ หรือนักออกแบบระบบ</li>
                          <li>📜 <strong>ใบอนุญาต:</strong> มีสิทธิ์สมัครสอบรับใบอนุญาตประกอบวิชาชีพวิศวกรรมควบคุม (<strong>ใบ กว.</strong>) จากสภาวิศวกร เพื่อทำหน้าที่เซ็นรับรองความปลอดภัยโครงการตามกฎหมาย</li>
                     </ul>
