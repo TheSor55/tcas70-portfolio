@@ -1322,6 +1322,58 @@
                 font-size: 1.25rem;
             }
         }
+
+        /* Special Badges styling */
+        .special-badges-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .special-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.55rem;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .badge-vocational {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            color: #60a5fa;
+        }
+        .badge-gapyear {
+            background: rgba(236, 72, 153, 0.12);
+            border: 1px solid rgba(236, 72, 153, 0.25);
+            color: #f472b6;
+        }
+        
+        /* Degree Info Button styling */
+        .degree-info-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.75);
+            padding: 0.15rem 0.4rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            vertical-align: middle;
+            margin-left: 0.35rem;
+        }
+        .degree-info-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -1501,6 +1553,22 @@
             <div class="modal-footer">
                 <button class="modal-btn btn-secondary" onclick="toggleTargetsModal()">ปิดหน้าต่าง</button>
                 <button class="modal-btn btn-primary" onclick="exportShareCard()"><i class="fa-solid fa-share-nodes"></i> สร้างรูปภาพสรุปเกณฑ์ (แชร์ต่อ LINE)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Degree Info Modal Overlay -->
+    <div class="modal-overlay" id="degreeInfoModal">
+        <div class="modal-container" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="degreeModalTitle"></h2>
+                <button class="modal-close-btn" onclick="toggleDegreeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="degreeModalBody" style="line-height: 1.6; font-size: 0.95rem; color: #e2e8f0; text-align: left;">
+                <!-- Content dynamically populated -->
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleDegreeModal()">เข้าใจแล้ว</button>
             </div>
         </div>
     </div>
@@ -1707,6 +1775,17 @@
             `;
         }
 
+        // Check for degree type (วศ.บ. or ค.อ.บ.) and render helper button
+        function getProgramNameHTML(name) {
+            let html = name;
+            if (name.includes('ครุศาสตร์อุตสาหกรรม') || name.includes('ค.อ.บ.')) {
+                html += ` <span class="degree-info-btn" onclick="showDegreeInfo('kob')" title="ข้อมูลปริญญา ค.อ.บ."><i class="fa-solid fa-circle-question"></i> ค.อ.บ.</span>`;
+            } else if (name.includes('วิศวกรรม') || name.includes('วศ.บ.')) {
+                html += ` <span class="degree-info-btn" onclick="showDegreeInfo('wosob')" title="ข้อมูลปริญญา วศ.บ."><i class="fa-solid fa-circle-question"></i> วศ.บ.</span>`;
+            }
+            return html;
+        }
+
         // Generate dynamic checklist of requirements from criteria text
         function getRequirementsHTML(criteria, condition) {
             const combinedText = ((criteria || '') + ' ' + (condition || '')).toLowerCase();
@@ -1791,6 +1870,27 @@
                 
                 const isBookmarked = savedTargets.some(t => t.program_id === item.program_id && t.project_id === item.project_id);
                 
+                // Parse special badges
+                let specialBadgesHTML = '';
+                const conditionStr = (item.condition || '').toLowerCase();
+                const criteriaStr = (item.criteria || '').toLowerCase();
+                const isGapYearAllowed = (item.grad_current === false) || 
+                                         conditionStr.includes('สำเร็จการศึกษา') || 
+                                         conditionStr.includes('เด็กซิ่ว') ||
+                                         criteriaStr.includes('สำเร็จการศึกษา') || 
+                                         criteriaStr.includes('เด็กซิ่ว');
+                
+                if (item.only_vocational === 1 || isGapYearAllowed) {
+                    specialBadgesHTML = `<div class="special-badges-row">`;
+                    if (item.only_vocational === 1) {
+                        specialBadgesHTML += `<span class="special-badge badge-vocational"><i class="fa-solid fa-briefcase"></i> ปวช. ยื่นได้</span>`;
+                    }
+                    if (isGapYearAllowed) {
+                        specialBadgesHTML += `<span class="special-badge badge-gapyear"><i class="fa-solid fa-rotate-left"></i> เด็กซิ่ว ยื่นได้</span>`;
+                    }
+                    specialBadgesHTML += `</div>`;
+                }
+                
                 card.innerHTML = `
                     <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" id="bookmark-${item.program_id}-${item.project_id}" title="บันทึกคณะเป้าหมาย">
                         <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
@@ -1804,7 +1904,8 @@
                     </div>
                     
                     <div class="card-body">
-                        <div class="program-name">${item.program_name}</div>
+                        ${specialBadgesHTML}
+                        <div class="program-name">${getProgramNameHTML(item.program_name)}</div>
                         
                         <div class="project-details">
                             <div class="project-title">
@@ -1893,6 +1994,46 @@
             } else {
                 content.style.maxHeight = "0px";
             }
+        };
+
+        // Degree Info Modal controllers
+        window.showDegreeInfo = function(type) {
+            const title = document.getElementById('degreeModalTitle');
+            const body = document.getElementById('degreeModalBody');
+            
+            if (type === 'kob') {
+                title.innerHTML = `<i class="fa-solid fa-user-tie" style="color: var(--secondary-light);"></i> ปริญญา ค.อ.บ. คืออะไร?`;
+                body.innerHTML = `
+                    <p style="margin-bottom: 1rem;"><strong>ค.อ.บ. (ครุศาสตร์อุตสาหกรรมศาสตรบัณฑิต)</strong> คือ ปริญญาตรีที่ผสานระหว่าง <strong>"วิศวกรรมศาสตร์สายปฏิบัติการ"</strong> และ <strong>"จิตวิทยาการสอน/ครูช่าง"</strong> เข้าไว้ด้วยกันครับ</p>
+                    <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
+                         <li>🎓 <strong>ระยะเวลาเรียน:</strong> 4 ปี</li>
+                         <li>💼 <strong>เส้นทางอาชีพ:</strong> สามารถสอบบรรจุเป็นครูสอนในสถาบันอาชีวศึกษา (วิทยาลัยเทคนิค/เทคโนโลยี) หรือทำงานเป็น <strong>วิศวกรสายปฏิบัติการ</strong>, นักเขียนแบบ, เจ้าหน้าที่เทคนิค และผู้วางระบบงานในอุตสาหกรรมได้เช่นกัน</li>
+                         <li>📜 <strong>ใบอนุญาต:</strong> ได้รับใบอนุญาตประกอบวิชาชีพครู (ตามเกณฑ์ของคุรุสภา)</li>
+                    </ul>
+                    <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; border-left: 3px solid var(--secondary-light); margin-top: 0.5rem; text-align: left;">
+                        <strong>💡 เกร็ดความรู้:</strong> วุฒินี้ได้รับความนิยมสูงมากในกลุ่มน้องๆ ที่จบ ปวช./สายอาชีพ เนื่องจากเน้นปฏิบัติการจริง และเปิดโอกาสให้ทำงานได้ทั้งสายอุตสาหกรรมและสายครูช่าง
+                    </div>
+                `;
+            } else if (type === 'wosob') {
+                title.innerHTML = `<i class="fa-solid fa-helmet-safety" style="color: var(--primary-light);"></i> ปริญญา วศ.บ. คืออะไร?`;
+                body.innerHTML = `
+                    <p style="margin-bottom: 1rem;"><strong>วศ.บ. (วิศวกรรมศาสตรบัณฑิต)</strong> คือ ปริญญาตรีสายวิชาชีพวิศวกรรมศาสตร์โดยตรง มุ่งเน้นการคิดค้น วิเคราะห์ ออกแบบคำนวณ และควบคุมดูแลโครงการด้านวิศวกรรมครับ</p>
+                    <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
+                         <li>🎓 <strong>ระยะเวลาเรียน:</strong> 4 ปี (เน้นวิทยาศาสตร์ ฟิสิกส์ คณิตศาสตร์ และการประยุกต์ออกแบบระบบ)</li>
+                         <li>💼 <strong>เส้นทางอาชีพ:</strong> ทำงานเป็น <strong>วิศวกรวิชาชีพ</strong> (เช่น วิศวกรไฟฟ้า, วิศวกรโยธา, วิศวกรเครื่องกล) ในภาคเอกชนและหน่วยงานรัฐ, ที่ปรึกษาโครงการ หรือนักออกแบบระบบ</li>
+                         <li>📜 <strong>ใบอนุญาต:</strong> มีสิทธิ์สมัครสอบรับใบอนุญาตประกอบวิชาชีพวิศวกรรมควบคุม (<strong>ใบ กว.</strong>) จากสภาวิศวกร เพื่อทำหน้าที่เซ็นรับรองความปลอดภัยโครงการตามกฎหมาย</li>
+                    </ul>
+                    <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; border-left: 3px solid var(--primary-light); margin-top: 0.5rem; text-align: left;">
+                        <strong>💡 เกร็ดความรู้:</strong> หากน้องๆ ต้องการทำอาชีพวิศวกรแบบควบคุมระบบเต็มตัว มีสิทธิ์เซ็นอนุมัติรับรองความปลอดภัยโครงสร้างหรือระบบไฟฟ้าขนาดใหญ่ วุฒิ วศ.บ. คือเส้นทางตรงสายที่สุดครับ
+                    </div>
+                `;
+            }
+            
+            document.getElementById('degreeInfoModal').classList.add('active');
+        };
+        
+        window.toggleDegreeModal = function() {
+            document.getElementById('degreeInfoModal').classList.remove('active');
         };
 
         // Filter Logic
