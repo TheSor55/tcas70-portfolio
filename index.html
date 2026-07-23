@@ -1374,6 +1374,26 @@
             border-color: rgba(255, 255, 255, 0.3);
             box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
         }
+        .degree-info-btn.degree-wosob {
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.25);
+            background: rgba(56, 189, 248, 0.05);
+        }
+        .degree-info-btn.degree-kob {
+            color: #c084fc;
+            border-color: rgba(192, 132, 252, 0.25);
+            background: rgba(192, 132, 252, 0.05);
+        }
+        .degree-info-btn.degree-tolob {
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.25);
+            background: rgba(52, 211, 153, 0.05);
+        }
+        .degree-info-btn.degree-osob {
+            color: #fbbf24;
+            border-color: rgba(251, 191, 36, 0.25);
+            background: rgba(251, 191, 36, 0.05);
+        }
 
         /* Dropdown Optgroup & Option styling */
         .select-wrapper select optgroup {
@@ -1866,13 +1886,17 @@
             `;
         }
 
-        // Check for degree type (วศ.บ. or ค.อ.บ.) and render helper button
+        // Check for degree type (วศ.บ., ค.อ.บ., ทล.บ., อส.บ.) and render helper button
         function getProgramNameHTML(name) {
             let html = name;
             if (name.includes('ครุศาสตร์อุตสาหกรรม') || name.includes('ค.อ.บ.')) {
-                html += ` <span class="degree-info-btn" onclick="showDegreeInfo('kob')" title="ข้อมูลปริญญา ค.อ.บ."><i class="fa-solid fa-circle-question"></i> ค.อ.บ.</span>`;
-            } else if (name.includes('วิศวกรรม') || name.includes('วศ.บ.')) {
-                html += ` <span class="degree-info-btn" onclick="showDegreeInfo('wosob')" title="ข้อมูลปริญญา วศ.บ."><i class="fa-solid fa-circle-question"></i> วศ.บ.</span>`;
+                html += ` <span class="degree-info-btn degree-kob" onclick="showDegreeInfo('kob')" title="ข้อมูลปริญญา ค.อ.บ."><i class="fa-solid fa-circle-question"></i> ค.อ.บ.</span>`;
+            } else if (name.includes('เทคโนโลยีบัณฑิต') || name.includes('ทล.บ.')) {
+                html += ` <span class="degree-info-btn degree-tolob" onclick="showDegreeInfo('tolob')" title="ข้อมูลปริญญา ทล.บ."><i class="fa-solid fa-circle-question"></i> ทล.บ.</span>`;
+            } else if (name.includes('อุตสาหกรรมศาสตรบัณฑิต') || name.includes('อส.บ.')) {
+                html += ` <span class="degree-info-btn degree-osob" onclick="showDegreeInfo('osob')" title="ข้อมูลปริญญา อส.บ."><i class="fa-solid fa-circle-question"></i> อส.บ.</span>`;
+            } else if (name.includes('วิศวกรรมศาสตรบัณฑิต') || name.includes('วศ.บ.') || (name.includes('วิศวกรรม') && !name.includes('เทคโนโลยีบัณฑิต') && !name.includes('อุตสาหกรรมศาสตรบัณฑิต'))) {
+                html += ` <span class="degree-info-btn degree-wosob" onclick="showDegreeInfo('wosob')" title="ข้อมูลปริญญา วศ.บ."><i class="fa-solid fa-circle-question"></i> วศ.บ.</span>`;
             }
             return html;
         }
@@ -2108,7 +2132,7 @@
             if (type === 'kob') {
                 title.innerHTML = `<i class="fa-solid fa-user-tie" style="color: var(--secondary-light);"></i> ปริญญา ค.อ.บ. คืออะไร?`;
                 body.innerHTML = `
-                    <p style="margin-bottom: 1rem;"><strong>ค.อ.บ. (ครุศาสตร์อุตสาหกรรมศาสตรบัณฑิต)</strong> คือ ปริญญาตรีที่ผสานระหว่าง <strong>"วิศวกรรมศาสตร์สายปฏิบัติการ"</strong> และ <strong>"จิตวิทยาการสอน/ครูช่าง"</strong> เข้าไว้ด้วยกันครับ</p>
+                    <p style="margin-bottom: 1rem;"><strong>ค.อ.บ. (ครุศาสตร์อุตสาหกรรมบัณฑิต)</strong> คือ ปริญญาตรีที่ผสานระหว่าง <strong>"วิศวกรรมศาสตร์สายปฏิบัติการ"</strong> และ <strong>"จิตวิทยาการสอน/ครูช่าง"</strong> เข้าไว้ด้วยกันครับ</p>
                     <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
                          <li>🎓 <strong>ระยะเวลาเรียน:</strong> 4 ปี</li>
                          <li>💼 <strong>เส้นทางอาชีพ:</strong> สามารถสอบบรรจุเป็นครูสอนในสถาบันอาชีวศึกษา (วิทยาลัยเทคนิค/เทคโนโลยี) หรือทำงานเป็น <strong>วิศวกรสายปฏิบัติการ</strong>, นักเขียนแบบ, เจ้าหน้าที่เทคนิค และผู้วางระบบงานในอุตสาหกรรมได้เช่นกัน</li>
@@ -2116,6 +2140,32 @@
                     </ul>
                     <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; border-left: 3px solid var(--secondary-light); margin-top: 0.5rem; text-align: left;">
                         <strong>💡 เกร็ดความรู้:</strong> วุฒินี้ได้รับความนิยมสูงมากในกลุ่มน้องๆ ที่จบ ปวช./สายอาชีพ เนื่องจากเน้นปฏิบัติการจริง และเปิดโอกาสให้ทำงานได้ทั้งสายอุตสาหกรรมและสายครูช่าง
+                    </div>
+                `;
+            } else if (type === 'tolob') {
+                title.innerHTML = `<i class="fa-solid fa-microchip" style="color: #34d399;"></i> ปริญญา ทล.บ. คืออะไร?`;
+                body.innerHTML = `
+                    <p style="margin-bottom: 1rem;"><strong>ทล.บ. (เทคโนโลยีบัณฑิต / Bachelor of Technology)</strong> คือ ปริญญาตรีที่มุ่งเน้น <strong>"การประยุกต์ใช้เทคโนโลยีและการลงมือปฏิบัติการเชิงวิชาชีพขั้นสูง"</strong> เพื่อพัฒนากำลังคนในอุตสาหกรรมเทคโนโลยีสมัยใหม่ครับ</p>
+                    <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
+                         <li>🎓 <strong>ระยะเวลาเรียน:</strong> 4 ปี (หรือหลักสูตรต่อเนื่อง 2 ปีสำหรับผู้จบ ปวส.) เน้นทักษะเทคโนโลยีสมัยใหม่และการแก้ปัญหาทางเทคนิคจริง</li>
+                         <li>💼 <strong>เส้นทางอาชีพ:</strong> ทำงานเป็น <strong>นักเทคโนโลยี</strong>, นักพัฒนาระบบควบคุม, วิศวกรควบคุมงานปฏิบัติการในโรงงาน, หัวหน้างานเทคนิค หรือผู้ประกอบการเทคโนโลยี</li>
+                         <li>📜 <strong>ใบอนุญาต:</strong> เน้นการทำงานตามมาตรฐานวิชาชีพเทคโนโลยีและอุตสาหกรรม (ไม่ได้เน้นการสอบใบอนุญาตประกอบวิชาชีพวิศวกรรมควบคุม หรือ ใบ กว.)</li>
+                    </ul>
+                    <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; border-left: 3px solid #34d399; margin-top: 0.5rem; text-align: left;">
+                        <strong>💡 เกร็ดความรู้:</strong> เหมาะสำหรับน้องๆ สายอาชีพ (ปวช./ปวส.) หรือสายสามัญที่ชอบลงมือทำงานด้านเทคโนโลยีจริงร่วมกับนวัตกรรมยุคดิจิทัล เป็นวุฒิที่เป็นที่ต้องการอย่างมากของโรงงานอัจฉริยะ (Smart Factory) ครับ
+                    </div>
+                `;
+            } else if (type === 'osob') {
+                title.innerHTML = `<i class="fa-solid fa-industry" style="color: #fbbf24;"></i> ปริญญา อส.บ. คืออะไร?`;
+                body.innerHTML = `
+                    <p style="margin-bottom: 1rem;"><strong>อส.บ. (อุตสาหกรรมศาสตรบัณฑิต / Bachelor of Industrial Technology)</strong> คือ ปริญญาตรีที่เน้น <strong>"เทคโนโลยีและกระบวนการทำงานในโรงงานอุตสาหกรรม"</strong> ผสมผสานกับการบริหารจัดการงานผลิตครับ</p>
+                    <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
+                         <li>🎓 <strong>ระยะเวลาเรียน:</strong> 4 ปี (หรือหลักสูตรต่อเนื่องสำหรับผู้จบ ปวส.) เน้นปฏิบัติการด้านเครื่องจักร เครื่องมือช่าง และการบริหารโรงงาน</li>
+                         <li>💼 <strong>เส้นทางอาชีพ:</strong> ทำงานเป็น <strong>วิศวกรโรงงานช่างปฏิบัติการ</strong>, ผู้จัดการฝ่ายการผลิต (Production Manager), นักควบคุมคุณภาพ (QA/QC), หรือเจ้าหน้าที่ความปลอดภัย (จป. วิชาชีพ)</li>
+                         <li>📜 <strong>ใบอนุญาต:</strong> ไม่ได้รับใบอนุญาตประกอบวิชาชีพวิศวกรรมควบคุม (ใบ กว.) แต่ทำงานแทนกันในตำแหน่งวิศวกรช่างปฏิบัติการของหน่วยงานเอกชนได้เกือบทั้งหมด</li>
+                    </ul>
+                    <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; border-left: 3px solid #fbbf24; margin-top: 0.5rem; text-align: left;">
+                        <strong>💡 เกร็ดความรู้:</strong> เป็นวุฒิยอดนิยมของเด็กสายเทคนิค-อาชีวะ เพราะเรียนรู้การวิเคราะห์ควบคุมเครื่องจักรจริง ผสานทักษะช่างระดับชำนาญการและการจัดการสายการผลิตโรงงานขนาดใหญ่
                     </div>
                 `;
             } else if (type === 'wosob') {
