@@ -69,6 +69,12 @@ async function main() {
             
             const { program_id, university_name_th, faculty_name_th, program_name_th } = course;
             
+            // Clean misspelled university names from central database
+            let cleanUniversityName = university_name_th || "";
+            if (cleanUniversityName === "มหาวิทยาลัยราคำแหง") {
+                cleanUniversityName = "มหาวิทยาลัยรามคำแหง";
+            }
+            
             try {
                 const rounds = await fetchRoundsWithRetry(program_id);
                 
@@ -94,7 +100,7 @@ async function main() {
                     for (const round of portfolioRounds) {
                         results.push({
                             university_id: course.university_id,
-                            university_name: university_name_th,
+                            university_name: cleanUniversityName,
                             faculty_id: course.faculty_id,
                             faculty_name: faculty_name_th,
                             program_id: program_id,
@@ -120,7 +126,7 @@ async function main() {
                     // Log program with no portfolio rounds
                     results.push({
                         university_id: course.university_id,
-                        university_name: university_name_th,
+                        university_name: cleanUniversityName,
                         faculty_id: course.faculty_id,
                         faculty_name: faculty_name_th,
                         program_id: program_id,
