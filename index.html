@@ -1678,7 +1678,14 @@
             // Get unique university names
             const universities = [...new Set(allData.map(item => item.university_name))].sort();
             
-            const eightGears = [
+            const tenGearsList = [];
+            const rajabhatList = [];
+            const rajamangalaList = [];
+            const instituteList = [];
+            const privateList = [];
+            const otherStateList = [];
+            
+            const tenGears = [
                 'จุฬาลงกรณ์มหาวิทยาลัย',
                 'มหาวิทยาลัยเกษตรศาสตร์',
                 'มหาวิทยาลัยเชียงใหม่',
@@ -1686,48 +1693,74 @@
                 'มหาวิทยาลัยสงขลานครินทร์',
                 'สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง',
                 'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี',
-                'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ'
+                'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ',
+                'มหาวิทยาลัยเทคโนโลยีสุรนารี',
+                'มหาวิทยาลัยธรรมศาสตร์',
+                'มหาวิทยาลัยมหิดล',
+                'มหาวิทยาลัยศรีนครินทรวิโรฒ'
             ];
             
-            const eightGearsList = [];
-            const otherList = [];
+            const privateUnis = [
+                'มหาวิทยาลัย วงษ์ลิตกุล',
+                'มหาวิทยาลัยวงษ์ชวลิตกุล',
+                'มหาวิทยาลัยคริสเตียน',
+                'มหาวิทยาลัยธุรกิจบัณฑิตย์',
+                'มหาวิทยาลัยปทุมธานี',
+                'มหาวิทยาลัยสยาม',
+                'มหาวิทยาลัยศรีปทุม',
+                'มหาวิทยาลัยหาดใหญ่',
+                'มหาวิทยาลัยอัสสัมชัญ',
+                'มหาวิทยาลัยอีสเทิร์นเอเชีย',
+                'มหาวิทยาลัยเกษมบัณฑิต',
+                'มหาวิทยาลัยเซาธ์อีสท์บางกอก',
+                'วิทยาลัยนครราชสีมา',
+                'วิทยาลัยนอร์ทเทิร์น',
+                'วิทยาลัยเทคโนโลยีสยาม',
+                'วิทยาลัยเซนต์หลุยส์',
+                'สถาบันการจัดการปัญญาภิวัฒน์'
+            ];
             
             universities.forEach(uni => {
-                if (eightGears.includes(uni)) {
-                    eightGearsList.push(uni);
+                if (tenGears.includes(uni)) {
+                    tenGearsList.push(uni);
+                } else if (uni.includes('ราชภัฏ')) {
+                    rajabhatList.push(uni);
+                } else if (uni.includes('ราชมงคล')) {
+                    rajamangalaList.push(uni);
+                } else if (privateUnis.includes(uni)) {
+                    privateList.push(uni);
+                } else if (uni.includes('สถาบัน') || uni.includes('วิทยาลัย') || uni.includes('ราชวิทยาลัย')) {
+                    instituteList.push(uni);
                 } else {
-                    otherList.push(uni);
+                    otherStateList.push(uni);
                 }
             });
             
             // Clear existing options except placeholder
             uniFilter.innerHTML = '<option value="">เลือกมหาวิทยาลัย (Universities)</option>';
             
-            // Create 8 Gears group
-            if (eightGearsList.length > 0) {
-                const groupGears = document.createElement('optgroup');
-                groupGears.label = '⚙️ กลุ่ม 8 เกียร์ (8 Gears Engineering)';
-                eightGearsList.forEach(uni => {
-                    const opt = document.createElement('option');
-                    opt.value = uni;
-                    opt.textContent = uni;
-                    groupGears.appendChild(opt);
-                });
-                uniFilter.appendChild(groupGears);
+            // Helper function to add a group
+            function addGroup(label, list) {
+                if (list.length > 0) {
+                    const group = document.createElement('optgroup');
+                    group.label = label;
+                    list.forEach(uni => {
+                        const opt = document.createElement('option');
+                        opt.value = uni;
+                        opt.textContent = uni;
+                        group.appendChild(opt);
+                    });
+                    uniFilter.appendChild(group);
+                }
             }
             
-            // Create other universities group
-            if (otherList.length > 0) {
-                const groupOthers = document.createElement('optgroup');
-                groupOthers.label = '🏛️ มหาวิทยาลัยอื่นๆ (Other Universities)';
-                otherList.forEach(uni => {
-                    const opt = document.createElement('option');
-                    opt.value = uni;
-                    opt.textContent = uni;
-                    groupOthers.appendChild(opt);
-                });
-                uniFilter.appendChild(groupOthers);
-            }
+            // Add groups in desired order
+            addGroup('⚙️ กลุ่ม 10 เกียร์ / มหาวิทยาลัยชั้นนำ (10 Gears Engineering)', tenGearsList);
+            addGroup('🏛️ มหาวิทยาลัยของรัฐทั่วไป (State Universities)', otherStateList);
+            addGroup('🛡️ กลุ่มมหาวิทยาลัยเทคโนโลยีราชมงคล (RMUT)', rajamangalaList);
+            addGroup('🏫 กลุ่มมหาวิทยาลัยราชภัฏ (Rajabhat)', rajabhatList);
+            addGroup('🧪 กลุ่มสถาบัน / วิทยาลัย (Institutes & Colleges)', instituteList);
+            addGroup('💼 มหาวิทยาลัยเอกชน (Private Universities)', privateList);
 
             // Populate unique faculty names initially
             updateFacultyDropdown();
