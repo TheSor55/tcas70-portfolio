@@ -1495,7 +1495,10 @@
                     <label for="studentPlan">แผนการเรียน / วุฒิการศึกษา:</label>
                     <select id="studentPlan">
                         <option value="">เลือกแผนการเรียน (ทั้งหมด)</option>
-                        <option value="formal">ม.ปลายสายสามัญ (ทั่วไป)</option>
+                        <option value="sci_math">ม.ปลาย สายวิทย์-คณิต</option>
+                        <option value="sci_com">ม.ปลาย สายวิทย์-คอมฯ</option>
+                        <option value="art_math">ม.ปลาย สายศิลป์-คำนวณ / ธุรกิจ</option>
+                        <option value="art_lang">ม.ปลาย สายศิลป์-ภาษา</option>
                         <option value="vocational">อาชีวะ / สายอาชีพ (ปวช.)</option>
                         <option value="ged">GED เทียบเท่า</option>
                         <option value="inter">นานาชาติ</option>
@@ -2190,6 +2193,76 @@
             document.getElementById('degreeInfoModal').classList.remove('active');
         };
 
+        // Helper to check study plan eligibility dynamically
+        function isPlanEligible(item, plan) {
+            if (!plan) return true;
+            
+            if (plan === 'vocational') return item.only_vocational === 1;
+            if (plan === 'ged') return item.only_ged === 1;
+            if (plan === 'inter') return item.only_international === 1;
+            if (plan === 'nonformal') return item.only_non_formal === 1;
+            
+            // For M.6 general plans
+            if (item.only_formal !== 1) return false;
+            
+            if (plan === 'sci_math') return true; // Science-Math can apply to all
+            
+            const faculty = (item.faculty_name || '').toLowerCase();
+            const program = (item.program_name || '').toLowerCase();
+            const project = (item.project_name || '').toLowerCase();
+            const cond = (item.condition || '').toLowerCase();
+            const crit = (item.criteria || '').toLowerCase();
+            const combined = faculty + ' ' + program + ' ' + project + ' ' + cond + ' ' + crit;
+            
+            const requiresSciMathText = combined.includes('วิทยาศาสตร์-คณิตศาสตร์') || 
+                                        combined.includes('วิทย์-คณิต') || 
+                                        combined.includes('วิทยาศาสตร์ และ คณิตศาสตร์') || 
+                                        combined.includes('วิทย์คณิต') ||
+                                        combined.includes('คณิตศาสตร์-วิทยาศาสตร์') ||
+                                        combined.includes('วิทยาศาสตร์และคณิตศาสตร์') ||
+                                        combined.includes('แผนการเรียนวิทยาศาสตร์');
+                                        
+            const noLimitText = combined.includes('ไม่จำกัดแผน') || 
+                                combined.includes('ไม่กำหนดแผน') || 
+                                combined.includes('ทุกแผนการเรียน') || 
+                                combined.includes('ทุกกลุ่มสาระ');
+
+            const isEngineering = faculty.includes('วิศวกรรม');
+            const isScience = faculty.includes('วิทยาศาสตร์') && !faculty.includes('วิทยาศาสตร์การกีฬา') && !faculty.includes('วิทยาศาสตร์สังคม') && !faculty.includes('วิทยพัฒน์');
+            const isHealth = faculty.includes('แพทยศาสตร์') || faculty.includes('ทันตแพทย์') || faculty.includes('เภสัชศาสตร์') || faculty.includes('พยาบาล') || faculty.includes('สหเวชศาสตร์') || faculty.includes('สัตวแพทยศาสตร์') || faculty.includes('สาธารณสุข');
+            
+            if (plan === 'sci_com') {
+                if (isHealth) return false;
+                if (isEngineering) {
+                    return program.includes('คอมพิวเตอร์') || program.includes('ดิจิทัล') || program.includes('sandbox') || program.includes('สารสนเทศ') || program.includes('ซอฟต์แวร์');
+                }
+                if (isScience) {
+                    return program.includes('คอมพิวเตอร์') || program.includes('สารสนเทศ') || program.includes('เทคโนโลยีสารสนเทศ') || program.includes('วิทยาการคำนวณ');
+                }
+                return true;
+            }
+            
+            if (plan === 'art_math') {
+                if (isEngineering || isScience || isHealth) {
+                    return noLimitText;
+                }
+                return true;
+            }
+            
+            if (plan === 'art_lang') {
+                if (isEngineering || isScience || isHealth) {
+                    return noLimitText;
+                }
+                const isBusiness = faculty.includes('บริหารธุรกิจ') || faculty.includes('บัญชี') || faculty.includes('เศรษฐศาสตร์') || program.includes('บริหารธุรกิจ') || program.includes('บัญชี');
+                if (isBusiness) {
+                    return noLimitText;
+                }
+                return true;
+            }
+            
+            return true;
+        }
+
         // Filter Logic
         function filterData() {
             const query = searchInput.value.toLowerCase().trim();
@@ -2229,12 +2302,8 @@
                 }
 
                 // 5. Personalized filters: Study Plan
-                if (plan) {
-                    if (plan === 'formal' && item.only_formal === 0) return false;
-                    if (plan === 'vocational' && item.only_vocational === 0) return false;
-                    if (plan === 'ged' && item.only_ged === 0) return false;
-                    if (plan === 'inter' && item.only_international === 0) return false;
-                    if (plan === 'nonformal' && item.only_non_formal === 0) return false;
+                if (plan && !isPlanEligible(item, plan)) {
+                    return false;
                 }
 
                 // 6. Personalized filters: Exams
