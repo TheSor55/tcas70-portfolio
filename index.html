@@ -1932,11 +1932,24 @@
                 let specialBadgesHTML = '';
                 const conditionStr = (item.condition || '').toLowerCase();
                 const criteriaStr = (item.criteria || '').toLowerCase();
-                const isGapYearAllowed = (item.grad_current === false) || 
-                                         conditionStr.includes('สำเร็จการศึกษา') || 
-                                         conditionStr.includes('เด็กซิ่ว') ||
-                                         criteriaStr.includes('สำเร็จการศึกษา') || 
-                                         criteriaStr.includes('เด็กซิ่ว');
+                const combinedStr = conditionStr + ' ' + criteriaStr;
+                
+                // Clean headings and current-student phrases to prevent false positives
+                const cleanText = combinedStr
+                    .replace(/เกณฑ์การสำเร็จการศึกษา/g, '')
+                    .replace(/ระดับการสำเร็จการศึกษา/g, '')
+                    .replace(/กำลังจะสำเร็จการศึกษา/g, '')
+                    .replace(/กำลังศึกษา/g, '')
+                    .replace(/กำลังจะจบ/g, '')
+                    .replace(/ผู้กำลังศึกษา/g, '');
+                    
+                const isGapYearAllowed = cleanText.includes('สำเร็จการศึกษา') || 
+                                         combinedStr.includes('เด็กซิ่ว') || 
+                                         combinedStr.includes('ผู้ซิ่ว') || 
+                                         combinedStr.includes('ซิ่ว') || 
+                                         combinedStr.includes('จบ ม.6') || 
+                                         combinedStr.includes('จบม.6') || 
+                                         combinedStr.includes('ผู้ที่สำเร็จการศึกษาแล้ว');
                 
                 if (item.only_vocational === 1 || isGapYearAllowed) {
                     specialBadgesHTML = `<div class="special-badges-row">`;
