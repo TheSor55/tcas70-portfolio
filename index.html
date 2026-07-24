@@ -11,7 +11,9 @@
       gtag('config', 'G-WRV0M4562M');
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>TCAS70 Portfolio Finder - ระบบค้นหาและเปรียบเทียบเกณฑ์รอบพอร์ตโฟลิโอ 2570</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
     
@@ -61,6 +63,47 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: none;
+        }
+
+        /* Back-to-Top Button */
+        #backToTopBtn {
+            position: fixed;
+            bottom: 5.5rem;
+            right: 1.2rem;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 20px rgba(99,102,241,0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(12px) scale(0.85);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 999;
+        }
+        #backToTopBtn.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+        #backToTopBtn:hover {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            box-shadow: 0 6px 28px rgba(99,102,241,0.7);
+        }
+        /* iOS safe-area bottom padding for fixed elements */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            #backToTopBtn {
+                bottom: calc(5.5rem + env(safe-area-inset-bottom));
+            }
         }
 
         /* Mockup Background Glow Tones */
@@ -1535,6 +1578,11 @@
             <!-- Dynamic cards will go here -->
         </div>
 
+        <!-- Back to Top Button -->
+        <button id="backToTopBtn" title="กลับขึ้นด้านบน" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            <i class="fa-solid fa-chevron-up"></i>
+        </button>
+
         <!-- Mockup Footer Divider -->
         <div class="divider"></div>
 
@@ -1967,8 +2015,9 @@
                 return;
             }
 
-            // Render limit to prevent browser lag (first 150 items)
-            const displayLimit = 150;
+            // Detect iOS/low-memory devices and reduce render limit
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const displayLimit = isIOS ? 60 : 150;
             const toDisplay = filteredData.slice(0, displayLimit);
             
             if (filteredData.length > displayLimit) {
@@ -2377,6 +2426,16 @@
         // Initialize panel collapsed by default
         document.getElementById('panelBody').style.display = 'none';
         document.getElementById('panelChevron').style.transform = 'rotate(-90deg)';
+
+        // Back-to-Top button visibility on scroll
+        const backToTopBtn = document.getElementById('backToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }, { passive: true });
 
         // Targets Bookmarking system functions
         function updateBadgeCount() {
