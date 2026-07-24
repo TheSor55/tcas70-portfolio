@@ -1744,12 +1744,16 @@
             }
         }
 
-        /* Mobile Performance Optimization - Disable heavy backdrop-filter to prevent WebKit process termination */
+        /* Mobile Performance Optimization - Disable heavy backdrop-filter and box-shadows to prevent WebKit process termination */
         @media (max-width: 768px) {
             .card {
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
                 background: #131927 !important; /* Solid fallback background matching dark theme */
+                box-shadow: none !important; /* Disable heavy shadows to save GPU memory on iOS WebKit */
+            }
+            .card:hover {
+                transform: none !important; /* Disable hover movement on mobile to save layout repaints */
             }
         }
 
@@ -2490,7 +2494,7 @@
 
             // Detect iOS/low-memory devices and reduce render limit
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const displayLimit = isIOS ? 30 : 150;
+            const displayLimit = isIOS ? 20 : 150;
             const toDisplay = filteredData.slice(0, displayLimit);
             
             if (filteredData.length > displayLimit) {
@@ -3392,14 +3396,15 @@
             }
         };
 
-        // Restore chat history on load
+        // Restore chat history on load (optimized for iOS DOM memory footprint)
         function restoreChatHistory() {
             try {
                 const saved = localStorage.getItem('tcas70_chat_history');
                 if (saved) {
                     const parsed = JSON.parse(saved);
                     if (parsed && parsed.length > 0) {
-                        chatHistory = parsed;
+                        // Limit to last 6 messages (3 turns) to keep DOM extremely light on load
+                        chatHistory = parsed.slice(-6);
                         const chatBody = document.getElementById('chatBody');
                         chatBody.innerHTML = '';
                         chatHistory.forEach(msg => {
