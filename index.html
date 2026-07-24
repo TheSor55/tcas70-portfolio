@@ -1852,7 +1852,7 @@
         </div>
         <nav>
             <a href="https://student.mytcas.com" target="_blank">TCASFolio</a>
-            <a href="https://www.mytcas.com/" target="_blank">About</a>
+            <a href="javascript:void(0)" onclick="toggleAboutModal()">About</a>
             <!-- LINE OpenChat invitation link -->
             <a href="https://line.me/ti/g2/LZO6E3ufrr2Xx0K0xOsNaGPYfOn8x5AoEKcFvg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank">Contact</a>
             <a href="https://www.mytcas.com/stat/" target="_blank">Dashboard(Portfolio)</a>
@@ -2064,6 +2064,51 @@
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="ถามคำถามพี่ AI ที่นี่... (เช่น วิศวะ คอม มทส)" onkeydown="handleChatInputKey(event)">
             <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+
+    <!-- About Modal Overlay (Volunteer Mission Detail) -->
+    <div class="modal-overlay" id="aboutModal">
+        <div class="modal-container" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-circle-info" style="color: var(--primary-light);"></i> เกี่ยวกับโปรเจกต์ TCAS70 Portfolio Finder</h2>
+                <button class="modal-close-btn" onclick="toggleAboutModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="line-height: 1.6; font-size: 0.92rem; color: #e2e8f0; text-align: left; display: flex; flex-direction: column; gap: 0.9rem;">
+                <div style="text-align: center; margin-bottom: 0.25rem;">
+                    <span style="background: rgba(99, 102, 241, 0.15); color: var(--primary-light); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(99, 102, 241, 0.3);">❤️ จิตอาสาเพื่อเด็กไทย 100%</span>
+                </div>
+                
+                <p><strong>จุดเริ่มต้นของโปรเจกต์นี้ 💡</strong><br>
+                เว็บแอปพลิเคชันค้นหาเกณฑ์ TCAS70 รอบ Portfolio นี้ พัฒนาขึ้นโดยความร่วมมือใน <strong>เชิงจิตอาสา</strong> ระหว่างพี่ๆ แอดมินกลุ่ม LINE OpenChat <em>"พูดคุยหาที่เรียนต่อมหาลัย TCAS70"</em> และทีมงาน FutureGreen Consulting เพื่อแก้ไขอุปสรรคในการเข้าถึงข้อมูลเกณฑ์การศึกษาของเด็กไทย</p>
+                
+                <div>
+                    <strong style="color: var(--primary-light);">ทำไมเราถึงต้องสร้างสิ่งนี้ขึ้นมา? 🚀</strong>
+                    <ul style="margin-left: 1.2rem; margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.5rem; list-style-type: disc;">
+                        <li><strong>เพื่อโอกาสที่เท่าเทียม (Educational Equality):</strong> ช่วยให้น้องๆ ที่ด้อยโอกาสหรือขาดแคลนทุนทรัพย์ สามารถเข้าถึงข้อมูลเกณฑ์การรับสมัครรอบพอร์ตทั่วประเทศได้ง่าย รวดเร็ว ครบจบในที่เดียว</li>
+                        <li><strong>เน็ตไม่แรงก็ใช้งานได้ (Fast & Lightweight):</strong> ออกแบบโดยใช้การแบ่งย่อยไฟล์ข้อมูล (Data Chunking) กินปริมาณอินเทอร์เน็ตน้อยและประหยัดแรมบนมือถือรุ่นประหยัด ช่วยให้ค้นเกณฑ์ได้รวดเร็วในเสี้ยววินาที</li>
+                        <li><strong>ไม่มีโฆษณากวนใจ (Ad-Free Experience):</strong> มอบประสบการณ์การใช้งานที่สะอาด ปราศจากโฆษณาแบนเนอร์กะพริบ ป๊อปอัปเด้งกวนใจ หรือการบังคับขายคอร์สติว เพื่อให้น้องๆ มีสมาธิในการหาข้อมูล</li>
+                        <li><strong>แนะแนวอบอุ่นด้วยพี่ AI:</strong> มีระบบบอทแชตอัจฉริยะ (Gemini 2.5 Flash) คอยช่วยแนะนำข้อมูล ตอบข้อสงสัย และอธิบายความแตกต่างของวุฒิปริญญา (วศ.บ., ค.อ.บ., ทล.บ.) ได้อย่างเป็นกันเอง</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.06); padding: 0.85rem; border-radius: 12px; display: flex; align-items: center; gap: 1rem; margin-top: 0.25rem;">
+                    <img src="line_openchat_qrcode.png" alt="LINE OpenChat QR" style="width: 80px; height: 80px; border-radius: 8px; background: white; padding: 4px; flex-shrink: 0;">
+                    <div>
+                        <strong style="color:#fff; font-size:0.88rem;">มาร่วมเป็นครอบครัวเดียวกันใน LINE OpenChat 💖</strong>
+                        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem; line-height:1.4;">สแกนเพื่อเข้าร่วมกลุ่มพูดคุย ปรึกษาการทำเล่มพอร์ต และเตรียมตัวยื่นเข้ามหาวิทยาลัยกับพี่ๆ แอดมินและเพื่อนๆ ได้ฟรีตลอด 24 ชม.</p>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.82rem; text-align: center; color: var(--text-muted); margin-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.6rem;">
+                    <em>พัฒนาขึ้นด้วยหัวใจ 💚 เพื่ออนาคตของเด็กไทยทุกคน<br>
+                    กลุ่ม LINE OpenChat TCAS70 & FutureGreen Consulting</em>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleAboutModal()">ปิดหน้าต่าง</button>
+            </div>
         </div>
     </div>
 
@@ -2646,6 +2691,13 @@
                 // Smooth scroll on other platforms
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+        };
+
+
+        // About Modal controllers
+        window.toggleAboutModal = function() {
+            const modal = document.getElementById('aboutModal');
+            modal.classList.toggle('active');
         };
 
         // Degree Info Modal controllers
