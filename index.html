@@ -2073,6 +2073,36 @@
     </div>
 
 
+
+    <!-- Image Preview Modal Overlay (For mobile long-press saving) -->
+    <div class="modal-overlay" id="imagePreviewModal" style="z-index: 1200;">
+        <div class="modal-container" style="max-width: 480px; width: 92%; background: #0f172a; border: 1px solid rgba(255,255,255,0.1);">
+            <div class="modal-header" style="padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <h3 style="font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-regular fa-image" style="color: var(--primary-light);"></i> รูปภาพเป้าหมายของคุณ
+                </h3>
+                <button class="modal-close-btn" onclick="toggleImagePreviewModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="padding: 1.25rem; text-align: center; display: flex; flex-direction: column; gap: 1rem;">
+                <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); padding: 0.75rem; border-radius: 8px; font-size: 0.82rem; color: #e2e8f0; line-height: 1.4; text-align: left;">
+                    <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-light);"></i> <strong>วิธีบันทึกภาพลงมือถือ:</strong><br>
+                    แตะค้างที่รูปภาพด้านล่าง แล้วเลือก <strong>"บันทึกรูปภาพ" (Save Image)</strong> หรือ <strong>"คัดลอก/แชร์" (Share)</strong> ลง Line, IG, FB ได้โดยตรงและบันทึกเข้าคลังภาพได้ทันทีครับ
+                </div>
+                
+                <!-- Generated preview image tag with default mobile long-press capabilities -->
+                <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 50vh; display: flex; justify-content: center; background: #0b0f19;">
+                    <img id="previewGeneratedImg" src="" alt="Target List Card" style="width: 100%; height: auto; max-height: 50vh; object-fit: contain; -webkit-touch-callout: default !important; pointer-events: auto !important; user-select: auto !important;">
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 0.85rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 0.75rem;">
+                <button class="modal-btn btn-secondary" style="flex: 1;" onclick="toggleImagePreviewModal()">ปิด</button>
+                <a id="downloadFallbackBtn" href="" download="tcas70_my_targets.png" class="modal-btn btn-primary" style="flex: 1.2; background: var(--gradient-primary); border: none; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem; color: #fff;">
+                    <i class="fa-solid fa-download"></i> ดาวน์โหลดรูปภาพ
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- About Modal Overlay (Volunteer Mission Detail) -->
     <div class="modal-overlay" id="aboutModal">
         <div class="modal-container" style="max-width: 600px;">
@@ -2741,6 +2771,13 @@
         };
 
 
+
+        // Image Preview Modal controllers
+        window.toggleImagePreviewModal = function() {
+            const modal = document.getElementById('imagePreviewModal');
+            modal.classList.toggle('active');
+        };
+
         // About Modal controllers
         window.toggleAboutModal = function() {
             const modal = document.getElementById('aboutModal');
@@ -3157,47 +3194,18 @@
                     scale: 2,
                     backgroundColor: null
                 }).then(canvas => {
-                    canvas.toBlob(async (blob) => {
-                        if (!blob) {
-                            // Fallback to standard download if blob fails
-                            const link = document.createElement('a');
-                            link.download = 'tcas70_my_targets.png';
-                            link.href = canvas.toDataURL('image/png');
-                            link.click();
-                            btn.innerHTML = origText;
-                            btn.disabled = false;
-                            return;
-                        }
+                    const imgData = canvas.toDataURL('image/png');
+                    
+                    // Set image source and download link
+                    document.getElementById('previewGeneratedImg').src = imgData;
+                    document.getElementById('downloadFallbackBtn').href = imgData;
 
-                        const file = new File([blob], 'tcas70_my_targets.png', { type: 'image/png' });
-                        
-                        // Check if browser has native share support for files
-                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                            try {
-                                await navigator.share({
-                                    files: [file],
-                                    title: 'คณะเป้าหมาย TCAS70',
-                                    text: 'นี่คือลิสต์คณะและเกณฑ์ TCAS70 ในฝันของฉัน! เช็กและกรองเกณฑ์ได้ฟรีที่นี่: https://tcas70.futuregreennet.com'
-                                });
-                            } catch (shareErr) {
-                                // If cancelled or failed, fallback to standard download
-                                console.log("Native share failed/cancelled, downloading instead:", shareErr);
-                                const link = document.createElement('a');
-                                link.download = 'tcas70_my_targets.png';
-                                link.href = canvas.toDataURL('image/png');
-                                link.click();
-                            }
-                        } else {
-                            // Desktop browsers fallback
-                            const link = document.createElement('a');
-                            link.download = 'tcas70_my_targets.png';
-                            link.href = canvas.toDataURL('image/png');
-                            link.click();
-                        }
-                        
-                        btn.innerHTML = origText;
-                        btn.disabled = false;
-                    }, 'image/png');
+                    // Close Targets list modal and open Image Preview modal
+                    document.getElementById('targetsModal').classList.remove('active');
+                    document.getElementById('imagePreviewModal').classList.add('active');
+                    
+                    btn.innerHTML = origText;
+                    btn.disabled = false;
                 }).catch(err => {
                     console.error(err);
                     alert('ไม่สามารถสร้างรูปภาพได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง');
