@@ -3157,13 +3157,47 @@
                     scale: 2,
                     backgroundColor: null
                 }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'tcas70_my_targets.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    
-                    btn.innerHTML = origText;
-                    btn.disabled = false;
+                    canvas.toBlob(async (blob) => {
+                        if (!blob) {
+                            // Fallback to standard download if blob fails
+                            const link = document.createElement('a');
+                            link.download = 'tcas70_my_targets.png';
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                            btn.innerHTML = origText;
+                            btn.disabled = false;
+                            return;
+                        }
+
+                        const file = new File([blob], 'tcas70_my_targets.png', { type: 'image/png' });
+                        
+                        // Check if browser has native share support for files
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            try {
+                                await navigator.share({
+                                    files: [file],
+                                    title: 'คณะเป้าหมาย TCAS70',
+                                    text: 'นี่คือลิสต์คณะและเกณฑ์ TCAS70 ในฝันของฉัน! เช็กและกรองเกณฑ์ได้ฟรีที่นี่: https://tcas70.futuregreennet.com'
+                                });
+                            } catch (shareErr) {
+                                // If cancelled or failed, fallback to standard download
+                                console.log("Native share failed/cancelled, downloading instead:", shareErr);
+                                const link = document.createElement('a');
+                                link.download = 'tcas70_my_targets.png';
+                                link.href = canvas.toDataURL('image/png');
+                                link.click();
+                            }
+                        } else {
+                            // Desktop browsers fallback
+                            const link = document.createElement('a');
+                            link.download = 'tcas70_my_targets.png';
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                        }
+                        
+                        btn.innerHTML = origText;
+                        btn.disabled = false;
+                    }, 'image/png');
                 }).catch(err => {
                     console.error(err);
                     alert('ไม่สามารถสร้างรูปภาพได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง');
