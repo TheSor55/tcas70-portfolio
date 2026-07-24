@@ -1893,9 +1893,11 @@
 
                 <!-- Admission Round Filter -->
                 <div class="select-wrapper">
-                    <select id="roundFilter">
-                        <option value="">เลือกรอบรับ (Admission Round)</option>
+                    <select id="roundFilter" onchange="handleRoundChange()">
                         <option value="1" selected>รอบที่ 1 Portfolio</option>
+                        <option value="2">รอบที่ 2 Quota</option>
+                        <option value="3">รอบที่ 3 Admission</option>
+                        <option value="4">รอบที่ 4 Direct Admission</option>
                     </select>
                 </div>
             </div>
@@ -2135,7 +2137,7 @@
     <div id="shareCardTemplate">
         <div class="share-header">
             <h1>🎓 MY TCAS70 TARGET LIST</h1>
-            <p>คณะและเกณฑ์รอบ Portfolio ในฝันของฉัน</p>
+            <p>คณะและเกณฑ์รอบต่างๆ ในฝันของฉัน</p>
         </div>
         <div class="share-list" id="shareCardList">
             <!-- Share items dynamically populated -->
@@ -2157,6 +2159,24 @@
     <script>
         let allData = [];
         let filteredData = [];
+        let activeRoundData = [];
+
+        window.handleRoundChange = function() {
+            const roundFilter = document.getElementById('roundFilter');
+            const selectedRoundVal = parseInt(roundFilter.value) || 1;
+            
+            activeRoundData = allData.filter(item => {
+                const matchesRound = (item.round || 1) === selectedRoundVal;
+                if (!matchesRound) return false;
+                if (item.project_name === 'ไม่มีข้อมูลโครงการ' || item.project_name === 'ไม่มีข้อมูลรอบ Portfolio') {
+                    return false;
+                }
+                return true;
+            });
+            
+            populateFilters();
+            filterData();
+        };
         let savedTargets = JSON.parse(localStorage.getItem('tcas70_targets') || '[]');
 
         // DOM elements
@@ -2185,16 +2205,8 @@
                 }
                 allData = await response.json();
                 
-                // Exclude items with no portfolio data
-                allData = allData.filter(item => item.project_name !== 'ไม่มีข้อมูลรอบ Portfolio');
-                
-                filteredData = [...allData];
-
-                // Populate Dropdowns
-                populateFilters();
-
-                // Render Cards
-                renderCards();
+                // Initialize default round (Round 1 Portfolio)
+                handleRoundChange();
                  
                 // Update saved targets badge count
                 updateBadgeCount();
@@ -2221,7 +2233,7 @@
         // Populate filter options dynamically
         function populateFilters() {
             // Get unique university names
-            const universities = [...new Set(allData.map(item => item.university_name))].sort();
+            const universities = [...new Set(activeRoundData.map(item => item.university_name))].sort();
             
             const tenGearsList = [];
             const rajabhatList = [];
@@ -2316,10 +2328,10 @@
             facultyFilter.innerHTML = '<option value="">เลือกคณะ (Faculties)</option>';
             
             const selectedUni = uniFilter.value;
-            let targetData = allData;
+            let targetData = activeRoundData;
             
             if (selectedUni) {
-                targetData = allData.filter(item => item.university_name === selectedUni);
+                targetData = activeRoundData.filter(item => item.university_name === selectedUni);
             }
             
             const faculties = [...new Set(targetData.map(item => item.faculty_name))].sort();
@@ -2478,16 +2490,33 @@
         function renderCards() {
             cardsGrid.innerHTML = '';
             
-            statsText.innerHTML = `พบทั้งหมด <span>${filteredData.length}</span> โครงการ ในรอบ Portfolio`;
+            const selectedRoundVal = parseInt(document.getElementById('roundFilter').value) || 1;
+            let roundLabel = 'Portfolio';
+            if (selectedRoundVal === 2) roundLabel = 'Quota';
+            if (selectedRoundVal === 3) roundLabel = 'Admission';
+            if (selectedRoundVal === 4) roundLabel = 'Direct Admission';
+
+            statsText.innerHTML = `พบทั้งหมด <span>${filteredData.length}</span> โครงการ ในรอบ ${roundLabel}`;
 
             if (filteredData.length === 0) {
-                cardsGrid.innerHTML = `
-                    <div class="no-results">
-                        <i class="fa-solid fa-face-frown"></i>
-                        <h4>ไม่พบข้อมูลการรับสมัคร</h4>
-                        <p>กรุณาลองเปลี่ยนคำค้นหา หรือเปลี่ยนตัวกรองมหาวิทยาลัย/คณะ</p>
-                    </div>
-                `;
+                const roundTotalCount = allData.filter(item => (item.round || 1) === selectedRoundVal && item.project_name !== 'ไม่มีข้อมูลโครงการ' && item.project_name !== 'ไม่มีข้อมูลรอบ Portfolio').length;
+                if (roundTotalCount === 0) {
+                    cardsGrid.innerHTML = `
+                        <div class="no-results" style="padding: 3rem 1.5rem; text-align: center; color: var(--text-muted);">
+                            <i class="fa-solid fa-hourglass-half" style="font-size: 3rem; color: var(--primary-light); margin-bottom: 1rem;"></i>
+                            <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.2rem;">ทปอ. ยังไม่เปิดเผยข้อมูลเกณฑ์ของรอบนี้ในระบบ</h4>
+                            <p style="font-size: 0.9rem; max-width: 400px; margin: 0 auto; line-height: 1.5;">ปัจจุบัน ข้อมูลรอบที่ ${selectedRoundVal} (${roundLabel}) ยังไม่ถูกนำขึ้นในระบบคลังของ ทปอ. ทางเพจจิตอาสาจะทำการเชื่อมโยงข้อมูลให้ทันทีที่ ทปอ. เปิดเผยข้อมูลรอบนี้ครับ</p>
+                        </div>
+                    `;
+                } else {
+                    cardsGrid.innerHTML = `
+                        <div class="no-results">
+                            <i class="fa-solid fa-face-frown"></i>
+                            <h4>ไม่พบข้อมูลการรับสมัคร</h4>
+                            <p>กรุณาลองเปลี่ยนคำค้นหา หรือเปลี่ยนตัวกรองมหาวิทยาลัย/คณะ</p>
+                        </div>
+                    `;
+                }
                 return;
             }
 
@@ -2536,16 +2565,31 @@
                                          combinedStr.includes('จบม.6') || 
                                          combinedStr.includes('ผู้ที่สำเร็จการศึกษาแล้ว');
                 
-                if (item.only_vocational === 1 || isGapYearAllowed) {
-                    specialBadgesHTML = `<div class="special-badges-row">`;
-                    if (item.only_vocational === 1) {
-                        specialBadgesHTML += `<span class="special-badge badge-vocational"><i class="fa-solid fa-briefcase"></i> ปวช. ยื่นได้</span>`;
-                    }
-                    if (isGapYearAllowed) {
-                        specialBadgesHTML += `<span class="special-badge badge-gapyear"><i class="fa-solid fa-rotate-left"></i> เด็กซิ่ว ยื่นได้</span>`;
-                    }
-                    specialBadgesHTML += `</div>`;
+                // Round badge styling
+                let roundBadgeColor = 'var(--primary-light)';
+                let roundBadgeLabel = 'รอบที่ 1 Portfolio';
+                const rNum = item.round || 1;
+                if (rNum === 2) {
+                    roundBadgeColor = '#818cf8';
+                    roundBadgeLabel = 'รอบที่ 2 Quota';
+                } else if (rNum === 3) {
+                    roundBadgeColor = '#ec4899';
+                    roundBadgeLabel = 'รอบที่ 3 Admission';
+                } else if (rNum === 4) {
+                    roundBadgeColor = '#f97316';
+                    roundBadgeLabel = 'รอบที่ 4 Direct';
                 }
+                
+                specialBadgesHTML = `<div class="special-badges-row">`;
+                specialBadgesHTML += `<span class="special-badge" style="background: rgba(99,102,241,0.1); color: ${roundBadgeColor}; border: 1px solid ${roundBadgeColor}33;"><i class="fa-solid fa-calendar-days"></i> ${roundBadgeLabel}</span>`;
+                
+                if (item.only_vocational === 1) {
+                    specialBadgesHTML += `<span class="special-badge badge-vocational"><i class="fa-solid fa-briefcase"></i> ปวช. ยื่นได้</span>`;
+                }
+                if (isGapYearAllowed) {
+                    specialBadgesHTML += `<span class="special-badge badge-gapyear"><i class="fa-solid fa-rotate-left"></i> เด็กซิ่ว ยื่นได้</span>`;
+                }
+                specialBadgesHTML += `</div>`;
                 
                 card.innerHTML = `
                     <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" id="bookmark-${item.program_id}-${item.project_id}" title="บันทึกคณะเป้าหมาย">
@@ -2871,7 +2915,7 @@
             const hasApt = hasAptitude.checked;
             const hasAL = hasALevel.checked;
 
-            filteredData = allData.filter(item => {
+            filteredData = activeRoundData.filter(item => {
                 // 1. Search Query filter
                 const matchesQuery = !query || 
                     item.university_name.toLowerCase().includes(query) ||
@@ -3033,7 +3077,7 @@
                         <img class="saved-item-logo" src="${logoUrl}" alt="logo" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
                         <div class="saved-item-details">
                             <h4>${item.program_name}</h4>
-                            <p>${item.university_name} | ${item.faculty_name}</p>
+                            <p>${item.university_name} | ${item.faculty_name} | <span style="color:var(--primary-light); font-weight:600;">รอบที่ ${item.round || 1}</span></p>
                             <p style="font-size: 0.75rem; color: var(--secondary-light); margin-top: 0.15rem;">${item.project_name} (รับ ${item.seats} คน)</p>
                         </div>
                     </div>
@@ -3087,6 +3131,7 @@
                         <div class="share-item-program">${item.program_name}</div>
                         <div class="share-item-project">${item.project_name}</div>
                         <div class="share-item-meta">
+                            <span class="share-meta-seats" style="background: rgba(99,102,241,0.15); color: var(--primary-light); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; border: 1px solid rgba(99,102,241,0.3);">รอบที่ ${item.round || 1}</span>
                             <span class="share-meta-seats">รับ: ${item.seats} คน</span>
                             <span class="share-meta-gpa">GPAX: ${gpaVal}</span>
                         </div>

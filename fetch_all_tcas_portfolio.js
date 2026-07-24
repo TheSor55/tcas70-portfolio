@@ -78,10 +78,12 @@ async function main() {
             try {
                 const rounds = await fetchRoundsWithRetry(program_id);
                 
-                // Filter Portfolio round (type starts with "1_")
+                // Filter active rounds (type starts with "1_", "2_", "3_", "4_")
                 // CRITICAL FIX: Filter rounds by major_id exactly to eliminate duplicate listings across majors
-                const portfolioRounds = rounds.filter(r => {
-                    if (!r.type || !r.type.startsWith("1_")) return false;
+                const validRounds = rounds.filter(r => {
+                    if (!r.type) return false;
+                    const startsWithRound = /^[1234]_/.test(r.type);
+                    if (!startsWithRound) return false;
                     const courseMajor = course.major_id || "";
                     const roundMajor = r.major_id || "";
                     return roundMajor === courseMajor;
@@ -101,8 +103,9 @@ async function main() {
                     fullProgramName = fullProgramName.replace("วศ.บ.วิศวกรรมเครื่องกลและการศึกษา (หลักสูตร 5 ปี)", "ค.อ.บ. วิศวกรรมเครื่องกลและการศึกษา (หลักสูตร 5 ปี)");
                 }
                 
-                if (portfolioRounds.length > 0) {
-                    for (const round of portfolioRounds) {
+                if (validRounds.length > 0) {
+                    for (const round of validRounds) {
+                        const roundNum = parseInt(round.type.charAt(0)) || 1;
                         results.push({
                             university_id: course.university_id,
                             university_name: cleanUniversityName,
@@ -124,11 +127,12 @@ async function main() {
                             grad_current: round.grad_current !== undefined ? round.grad_current : false,
                             major_id: course.major_id || '',
                             major_name: course.major_name_th || '',
-                            field_name: course.field_name_th || ''
+                            field_name: course.field_name_th || '',
+                            round: roundNum
                         });
                     }
                 } else {
-                    // Log program with no portfolio rounds
+                    // Log program with no active rounds
                     results.push({
                         university_id: course.university_id,
                         university_name: cleanUniversityName,
@@ -137,7 +141,7 @@ async function main() {
                         program_id: program_id,
                         program_name: fullProgramName,
                         project_id: 'N/A',
-                        project_name: 'ไม่มีข้อมูลรอบ Portfolio',
+                        project_name: 'ไม่มีข้อมูลโครงการ',
                         seats: 0,
                         criteria: '',
                         link: '',
@@ -150,7 +154,8 @@ async function main() {
                         grad_current: false,
                         major_id: course.major_id || '',
                         major_name: course.major_name_th || '',
-                        field_name: course.field_name_th || ''
+                        field_name: course.field_name_th || '',
+                        round: 1
                     });
                 }
             } catch (error) {
@@ -192,7 +197,7 @@ async function main() {
         'Program ID', 'Program/Major Name', 'Project ID', 'Project Name (Portfolio)', 
         'Seats Accepted', 'Criteria Details', 'URL',
         'Only Formal', 'Only International', 'Only Vocational', 'Only Non-Formal', 'Only GED',
-        'Admission Conditions', 'Major ID', 'Major Name', 'Field Name'
+        'Admission Conditions', 'Major ID', 'Major Name', 'Field Name', 'Round'
     ];
     
     const csvRows = [headers.join(',')];
@@ -217,7 +222,8 @@ async function main() {
             `"${r.condition.replace(/"/g, '""')}"`,
             `"${r.major_id}"`,
             `"${r.major_name.replace(/"/g, '""')}"`,
-            `"${r.field_name.replace(/"/g, '""')}"`
+            `"${r.field_name.replace(/"/g, '""')}"`,
+            r.round || 1
         ];
         csvRows.push(row.join(','));
     }
