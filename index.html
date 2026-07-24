@@ -1743,6 +1743,16 @@
                 right: 1.2rem !important;
             }
         }
+
+        /* Mobile Performance Optimization - Disable heavy backdrop-filter to prevent WebKit process termination */
+        @media (max-width: 768px) {
+            .card {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: #131927 !important; /* Solid fallback background matching dark theme */
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -1872,7 +1882,7 @@
         </div>
 
         <!-- Back to Top Button -->
-        <button id="backToTopBtn" title="กลับขึ้นด้านบน" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        <button id="backToTopBtn" title="กลับขึ้นด้านบน" onclick="scrollToTop()">
             <i class="fa-solid fa-chevron-up"></i>
         </button>
 
@@ -2346,7 +2356,7 @@
 
             // Detect iOS/low-memory devices and reduce render limit
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const displayLimit = isIOS ? 60 : 150;
+            const displayLimit = isIOS ? 30 : 150;
             const toDisplay = filteredData.slice(0, displayLimit);
             
             if (filteredData.length > displayLimit) {
@@ -2502,6 +2512,19 @@
                 content.style.maxHeight = content.scrollHeight + "px";
             } else {
                 content.style.maxHeight = "0px";
+            }
+        };
+
+
+        // Custom scroll to top function to prevent iOS WebKit performance crash
+        window.scrollToTop = function() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (isIOS) {
+                // Instant scroll on iOS to bypass animation repaint memory crash
+                window.scrollTo(0, 0);
+            } else {
+                // Smooth scroll on other platforms
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
 
