@@ -1753,6 +1753,80 @@
             }
         }
 
+
+        /* Custom Themes for exported Share Card */
+        #shareCardTemplate.theme-midnight {
+            background: linear-gradient(135deg, #0b0f19 0%, #1e1b4b 100%) !important;
+        }
+        #shareCardTemplate.theme-midnight .share-item-uni {
+            color: #818cf8 !important;
+        }
+        #shareCardTemplate.theme-midnight .share-header h1 {
+            background: linear-gradient(to right, #a5b4fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #shareCardTemplate.theme-pastel {
+            background: linear-gradient(135deg, #fdf2f8 0%, #f3e8ff 100%) !important;
+            color: #374151 !important;
+        }
+        #shareCardTemplate.theme-pastel .share-header h1 {
+            background: linear-gradient(to right, #db2777, #7c3aed) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+        }
+        #shareCardTemplate.theme-pastel .share-header p {
+            color: #6b7280 !important;
+        }
+        #shareCardTemplate.theme-pastel .share-item {
+            background: rgba(0, 0, 0, 0.02) !important;
+            border-color: rgba(0, 0, 0, 0.08) !important;
+        }
+        #shareCardTemplate.theme-pastel .share-item-program {
+            color: #111827 !important;
+        }
+        #shareCardTemplate.theme-pastel .share-item-uni {
+            color: #db2777 !important;
+        }
+        #shareCardTemplate.theme-pastel .share-item-project {
+            color: #4b5563 !important;
+        }
+        #shareCardTemplate.theme-pastel .share-footer {
+            border-top-color: rgba(0, 0, 0, 0.08) !important;
+            color: #4b5563 !important;
+        }
+        #shareCardTemplate.theme-pastel .share-footer-tag {
+            color: #6b7280 !important;
+        }
+        #shareCardTemplate.theme-pastel .share-qr-label {
+            color: #4b5563 !important;
+        }
+
+        #shareCardTemplate.theme-mint {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%) !important;
+        }
+        #shareCardTemplate.theme-mint .share-item-uni {
+            color: #34d399 !important;
+        }
+        #shareCardTemplate.theme-mint .share-header h1 {
+            background: linear-gradient(to right, #6ee7b7, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #shareCardTemplate.theme-slate {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+        }
+        #shareCardTemplate.theme-slate .share-item-uni {
+            color: #94a3b8 !important;
+        }
+        #shareCardTemplate.theme-slate .share-header h1 {
+            background: linear-gradient(to right, #f1f5f9, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
     </style>
 </head>
 <body>
@@ -1935,6 +2009,16 @@
             <div class="modal-body" id="modalBody">
                 <!-- Saved items list dynamically populated -->
             </div>
+            <!-- Theme selector row -->
+            <div class="theme-selector-container" style="padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 0.5rem;">
+                <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-align: left;">เลือกธีมสีการ์ดสรุป:</label>
+                <div class="theme-options" style="display: flex; gap: 0.75rem;">
+                    <button class="theme-opt-btn active" onclick="selectCardTheme('midnight')" data-theme="midnight" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(99,102,241,0.5); background: rgba(99,102,241,0.15); color: #fff; cursor: pointer; font-family: inherit; transition: all 0.2s;">🌌 Midnight</button>
+                    <button class="theme-opt-btn" onclick="selectCardTheme('pastel')" data-theme="pastel" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🌸 Pastel</button>
+                    <button class="theme-opt-btn" onclick="selectCardTheme('mint')" data-theme="mint" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🍵 Mint</button>
+                    <button class="theme-opt-btn" onclick="selectCardTheme('slate')" data-theme="slate" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🖤 Slate</button>
+                </div>
+            </div>
             <div class="modal-footer">
                 <button class="modal-btn btn-secondary" onclick="toggleTargetsModal()">ปิดหน้าต่าง</button>
                 <button class="modal-btn btn-primary" onclick="exportShareCard()"><i class="fa-solid fa-share-nodes"></i> สร้างรูปภาพสรุปเกณฑ์ (แชร์ต่อ LINE)</button>
@@ -1959,7 +2043,12 @@
                     <span class="online-indicator"><span class="dot"></span> Online (Free tier)</span>
                 </div>
             </div>
-            <button class="chat-close-btn" onclick="toggleChatWindow()"><i class="fa-solid fa-xmark"></i></button>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button onclick="clearChatHistory()" title="ล้างประวัติการคุย" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.78rem; display: flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); font-family: inherit; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='rgba(255,255,255,0.1)'">
+                    <i class="fa-solid fa-trash-can"></i> ล้างแชต
+                </button>
+                <button class="chat-close-btn" onclick="toggleChatWindow()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
         </div>
         <div class="chat-body" id="chatBody">
             <div class="message bot-message">
@@ -2042,7 +2131,7 @@
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 // Fetch the generated JSON file
-                const response = await fetch('tcas_portfolio_admission_details.json');
+                const response = await fetch('data_chunks/global_index.json');
                 if (!response.ok) {
                     throw new Error('ไม่สามารถโหลดไฟล์ข้อมูล tcas_portfolio_admission_details.json ได้');
                 }
@@ -2466,27 +2555,31 @@
                         </div>
 
                         <!-- Collapsible Conditions detail -->
-                        ${item.condition ? `
+                        ${item.has_condition ? `
                         <div class="criteria-accordion" style="margin-bottom: 0.5rem;">
-                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'cond-${index}')">
+                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'cond', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})">
                                 <span><i class="fa-solid fa-circle-info"></i> เงื่อนไขการรับสมัคร (Conditions)</span>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
                             <div class="criteria-content" id="crit-content-cond-${index}">
-                                <div class="criteria-inner" style="border-top: 1px solid rgba(255, 255, 255, 0.05); color: #f8fafc; background-color: rgba(99, 102, 241, 0.03);">${item.condition}</div>
+                                <div class="criteria-inner" style="border-top: 1px solid rgba(255, 255, 255, 0.05); color: #f8fafc; background-color: rgba(99, 102, 241, 0.03);">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+                                </div>
                             </div>
                         </div>
                         ` : ''}
                         
                         <!-- Collapsible Criteria detail -->
-                        ${item.criteria ? `
+                        ${item.has_criteria ? `
                         <div class="criteria-accordion">
-                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'crit-${index}')">
+                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'crit', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})">
                                 <span><i class="fa-solid fa-list-check"></i> เกณฑ์พอร์ตโฟลิโอแบบเต็ม (Criteria)</span>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
                             <div class="criteria-content" id="crit-content-crit-${index}">
-                                <div class="criteria-inner">${item.criteria}</div>
+                                <div class="criteria-inner">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+                                </div>
                             </div>
                         </div>
                         ` : ''}
@@ -2503,15 +2596,42 @@
             });
         }
 
-        // Toggle collapsible criteria section
-        window.toggleCriteria = function(button, index) {
-            const content = document.getElementById(`crit-content-${index}`);
+        // Toggle collapsible criteria section with dynamic chunk loading
+        let cachedUniDetails = {};
+        window.toggleCriteria = async function(button, type, uniId, programId, projectId, index) {
+            const contentContainer = document.getElementById(`crit-content-${type}-${index}`);
             button.classList.toggle('active');
             
             if (button.classList.contains('active')) {
-                content.style.maxHeight = content.scrollHeight + "px";
+                const innerDiv = contentContainer.querySelector('.criteria-inner');
+                
+                // If details are not loaded for this university, fetch the chunk
+                if (!cachedUniDetails[uniId]) {
+                    try {
+                        const res = await fetch(`data_chunks/uni_${uniId}.json`);
+                        if (!res.ok) throw new Error("Failed to load chunk");
+                        cachedUniDetails[uniId] = await res.json();
+                    } catch (err) {
+                        console.error("Error loading chunk:", err);
+                        innerDiv.innerHTML = '<span style="color:var(--accent);"><i class="fa-solid fa-triangle-exclamation"></i> ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง</span>';
+                        return;
+                    }
+                }
+                
+                // Find matching item in cached array
+                const items = cachedUniDetails[uniId];
+                const match = items.find(item => item.program_id === programId && item.project_id === projectId);
+                if (match) {
+                    const text = type === 'cond' ? match.condition : match.criteria;
+                    innerDiv.innerHTML = text || 'ไม่มีรายละเอียดเงื่อนไข';
+                } else {
+                    innerDiv.innerHTML = 'ไม่พบรายละเอียดในระบบ';
+                }
+                
+                // Force layout update for heights
+                contentContainer.style.maxHeight = contentContainer.scrollHeight + "px";
             } else {
-                content.style.maxHeight = "0px";
+                contentContainer.style.maxHeight = "0px";
             }
         };
 
@@ -2870,6 +2990,26 @@
             });
         }
 
+        let selectedTheme = 'midnight';
+        window.selectCardTheme = function(theme) {
+            selectedTheme = theme;
+            
+            // Update active button UI
+            document.querySelectorAll('.theme-opt-btn').forEach(btn => {
+                if (btn.getAttribute('data-theme') === theme) {
+                    btn.classList.add('active');
+                    btn.style.border = '1px solid rgba(99,102,241,0.8)';
+                    btn.style.background = 'rgba(99,102,241,0.25)';
+                    btn.style.color = '#fff';
+                } else {
+                    btn.classList.remove('active');
+                    btn.style.border = '1px solid rgba(255,255,255,0.1)';
+                    btn.style.background = 'rgba(255,255,255,0.05)';
+                    btn.style.color = 'var(--text-muted)';
+                }
+            });
+        };
+
         window.exportShareCard = function() {
             if (savedTargets.length === 0) {
                 alert('กรุณาบันทึกเป้าหมายอย่างน้อย 1 รายการก่อนสร้างการ์ดแชร์ครับ');
@@ -2906,6 +3046,9 @@
             btn.disabled = true;
 
             const template = document.getElementById('shareCardTemplate');
+            // Remove previous theme classes and apply selected one
+            template.className = '';
+            template.classList.add('theme-' + selectedTheme);
             
             setTimeout(() => {
                 html2canvas(template, {
@@ -3124,6 +3267,7 @@
             input.value = '';
             appendMessageToUI('user', text);
             chatHistory.push({ sender: 'user', text: text });
+            saveChatHistory();
             
             const chatBody = document.getElementById('chatBody');
             const loadingDiv = document.createElement('div');
@@ -3153,6 +3297,7 @@
                     chatHistory.shift();
                     chatHistory.shift();
                 }
+                saveChatHistory();
             } catch (err) {
                 console.error("Chatbot Error:", err);
                 const placeholder = document.getElementById('chatLoadingPlaceholder');
@@ -3166,6 +3311,58 @@
                 appendMessageToUI('bot', errorText);
             }
         };
+
+        // Save and Load history in LocalStorage helper functions
+        function saveChatHistory() {
+            try {
+                localStorage.setItem('tcas70_chat_history', JSON.stringify(chatHistory));
+            } catch (e) {
+                console.error("Failed to save chat history:", e);
+            }
+        }
+
+        window.clearChatHistory = function() {
+            if (confirm("ต้องการล้างประวัติการสนทนากับพี่ AI ใช่ไหมครับ?")) {
+                localStorage.removeItem('tcas70_chat_history');
+                chatHistory = [];
+                const chatBody = document.getElementById('chatBody');
+                chatBody.innerHTML = `
+                    <div class="message bot-message">
+                        สวัสดีครับน้องๆ และผู้ปกครอง! ยินดีต้อนรับสู่ระบบแนะนำเกณฑ์ TCAS70 รอบ Portfolio ครับ 🎓 พี่ AI สามารถช่วยน้องๆ เช็กเกณฑ์คณะต่างๆ ตรวจสอบเงื่อนไขเด็กซิ่ว/ปวช/สายวิทย์-คอม หรืออธิบายความหมายของวุฒิการศึกษาได้เลยครับ! น้องๆ อยากถามอะไรพิมพ์มาได้เลย หรือเลือกดูคำถามแนะนำด้านล่างนี้ได้ครับ 👇
+                    </div>
+                    <div class="quick-prompts">
+                        <button onclick="sendQuickPrompt('วิศวะ จุฬา ต้องใช้ GPAX เท่าไหร่?')">วิศวะ จุฬา ใช้ GPAX เท่าไหร่?</button>
+                        <button onclick="sendQuickPrompt('วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?')">วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?</button>
+                        <button onclick="sendQuickPrompt('ครุศาสตร์ เครื่องกล 5 ปี จบมาได้กี่วุฒิ?')">ครุฯ เครื่องกล 5 ปี ได้กี่วุฒิ?</button>
+                        <button onclick="sendQuickPrompt('เด็กซิ่วยื่นรอบพอร์ตได้ไหม?')">เด็กซิ่วยื่นรอบพอร์ตได้ไหม?</button>
+                    </div>
+                `;
+            }
+        };
+
+        // Restore chat history on load
+        function restoreChatHistory() {
+            try {
+                const saved = localStorage.getItem('tcas70_chat_history');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && parsed.length > 0) {
+                        chatHistory = parsed;
+                        const chatBody = document.getElementById('chatBody');
+                        chatBody.innerHTML = '';
+                        chatHistory.forEach(msg => {
+                            appendMessageToUI(msg.sender, msg.text);
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to restore chat history:", e);
+            }
+        }
+        
+        // Trigger restore after DOM loads
+        setTimeout(restoreChatHistory, 100);
+        
 
     </script>
 </body>

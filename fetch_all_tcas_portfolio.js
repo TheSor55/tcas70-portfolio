@@ -224,6 +224,38 @@ async function main() {
     
     fs.writeFileSync(outCsvPath, csvRows.join('\n'), 'utf8');
     console.log(`Saved CSV output to: ${outCsvPath}`);
+
+    // Automatic Database Splitting into data_chunks
+    console.log("Automatically splitting database into chunks...");
+    const destDir = path.join(baseDir, 'data_chunks');
+    if (!fs.existsSync(destDir)) {
+        fs.mkdirSync(destDir, { recursive: true });
+    }
+
+    const groups = {};
+    results.forEach(item => {
+        const uniId = item.university_id;
+        if (!groups[uniId]) {
+            groups[uniId] = [];
+        }
+        groups[uniId].push(item);
+    });
+
+    for (const [uniId, items] of Object.entries(groups)) {
+        const uniPath = path.join(destDir, `uni_${uniId}.json`);
+        fs.writeFileSync(uniPath, JSON.stringify(items), 'utf8');
+    }
+
+    const globalIndex = results.map(item => {
+        const copy = { ...item };
+        copy.has_criteria = !!item.criteria;
+        copy.has_condition = !!item.condition;
+        delete copy.criteria;
+        delete copy.condition;
+        return copy;
+    });
+    fs.writeFileSync(path.join(destDir, 'global_index.json'), JSON.stringify(globalIndex), 'utf8');
+    console.log("Database chunks split successfully during scrape pipeline!");
 }
 
 main().catch(console.error);
