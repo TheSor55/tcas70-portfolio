@@ -1745,6 +1745,22 @@
 
         /* Mobile Performance Optimization - Disable heavy backdrop-filter and box-shadows to prevent WebKit process termination */
         @media (max-width: 768px) {
+            /* 1 & 2. Completely hide glow blobs and disable mix-blend-mode / blur filters on mobile */
+            .glow-blob {
+                display: none !important;
+                filter: none !important;
+                -webkit-filter: none !important;
+                mix-blend-mode: normal !important;
+            }
+            
+            /* 3. Solid dark background for header instead of backdrop-filter */
+            header {
+                background: #0b0f19 !important; /* Solid dark color matching the app theme */
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                box-shadow: none !important;
+            }
+
             .card {
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
@@ -1754,11 +1770,23 @@
             .card:hover {
                 transform: none !important; /* Disable hover movement on mobile to save layout repaints */
             }
+            
             /* Level 3 overrides: disable backdrop blur on fixed components on mobile sizes */
             .controls-panel, .chat-window, .modal-overlay, .modal-container, .chat-toggle-btn {
+                background: #0f172a !important; /* Solid dark background fallback */
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
                 box-shadow: none !important;
+            }
+        }
+
+        /* 4. CSS Media Query for prefers-reduced-motion to disable transitions and animations */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
             }
         }
 
@@ -2641,7 +2669,7 @@
                         <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
                     </button>
                     <div class="card-header">
-                        <img class="uni-logo" src="${logoUrl}" alt="${item.university_name} Logo" loading="lazy" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
+                        <img class="uni-logo" src="${logoUrl}" alt="${item.university_name} Logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
                         <div class="card-header-text">
                             <h3>${item.university_name}</h3>
                             <p>${item.faculty_name}</p>
@@ -3118,7 +3146,7 @@
                 div.className = 'saved-item';
                 div.innerHTML = `
                     <div class="saved-item-info">
-                        <img class="saved-item-logo" src="${logoUrl}" alt="logo" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
+                        <img class="saved-item-logo" src="${logoUrl}" alt="logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
                         <div class="saved-item-details">
                             <h4>${item.program_name}</h4>
                             <p>${item.university_name} | ${item.faculty_name} | <span style="color:var(--primary-light); font-weight:600;">รอบที่ ${item.round || 1}</span></p>
@@ -3169,7 +3197,7 @@
                 const div = document.createElement('div');
                 div.className = 'share-item';
                 div.innerHTML = `
-                    <img class="share-item-logo" src="${logoUrl}" alt="logo" onerror="this.src='https://placehold.co/100x100/ffffff/000000?text=${item.university_name.substring(0, 2)}'">
+                    <img class="share-item-logo" src="${logoUrl}" alt="logo" decoding="async" onerror="this.src='https://placehold.co/100x100/ffffff/000000?text=${item.university_name.substring(0, 2)}'">
                     <div class="share-item-info">
                         <div class="share-item-uni">${item.university_name}</div>
                         <div class="share-item-program">${item.program_name}</div>
