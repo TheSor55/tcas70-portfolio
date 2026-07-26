@@ -1754,6 +1754,12 @@
             .card:hover {
                 transform: none !important; /* Disable hover movement on mobile to save layout repaints */
             }
+            /* Level 3 overrides: disable backdrop blur on fixed components on mobile sizes */
+            .controls-panel, .chat-window, .modal-overlay, .modal-container, .chat-toggle-btn {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                box-shadow: none !important;
+            }
         }
 
 
@@ -2191,6 +2197,15 @@
         let filteredData = [];
         let activeRoundData = [];
 
+        // Debounce helper to prevent rapid keypress re-render spikes
+        function debounce(func, delay) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
         window.handleRoundChange = function() {
             const roundFilter = document.getElementById('roundFilter');
             const selectedRoundVal = parseInt(roundFilter.value) || 1;
@@ -2626,7 +2641,7 @@
                         <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
                     </button>
                     <div class="card-header">
-                        <img class="uni-logo" src="${logoUrl}" alt="${item.university_name} Logo" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
+                        <img class="uni-logo" src="${logoUrl}" alt="${item.university_name} Logo" loading="lazy" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
                         <div class="card-header-text">
                             <h3>${item.university_name}</h3>
                             <p>${item.faculty_name}</p>
@@ -2869,7 +2884,7 @@
             document.getElementById('degreeInfoModal').classList.remove('active');
         };
 
-        // Helper to check study plan eligibility dynamically
+        // Helper to check study plan eligibility dynamically (optimized to avoid string scanning on load)
         function isPlanEligible(item, plan) {
             if (!plan) return true;
             
@@ -2883,25 +2898,11 @@
             
             if (plan === 'sci_math') return true; // Science-Math can apply to all
             
+            const requiresSciMath = item.requires_sci_math;
+            const noLimitText = item.no_limit_text;
+
             const faculty = (item.faculty_name || '').toLowerCase();
             const program = (item.program_name || '').toLowerCase();
-            const project = (item.project_name || '').toLowerCase();
-            const cond = (item.condition || '').toLowerCase();
-            const crit = (item.criteria || '').toLowerCase();
-            const combined = faculty + ' ' + program + ' ' + project + ' ' + cond + ' ' + crit;
-            
-            const requiresSciMathText = combined.includes('วิทยาศาสตร์-คณิตศาสตร์') || 
-                                        combined.includes('วิทย์-คณิต') || 
-                                        combined.includes('วิทยาศาสตร์ และ คณิตศาสตร์') || 
-                                        combined.includes('วิทย์คณิต') ||
-                                        combined.includes('คณิตศาสตร์-วิทยาศาสตร์') ||
-                                        combined.includes('วิทยาศาสตร์และคณิตศาสตร์') ||
-                                        combined.includes('แผนการเรียนวิทยาศาสตร์');
-                                        
-            const noLimitText = combined.includes('ไม่จำกัดแผน') || 
-                                combined.includes('ไม่กำหนดแผน') || 
-                                combined.includes('ทุกแผนการเรียน') || 
-                                combined.includes('ทุกกลุ่มสาระ');
 
             const isEngineering = faculty.includes('วิศวกรรม');
             const isScience = faculty.includes('วิทยาศาสตร์') && !faculty.includes('วิทยาศาสตร์การกีฬา') && !faculty.includes('วิทยาศาสตร์สังคม') && !faculty.includes('วิทยพัฒน์');
@@ -2953,15 +2954,13 @@
             const hasAL = hasALevel.checked;
 
             filteredData = activeRoundData.filter(item => {
-                // 1. Search Query filter
+                // 1. Search Query filter (pre-computed items matching round)
                 const matchesQuery = !query || 
                     item.university_name.toLowerCase().includes(query) ||
                     item.faculty_name.toLowerCase().includes(query) ||
                     item.program_name.toLowerCase().includes(query) ||
                     (item.field_name && item.field_name.toLowerCase().includes(query)) ||
-                    (item.major_name && item.major_name.toLowerCase().includes(query)) ||
-                    (item.criteria && item.criteria.toLowerCase().includes(query)) ||
-                    (item.condition && item.condition.toLowerCase().includes(query));
+                    (item.major_name && item.major_name.toLowerCase().includes(query));
 
                 // 2. University filter
                 const matchesUni = !selectedUni || item.university_name === selectedUni;
@@ -2969,28 +2968,26 @@
                 // 3. Faculty filter
                 const matchesFaculty = !selectedFaculty || item.faculty_name === selectedFaculty;
 
-                // 4. Personalized filters: GPAX
+                // 4. Personalized filters: GPAX (uses pre-computed min_gpax)
                 if (!isNaN(gpaxFilterVal)) {
-                    const minGpa = extractGPAX((item.criteria || '') + ' ' + (item.condition || ''));
-                    if (minGpa && gpaxFilterVal < parseFloat(minGpa)) {
+                    if (item.min_gpax && gpaxFilterVal < item.min_gpax) {
                         return false;
                     }
                 }
 
-                // 5. Personalized filters: Study Plan
+                // 5. Personalized filters: Study Plan (uses pre-computed requires_sci_math / no_limit_text)
                 if (plan && !isPlanEligible(item, plan)) {
                     return false;
                 }
 
-                // 6. Personalized filters: Exams
-                const text = ((item.criteria || '') + ' ' + (item.condition || '')).toLowerCase();
-                if (!hasEng && (text.includes('ielts') || text.includes('toefl') || text.includes('toeic'))) {
+                // 6. Personalized filters: Exams (uses pre-computed exam requirements)
+                if (!hasEng && item.req_english) {
                     return false;
                 }
-                if (!hasApt && (text.includes('tgat') || text.includes('tpat'))) {
+                if (!hasApt && item.req_aptitude) {
                     return false;
                 }
-                if (!hasAL && (text.includes('a-level') || text.includes('alevel') || text.includes('วิชาสามัญ'))) {
+                if (!hasAL && item.req_alevel) {
                     return false;
                 }
 
@@ -3001,7 +2998,7 @@
         }
 
         // Event listeners
-        searchInput.addEventListener('input', filterData);
+        searchInput.addEventListener('input', debounce(filterData, 200));
         btnSearchSubmit.addEventListener('click', filterData);
         
         uniFilter.addEventListener('change', () => {
@@ -3012,7 +3009,7 @@
         facultyFilter.addEventListener('change', filterData);
 
         // Personalized Filter Event Listeners
-        studentGPAX.addEventListener('input', filterData);
+        studentGPAX.addEventListener('input', debounce(filterData, 200));
         studentPlan.addEventListener('change', filterData);
         hasEnglish.addEventListener('change', filterData);
         hasAptitude.addEventListener('change', filterData);
@@ -3035,14 +3032,24 @@
         document.getElementById('panelBody').style.display = 'none';
         document.getElementById('panelChevron').style.transform = 'rotate(-90deg)';
 
-        // Back-to-Top button visibility on scroll
+        // Back-to-Top button visibility on scroll (throttled & state cached to prevent layout thrashing)
         const backToTopBtn = document.getElementById('backToTopBtn');
+        let isBtnVisible = false;
+        let scrollTimeout;
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 400) {
-                backToTopBtn.classList.add('visible');
-            } else {
-                backToTopBtn.classList.remove('visible');
-            }
+            if (scrollTimeout) return;
+            scrollTimeout = setTimeout(() => {
+                scrollTimeout = null;
+                const shouldBeVisible = window.scrollY > 400;
+                if (shouldBeVisible !== isBtnVisible) {
+                    isBtnVisible = shouldBeVisible;
+                    if (isBtnVisible) {
+                        backToTopBtn.classList.add('visible');
+                    } else {
+                        backToTopBtn.classList.remove('visible');
+                    }
+                }
+            }, 150); // limit check to at most once per 150ms
         }, { passive: true });
 
         // Targets Bookmarking system functions

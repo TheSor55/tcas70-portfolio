@@ -4,6 +4,67 @@ const path = require('path');
 // Helper sleep function
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+function extractGPAX(criteria) {
+    if (!criteria) return null;
+    const text = criteria.replace(/\s+/g, ' ').toLowerCase();
+    
+    // Pattern 1: gpax ไม่ต่ำกว่า 3.00
+    const match1 = text.match(/gpax[^\d]*?ไม่ต่ำกว่า[^\d]*?(\d\.\d{2})/);
+    if (match1) return parseFloat(match1[1]);
+    
+    // Pattern 2: gpax >= 3.00
+    const match2 = text.match(/gpax\s*?[>=]{1,2}\s*?(\d\.\d{2})/);
+    if (match2) return parseFloat(match2[1]);
+
+    // Pattern 3: gpax ... 3.00
+    const match3 = text.match(/gpax[^\d]*?(\d\.\d{2})/);
+    if (match3) return parseFloat(match3[1]);
+    
+    // Pattern 4: เกรดเฉลี่ยสะสม... 3.00
+    const match4 = text.match(/เฉลี่ยสะสม[^\d]*?(\d\.\d{2})/);
+    if (match4) return parseFloat(match4[1]);
+    
+    // Pattern 5: เกรดเฉลี่ย... 3.00
+    const match5 = text.match(/เกรดเฉลี่ย[^\d]*?(\d\.\d{2})/);
+    if (match5) return parseFloat(match5[1]);
+
+    // Pattern 6: ไม่ต่ำกว่า 3.00
+    const match6 = text.match(/ไม่ต่ำกว่า[^\d]*?(\d\.\d{2})/);
+    if (match6) return parseFloat(match6[1]);
+
+    return null;
+}
+
+function extractFlags(combinedText) {
+    const text = combinedText.toLowerCase();
+    
+    const requiresSciMath = text.includes('วิทยาศาสตร์-คณิตศาสตร์') || 
+                            text.includes('วิทย์-คณิต') || 
+                            text.includes('วิทยาศาสตร์ และ คณิตศาสตร์') || 
+                            text.includes('วิทย์คณิต') ||
+                            text.includes('คณิตศาสตร์-วิทยาศาสตร์') ||
+                            text.includes('วิทยาศาสตร์และคณิตศาสตร์') ||
+                            text.includes('แผนการเรียนวิทยาศาสตร์');
+                            
+    const noLimitText = text.includes('ไม่จำกัดแผน') || 
+                        text.includes('ไม่กำหนดแผน') || 
+                        text.includes('ทุกแผนการเรียน') || 
+                        text.includes('ทุกกลุ่มสาระ');
+                        
+    const reqEnglish = text.includes('ielts') || text.includes('toefl') || text.includes('toeic');
+    const reqAptitude = text.includes('tgat') || text.includes('tpat');
+    const reqALevel = text.includes('a-level') || text.includes('alevel') || text.includes('วิชาสามัญ');
+
+    return {
+        requires_sci_math: requiresSciMath,
+        no_limit_text: noLimitText,
+        req_english: reqEnglish,
+        req_aptitude: reqAptitude,
+        req_alevel: reqALevel
+    };
+}
+
+
 async function main() {
     console.log("=========================================");
     console.log("TCAS Portfolio Data Extractor Starting...");
@@ -106,6 +167,13 @@ async function main() {
                 if (validRounds.length > 0) {
                     for (const round of validRounds) {
                         const roundNum = parseInt(round.type.charAt(0)) || 1;
+                        const critText = (round.folio && round.folio.criteria) ? round.folio.criteria.replace(/\r?\n/g, ' ') : '';
+                        const condText = round.condition ? round.condition.replace(/\r?\n/g, ' ') : '';
+                        const minGpa = extractGPAX(critText + ' ' + condText);
+                        
+                        const combinedInfo = (cleanUniversityName + ' ' + faculty_name_th + ' ' + fullProgramName + ' ' + (round.project_name_th || '') + ' ' + condText + ' ' + critText).toLowerCase();
+                        const flags = extractFlags(combinedInfo);
+
                         results.push({
                             university_id: course.university_id,
                             university_name: cleanUniversityName,
@@ -116,19 +184,25 @@ async function main() {
                             project_id: round.project_id || 'N/A',
                             project_name: round.project_name_th || 'โครงการทั่วไป / โครงการหลัก',
                             seats: round.receive_student_number || 0,
-                            criteria: (round.folio && round.folio.criteria) ? round.folio.criteria.replace(/\r?\n/g, ' ') : '',
+                            criteria: critText,
                             link: round.link || '',
                             only_formal: round.only_formal || 2,
                             only_international: round.only_international || 2,
                             only_vocational: round.only_vocational || 2,
                             only_non_formal: round.only_non_formal || 2,
                             only_ged: round.only_ged || 2,
-                            condition: round.condition ? round.condition.replace(/\r?\n/g, ' ') : '',
+                            condition: condText,
                             grad_current: round.grad_current !== undefined ? round.grad_current : false,
                             major_id: course.major_id || '',
                             major_name: course.major_name_th || '',
                             field_name: course.field_name_th || '',
-                            round: roundNum
+                            round: roundNum,
+                            min_gpax: minGpa,
+                            requires_sci_math: flags.requires_sci_math,
+                            no_limit_text: flags.no_limit_text,
+                            req_english: flags.req_english,
+                            req_aptitude: flags.req_aptitude,
+                            req_alevel: flags.req_alevel
                         });
                     }
                 } else {
@@ -155,7 +229,13 @@ async function main() {
                         major_id: course.major_id || '',
                         major_name: course.major_name_th || '',
                         field_name: course.field_name_th || '',
-                        round: 1
+                        round: 1,
+                        min_gpax: null,
+                        requires_sci_math: false,
+                        no_limit_text: false,
+                        req_english: false,
+                        req_aptitude: false,
+                        req_alevel: false
                     });
                 }
             } catch (error) {
