@@ -1975,6 +1975,10 @@
                         <input type="checkbox" id="hasALevel">
                         <span>มีคะแนน A-Level</span>
                     </label>
+                    <label class="checkbox-label" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.6rem; margin-top: 0.6rem; color: #c084fc; display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="onlyMedical">
+                        <span style="font-weight: 600;"><i class="fa-solid fa-stethoscope"></i> แสดงเฉพาะกลุ่ม กสพท (แพทย์/ทันตะ/เภสัช/สัตวแพทย์)</span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -2980,6 +2984,7 @@
             const hasEng = hasEnglish.checked;
             const hasApt = hasAptitude.checked;
             const hasAL = hasALevel.checked;
+            const onlyMed = document.getElementById('onlyMedical').checked;
 
             filteredData = activeRoundData.filter(item => {
                 // 1. Search Query filter (pre-computed items matching round)
@@ -3019,6 +3024,19 @@
                     return false;
                 }
 
+                // 7. COTMES (กสพท) filter check
+                if (onlyMed) {
+                    const fac = (item.faculty_name || '').toLowerCase();
+                    const prog = (item.program_name || '').toLowerCase();
+                    const isMedicalField = fac.includes('แพทยศาสตร์') || fac.includes('ทันตแพทย์') || 
+                                           fac.includes('เภสัชศาสตร์') || fac.includes('สัตวแพทย์') ||
+                                           prog.includes('แพทยศาสตร') || prog.includes('ทันตแพทยศาสตร') ||
+                                           prog.includes('เภสัชศาสตร') || prog.includes('สัตวแพทยศาสตร');
+                    if (!isMedicalField) {
+                        return false;
+                    }
+                }
+
                 return matchesQuery && matchesUni && matchesFaculty;
             });
 
@@ -3042,6 +3060,7 @@
         hasEnglish.addEventListener('change', filterData);
         hasAptitude.addEventListener('change', filterData);
         hasALevel.addEventListener('change', filterData);
+        document.getElementById('onlyMedical').addEventListener('change', filterData);
 
         // Collapsible Personalized panel helper
         window.togglePersonalizedPanel = function() {
