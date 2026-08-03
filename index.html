@@ -2771,7 +2771,7 @@
                     </div>
                     
                     <div class="card-footer">
-                        <a href="${item.link || 'https://www.mytcas.com'}" target="_blank" class="btn-apply">
+                        <a href="${item.link ? (item.link.trim().startsWith('http') ? item.link.trim() : 'https://' + item.link.trim()) : 'https://www.mytcas.com'}" target="_blank" class="btn-apply">
                             <span>รายละเอียดเพิ่มเติม</span>
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </a>
