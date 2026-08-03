@@ -1975,10 +1975,7 @@
                         <input type="checkbox" id="hasALevel">
                         <span>มีคะแนน A-Level</span>
                     </label>
-                    <label class="checkbox-label" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.6rem; margin-top: 0.6rem; color: #c084fc; display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="onlyMedical">
-                        <span style="font-weight: 600;"><i class="fa-solid fa-stethoscope"></i> แสดงเฉพาะกลุ่ม กสพท (แพทย์/ทันตะ/เภสัช/สัตวแพทย์)</span>
-                    </label>
+
                 </div>
             </div>
         </div>
@@ -2373,6 +2370,14 @@
             // Clear existing options except placeholder
             uniFilter.innerHTML = '<option value="">เลือกมหาวิทยาลัย (Universities)</option>';
             
+            // Add COTMES as a special custom option right after the placeholder
+            const cotmesOpt = document.createElement('option');
+            cotmesOpt.value = 'COTMES';
+            cotmesOpt.textContent = '🩺 กลุ่ม กสพท (แพทย์/ทันตะ/เภสัช/สัตวแพทย์)';
+            cotmesOpt.style.fontWeight = 'bold';
+            cotmesOpt.style.color = '#c084fc';
+            uniFilter.appendChild(cotmesOpt);
+            
             // Helper function to add a group
             function addGroup(label, list) {
                 if (list.length > 0) {
@@ -2408,7 +2413,18 @@
             let targetData = activeRoundData;
             
             if (selectedUni) {
-                targetData = activeRoundData.filter(item => item.university_name === selectedUni);
+                if (selectedUni === 'COTMES') {
+                    targetData = activeRoundData.filter(item => {
+                        const fac = (item.faculty_name || '').toLowerCase();
+                        const prog = (item.program_name || '').toLowerCase();
+                        return fac.includes('แพทยศาสตร์') || fac.includes('ทันตแพทย์') || 
+                               fac.includes('เภสัชศาสตร์') || fac.includes('สัตวแพทย์') ||
+                               prog.includes('แพทยศาสตร') || prog.includes('ทันตแพทยศาสตร') ||
+                               prog.includes('เภสัชศาสตร') || prog.includes('สัตวแพทยศาสตร');
+                    });
+                } else {
+                    targetData = activeRoundData.filter(item => item.university_name === selectedUni);
+                }
             }
             
             const faculties = [...new Set(targetData.map(item => item.faculty_name))].sort();
@@ -2984,7 +3000,7 @@
             const hasEng = hasEnglish.checked;
             const hasApt = hasAptitude.checked;
             const hasAL = hasALevel.checked;
-            const onlyMed = document.getElementById('onlyMedical').checked;
+
 
             filteredData = activeRoundData.filter(item => {
                 // 1. Search Query filter (pre-computed items matching round)
@@ -2996,7 +3012,19 @@
                     (item.major_name && item.major_name.toLowerCase().includes(query));
 
                 // 2. University filter
-                const matchesUni = !selectedUni || item.university_name === selectedUni;
+                let matchesUni = false;
+                if (!selectedUni) {
+                    matchesUni = true;
+                } else if (selectedUni === 'COTMES') {
+                    const fac = (item.faculty_name || '').toLowerCase();
+                    const prog = (item.program_name || '').toLowerCase();
+                    matchesUni = fac.includes('แพทยศาสตร์') || fac.includes('ทันตแพทย์') || 
+                                 fac.includes('เภสัชศาสตร์') || fac.includes('สัตวแพทย์') ||
+                                 prog.includes('แพทยศาสตร') || prog.includes('ทันตแพทยศาสตร') ||
+                                 prog.includes('เภสัชศาสตร') || prog.includes('สัตวแพทยศาสตร');
+                } else {
+                    matchesUni = item.university_name === selectedUni;
+                }
 
                 // 3. Faculty filter
                 const matchesFaculty = !selectedFaculty || item.faculty_name === selectedFaculty;
@@ -3024,18 +3052,7 @@
                     return false;
                 }
 
-                // 7. COTMES (กสพท) filter check
-                if (onlyMed) {
-                    const fac = (item.faculty_name || '').toLowerCase();
-                    const prog = (item.program_name || '').toLowerCase();
-                    const isMedicalField = fac.includes('แพทยศาสตร์') || fac.includes('ทันตแพทย์') || 
-                                           fac.includes('เภสัชศาสตร์') || fac.includes('สัตวแพทย์') ||
-                                           prog.includes('แพทยศาสตร') || prog.includes('ทันตแพทยศาสตร') ||
-                                           prog.includes('เภสัชศาสตร') || prog.includes('สัตวแพทยศาสตร');
-                    if (!isMedicalField) {
-                        return false;
-                    }
-                }
+
 
                 return matchesQuery && matchesUni && matchesFaculty;
             });
@@ -3060,7 +3077,7 @@
         hasEnglish.addEventListener('change', filterData);
         hasAptitude.addEventListener('change', filterData);
         hasALevel.addEventListener('change', filterData);
-        document.getElementById('onlyMedical').addEventListener('change', filterData);
+
 
         // Collapsible Personalized panel helper
         window.togglePersonalizedPanel = function() {
