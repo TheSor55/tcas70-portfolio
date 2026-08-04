@@ -77,3 +77,71 @@
   git switch main
   git branch -D improvement/safe-ux-update
   ```
+
+---
+
+## PHASE 2 — UI Copy Adjustments (Applied: 2026-08-04 17:28:00)
+
+### Changes Made:
+1. **Heading Section Title**:
+   * Old: `<h2 class="section-title">Featured Programs</h2>`
+   * New: `<h2 class="section-title">ผลการค้นหาโครงการ</h2>`
+2. **Search Input Placeholder**:
+   * Old: `placeholder="Search universities, programs, or criteria..."`
+   * New: `placeholder="ค้นหามหาวิทยาลัย คณะ สาขา โครงการ หรือคุณสมบัติ"`
+3. **Search Hint**:
+   * Added: `<div class="search-hint">ตัวอย่าง: วิศวกรรมคอมพิวเตอร์, เด็กซิ่ว, GPAX 3.00, Portfolio</div>`
+4. **Faculty Dropdown Label (HTML & JS)**:
+   * Old: `<option value="">เลือกคณะ (Faculties)</option>`
+   * New: `<option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>`
+5. **System Disclaimer (Footer)**:
+   * Added: `<div class="system-disclaimer"><i class="fa-solid fa-circle-exclamation"></i><span>ข้อมูลในระบบเป็นข้อมูลสรุปเพื่อช่วยค้นหา ผู้สมัครควรตรวจสอบประกาศฉบับทางการของมหาวิทยาลัยก่อนสมัครทุกครั้ง</span></div>`
+
+### CSS Added:
+```css
+        .search-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: -0.25rem;
+            margin-bottom: 0.75rem;
+            padding-left: 0.5rem;
+            text-align: left;
+        }
+        .system-disclaimer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1rem;
+            margin: 1.5rem 0 1rem 0;
+            text-align: center;
+            line-height: 1.4;
+        }
+        .system-disclaimer i {
+            color: var(--primary-light);
+            font-size: 0.95rem;
+        }
+        @media (max-width: 768px) {
+            .system-disclaimer {
+                font-size: 0.75rem;
+                padding: 0.6rem 0.85rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 4px;
+            }
+        }
+```
+
+### Phase 2 Test Results:
+* **Functional Tests**: Passed. The UI text updates render beautifully. Search queries correctly fetch and filter results dynamically. Dropdowns behave identically. Favorite, Dashboard, About, and AI Chat functions continue to work flawlessly. No layout shifts or blocked buttons.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 2 specifically**:
+  ```bash
+  git revert <PHASE_2_COMMIT_HASH>
+  ```

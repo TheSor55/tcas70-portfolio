@@ -1864,6 +1864,42 @@
             -webkit-text-fill-color: transparent;
         }
 
+        .search-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: -0.25rem;
+            margin-bottom: 0.75rem;
+            padding-left: 0.5rem;
+            text-align: left;
+        }
+        .system-disclaimer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1rem;
+            margin: 1.5rem 0 1rem 0;
+            text-align: center;
+            line-height: 1.4;
+        }
+        .system-disclaimer i {
+            color: var(--primary-light);
+            font-size: 0.95rem;
+        }
+        @media (max-width: 768px) {
+            .system-disclaimer {
+                font-size: 0.75rem;
+                padding: 0.6rem 0.85rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 4px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1903,7 +1939,11 @@
             <!-- Search Row -->
             <div class="search-row">
                 <div class="search-wrapper">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Search universities, programs, or criteria...">
+                    <input type="text" id="searchInput" class="search-input" placeholder="ค้นหามหาวิทยาลัย คณะ สาขา โครงการ หรือคุณสมบัติ">
+                <!-- Search Hint -->
+                <div class="search-hint">
+                    ตัวอย่าง: วิศวกรรมคอมพิวเตอร์, เด็กซิ่ว, GPAX 3.00, Portfolio
+                </div>
                 </div>
                 <button class="btn-search" id="btnSearchSubmit"><i class="fa-solid fa-magnifying-glass"></i></button>
                 <button class="btn-location"><i class="fa-solid fa-location-dot"></i></button>
@@ -1921,7 +1961,7 @@
                 <!-- Faculty Dropdown (derived dynamically) -->
                 <div class="select-wrapper">
                     <select id="facultyFilter">
-                        <option value="">เลือกคณะ (Faculties)</option>
+                        <option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>
                     </select>
                 </div>
 
@@ -1981,7 +2021,7 @@
         </div>
 
         <!-- Featured Programs Section Title -->
-        <h2 class="section-title">Featured Programs</h2>
+        <h2 class="section-title">ผลการค้นหาโครงการ</h2>
 
         <!-- Stats Bar -->
         <div class="stats-bar">
@@ -1999,6 +2039,12 @@
         <button id="backToTopBtn" title="กลับขึ้นด้านบน" onclick="scrollToTop()">
             <i class="fa-solid fa-chevron-up"></i>
         </button>
+
+        <!-- System Disclaimer Safeguard -->
+        <div class="system-disclaimer">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>ข้อมูลในระบบเป็นข้อมูลสรุปเพื่อช่วยค้นหา ผู้สมัครควรตรวจสอบประกาศฉบับทางการของมหาวิทยาลัยก่อนสมัครทุกครั้ง</span>
+        </div>
 
         <!-- Mockup Footer Divider -->
         <div class="divider"></div>
@@ -2407,7 +2453,7 @@
 
         // Update Faculty dropdown based on selected university
         function updateFacultyDropdown() {
-            facultyFilter.innerHTML = '<option value="">เลือกคณะ (Faculties)</option>';
+            facultyFilter.innerHTML = '<option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>';
             
             const selectedUni = uniFilter.value;
             let targetData = activeRoundData;
