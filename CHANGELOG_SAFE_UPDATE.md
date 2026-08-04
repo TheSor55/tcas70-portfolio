@@ -299,3 +299,27 @@
   ```bash
   git revert <PHASE_3C_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 3C.1 — Requirement Accordion UI Polish (Applied: 2026-08-04 18:14:00)
+
+### Changes Made:
+1. **Status Color Optimization (CSS)**:
+   * Changed `.status-not-used` ("ไม่ใช้") from rose red (`#f43f5e`) to neutral slate gray (`#64748b`) to prevent users from mistaking it for a system error.
+   * Changed `.status-unknown` ("ไม่พบข้อมูล") to a high-contrast light slate color (`#cbd5e1`) and increased opacity to `0.9` for improved readability in Dark Theme.
+2. **Responsive Grid Layout inside Accordion (CSS)**:
+   * Styled `.secondary-requirements-box .req-list` with CSS Grid: `display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;` for 2 columns on wide viewports (Desktop).
+   * Styled `@media (max-width: 768px)` media query to stack items into 1 column (`grid-template-columns: 1fr;`) on mobile screens, wrapping text naturally.
+   * Increased spacing between label and status: `.secondary-requirements-box .req-list li strong { margin-left: 0.25rem; }`.
+3. **Class Refinement in window.toggleCriteria**:
+   * Removed inline styles from the prepended requirements box HTML string inside `window.toggleCriteria()`. Replaced with semantic CSS classes: `.secondary-requirements-box` and `.secondary-requirements-title`.
+
+### Phase 3C.1 Test Results:
+* **Functional & Visual Tests**: Passed. The grid layout looks extremely clean and premium. The neutral Slate Gray color for "ไม่ใช้" does not suggest errors. The high-contrast slate color for "ไม่พบข้อมูล" is clearly readable in Dark Theme. Mobile wrapping matches viewport widths naturally.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 3C.1 specifically**:
+  ```bash
+  git revert <PHASE_3C1_COMMIT_HASH>
+  ```

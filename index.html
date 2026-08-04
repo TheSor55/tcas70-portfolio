@@ -1910,7 +1910,7 @@
                 gap: 4px;
             }
         }
-        /* Dynamic Requirement status classes for Phase 3B */
+        /* Dynamic Requirement status classes for Phase 3B/3C.1 */
         .req-list li.status-required {
             color: #10b981; /* Emerald Green */
         }
@@ -1918,11 +1918,11 @@
             color: #10b981;
         }
         .req-list li.status-not-used {
-            color: #f43f5e; /* Rose Red */
+            color: #64748b; /* Neutral Slate Gray - Changed in Phase 3C.1 */
             opacity: 0.85;
         }
         .req-list li.status-not-used i {
-            color: #f43f5e;
+            color: #64748b;
         }
         .req-list li.status-warning {
             color: #fbbf24; /* Amber Gold */
@@ -1931,11 +1931,56 @@
             color: #fbbf24;
         }
         .req-list li.status-unknown {
-            color: #94a3b8; /* Muted Slate */
-            opacity: 0.75;
+            color: #cbd5e1; /* Increased Contrast Light Slate - Changed in Phase 3C.1 */
+            opacity: 0.9;
         }
         .req-list li.status-unknown i {
-            color: #64748b;
+            color: #94a3b8;
+        }
+
+        /* Requirement layout styling inside collapsible accordion - Phase 3C.1 */
+        .secondary-requirements-box {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .secondary-requirements-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .secondary-requirements-box .req-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.65rem;
+            margin-bottom: 0;
+            list-style: none;
+            padding: 0;
+        }
+        .secondary-requirements-box .req-list li {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .secondary-requirements-box .req-list li strong {
+            margin-left: 0.25rem;
+        }
+        @media (max-width: 768px) {
+            .secondary-requirements-box .req-list {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            .secondary-requirements-box .req-list li {
+                white-space: normal; /* Wrap text naturally on mobile */
+            }
         }
     </style>
 </head>
@@ -2944,11 +2989,11 @@
                         itemsList.push(getRequirementStatusHTML('SOP (เรียงความ)', null, hasSopKeyword));
                         
                         secondaryReqsHTML = `
-                            <div class="secondary-requirements-box" style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-                                <div style="font-size: 0.8rem; font-weight: 600; color: var(--primary-light); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 4px;">
+                            <div class="secondary-requirements-box">
+                                <div class="secondary-requirements-title">
                                     <i class="fa-solid fa-clipboard-list"></i> เกณฑ์คุณสมบัติเพิ่มเติม:
                                 </div>
-                                <ul class="req-list" style="margin-bottom: 0;">${itemsList.join('')}</ul>
+                                <ul class="req-list">${itemsList.join('')}</ul>
                             </div>
                         `;
                     }
