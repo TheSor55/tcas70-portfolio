@@ -401,7 +401,19 @@
    * Attached delegation event listener on `#activeFilterChips` click to capture clicks on target filter keys, and bound `#clearAllFiltersBtn`.
 
 ### Phase 6 Test Results:
-* **Functional & Visual Tests**: Passed. The summary chips display and wrap cleanly. Removing individual chips resets the corresponding input element and filters results correctly. Clicking "ล้างตัวกรองทั้งหมด" clears all inputs while preserving the active round. Stale dropdown selections, invalid cascading states, and recursive calls are completely prevented.
+* **Functional & Visual Tests**: Passed. Officially verified in browser with all 12 test cases succeeding:
+  1. Active Filter Section correctly hides when there are no active filters.
+  2. Search Chip displays and can be deleted to reset the search input.
+  3. University Chip displays the correct university name (or group translation).
+  4. COTMES selection displays as "กลุ่ม กสพท.".
+  5. Faculty Chip can be deleted while preserving the university selection.
+  6. GPAX Chip displays correctly as "x.xx ขึ้นไป".
+  7. Study Plan, English, TGAT/TPAT, and A-Level Chips display and reset correctly.
+  8. Deleting the University Chip triggers cascading logic to reset invalid faculties.
+  9. "ล้างตัวกรองทั้งหมด" resets all optional filters while keeping the active round selection.
+  10. Responsive layout wraps chips cleanly on mobile viewports without horizontal scroll.
+  11. Browser console does not record any errors during filter manipulation.
+  12. Network tab shows no unexpected or extra HTTP requests.
 * **Console Errors**: 0 console errors / 0 warnings.
 * **Network Errors**: 0 network errors.
 * **Rollback Command for Phase 6 specifically**:
