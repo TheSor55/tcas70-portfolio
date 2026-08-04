@@ -367,7 +367,14 @@
    * Updated `uniFilter` change listener to delegate dropdown rebuilds and query clears directly to `updateFacultyDropdown()`, preventing redundant state resets and double-filtering triggers.
 
 ### Phase 5B Test Results:
-* **Functional & Visual Tests**: Passed. Selection state preservation works seamlessly. Selecting a university restricts the faculty dropdown options cleanly. The scope hint displays correct text (e.g. "แสดงเฉพาะคณะ / หน่วยงานของ จุฬาลงกรณ์มหาวิทยาลัย") or hides when clear. Stale selection and invalid cross-university combinations are 100% prevented.
+* **Functional & Visual Tests**: Passed. Officially verified in browser with all 7 test cases succeeding:
+  1. University-Faculty Cascading behaves correctly.
+  2. Faculty value is reset dynamically only when it does not exist under the newly selected university.
+  3. Clearing the university filter restores all faculties immediately.
+  4. COTMES special group logic matches target medical faculties properly.
+  5. Switching active rounds does not produce stale dropdown selections.
+  6. Other filters (GPAX, Round, Study Plan, A-Level) remain fully preserved during cascading changes.
+  7. Searchable dropdown keypress filtering and cleaning function securely.
 * **Console Errors**: 0 console errors / 0 warnings.
 * **Network Errors**: 0 network errors.
 * **Rollback Command for Phase 5B specifically**:
