@@ -381,3 +381,30 @@
   ```bash
   git revert <PHASE_5_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 6 — Active Filter Chips and Safe Reset Controls (Applied: 2026-08-04 19:00:00)
+
+### Changes Made:
+1. **Active Filters Summary Section (HTML & CSS)**:
+   * Added `#activeFiltersSection` layout block beneath the collapsible personalized filter panel.
+   * Styled CSS classes (`.active-filters-section`, `.active-filters-header`, `.active-filters-title`, `.active-filter-chips`, `.active-filter-chip`, `.active-filter-chip-label`, `.active-filter-chip-remove`, `.clear-all-filters-btn`) ensuring responsive wrapping, high-contrast readability in Dark Theme, clear button targets, focus visible states, and layout safety.
+2. **State Synchronizer Pipeline (JS)**:
+   * Created pure read function `getActiveFiltersFromUI()` mapping valid non-default filter settings (Search input, University selection, Faculty selection, GPAX query, Study Plan dropdown, English, Aptitude, and A-Level checklist flags) without editing state or firing events. COTMES selection is mapped cleanly to `'กลุ่ม กสพท.'`.
+   * Created safe rendering function `renderActiveFilterChips()` rebuilding `<button>` elements with `textContent` protection to defend against XSS, showing or hiding the container dynamically.
+3. **Safe Centralized Clear & Reset (JS)**:
+   * Defined `clearSingleFilter(key)` to clear a target filter in the DOM and trigger the centralized filtering workflow.
+   * Defined `clearAllOptionalFilters()` to reset all optional parameters while correctly keeping the selected round (`roundFilter`).
+4. **Integration & Delegation (JS)**:
+   * Injected `renderActiveFilterChips()` at the end of the centralized `filterData()` function to synchronize chips inside the single-pass filter pipeline without loops.
+   * Attached delegation event listener on `#activeFilterChips` click to capture clicks on target filter keys, and bound `#clearAllFiltersBtn`.
+
+### Phase 6 Test Results:
+* **Functional & Visual Tests**: Passed. The summary chips display and wrap cleanly. Removing individual chips resets the corresponding input element and filters results correctly. Clicking "ล้างตัวกรองทั้งหมด" clears all inputs while preserving the active round. Stale dropdown selections, invalid cascading states, and recursive calls are completely prevented.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 6 specifically**:
+  ```bash
+  git revert <PHASE_6_COMMIT_HASH>
+  ```

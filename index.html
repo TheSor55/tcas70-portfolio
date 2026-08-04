@@ -357,6 +357,96 @@
             min-height: 1.1rem;
             display: none;
         }
+        
+        /* Active Filters & Reset Container Styling - Phase 6 */
+        .active-filters-section {
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 0.85rem 1.1rem;
+            margin-top: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        .active-filters-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .active-filters-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .active-filters-title i {
+            color: var(--primary-light);
+            font-size: 0.8rem;
+        }
+        .clear-all-filters-btn {
+            background: none;
+            border: none;
+            color: var(--primary-light);
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .clear-all-filters-btn:hover {
+            color: #818cf8;
+            background-color: rgba(99, 102, 241, 0.08);
+        }
+        .clear-all-filters-btn:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+        }
+        .active-filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .active-filter-chip {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 6px;
+            padding: 0.35rem 0.6rem;
+            font-size: 0.8rem;
+            color: #fff;
+            gap: 0.4rem;
+        }
+        .active-filter-chip-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .active-filter-chip-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.1rem;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            width: 18px;
+            height: 18px;
+        }
+        .active-filter-chip-remove:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .active-filter-chip-remove:focus-visible {
+            outline: 2px solid var(--primary-light);
+        }
 
         @media (max-width: 768px) {
             .filters-row {
@@ -2144,6 +2234,20 @@
             </div>
         </div>
 
+        <!-- Active Filters Summarizer Section - Phase 6 -->
+        <div id="activeFiltersSection" class="active-filters-section" hidden>
+            <div class="active-filters-header">
+                <span class="active-filters-title">
+                    <i class="fa-solid fa-filter" aria-hidden="true"></i>
+                    ตัวกรองที่ใช้งาน
+                </span>
+                <button type="button" id="clearAllFiltersBtn" class="clear-all-filters-btn">
+                    ล้างตัวกรองทั้งหมด
+                </button>
+            </div>
+            <div id="activeFilterChips" class="active-filter-chips" aria-live="polite"></div>
+        </div>
+
         <!-- Featured Programs Section Title -->
         <h2 class="section-title">ผลการค้นหาโครงการ</h2>
 
@@ -2402,6 +2506,230 @@
         const specialUniOptions = [
             { value: 'COTMES', text: '🩺 กลุ่ม กสพท (แพทย์/ทันตะ/เภสัช/สัตวแพทย์)' }
         ];
+
+        // Read all active filters from UI controls without mutation (Phase 6)
+        function getActiveFiltersFromUI() {
+            const filters = [];
+
+            // 1. searchInput
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && searchInput.value.trim() !== "") {
+                filters.push({
+                    key: 'search',
+                    label: 'ค้นหา',
+                    displayText: searchInput.value.trim()
+                });
+            }
+
+            // 2. uniFilter
+            const uniFilter = document.getElementById('uniFilter');
+            if (uniFilter && uniFilter.value !== "") {
+                let displayText = uniFilter.value;
+                if (uniFilter.value === 'COTMES') {
+                    displayText = 'กลุ่ม กสพท.';
+                } else {
+                    const opt = uniFilter.options[uniFilter.selectedIndex];
+                    if (opt) {
+                        displayText = opt.textContent.trim();
+                    }
+                }
+                filters.push({
+                    key: 'university',
+                    label: 'มหาวิทยาลัย',
+                    displayText: displayText
+                });
+            }
+
+            // 3. facultyFilter
+            const facultyFilter = document.getElementById('facultyFilter');
+            if (facultyFilter && facultyFilter.value !== "") {
+                const opt = facultyFilter.options[facultyFilter.selectedIndex];
+                const displayText = opt ? opt.textContent.trim() : facultyFilter.value;
+                filters.push({
+                    key: 'faculty',
+                    label: 'คณะ / หน่วยงาน',
+                    displayText: displayText
+                });
+            }
+
+            // 4. studentGPAX
+            const studentGPAX = document.getElementById('studentGPAX');
+            if (studentGPAX && studentGPAX.value.trim() !== "" && !isNaN(parseFloat(studentGPAX.value))) {
+                filters.push({
+                    key: 'gpax',
+                    label: 'GPAX',
+                    displayText: studentGPAX.value.trim() + ' ขึ้นไป'
+                });
+            }
+
+            // 5. studentPlan
+            const studentPlan = document.getElementById('studentPlan');
+            if (studentPlan && studentPlan.value !== "") {
+                const opt = studentPlan.options[studentPlan.selectedIndex];
+                const displayText = opt ? opt.textContent.trim() : studentPlan.value;
+                filters.push({
+                    key: 'plan',
+                    label: 'วุฒิ / แผนการเรียน',
+                    displayText: displayText
+                });
+            }
+
+            // 6. hasEnglish
+            const hasEnglish = document.getElementById('hasEnglish');
+            if (hasEnglish && hasEnglish.checked) {
+                filters.push({
+                    key: 'english',
+                    label: 'ภาษาอังกฤษ',
+                    displayText: 'ต้องใช้'
+                });
+            }
+
+            // 7. hasAptitude
+            const hasAptitude = document.getElementById('hasAptitude');
+            if (hasAptitude && hasAptitude.checked) {
+                filters.push({
+                    key: 'aptitude',
+                    label: 'TGAT / TPAT',
+                    displayText: 'ต้องใช้'
+                });
+            }
+
+            // 8. hasALevel
+            const hasALevel = document.getElementById('hasALevel');
+            if (hasALevel && hasALevel.checked) {
+                filters.push({
+                    key: 'alevel',
+                    label: 'A-Level',
+                    displayText: 'ต้องใช้'
+                });
+            }
+
+            return filters;
+        }
+
+        // Render Active Filter Chips (Phase 6)
+        function renderActiveFilterChips() {
+            const containerSection = document.getElementById('activeFiltersSection');
+            const chipsWrapper = document.getElementById('activeFilterChips');
+            if (!containerSection || !chipsWrapper) return;
+
+            const filters = getActiveFiltersFromUI();
+
+            if (filters.length === 0) {
+                containerSection.hidden = true;
+                chipsWrapper.innerHTML = '';
+                return;
+            }
+
+            containerSection.hidden = false;
+            chipsWrapper.innerHTML = '';
+
+            filters.forEach(filter => {
+                const chip = document.createElement('div');
+                chip.className = 'active-filter-chip';
+
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'active-filter-chip-label';
+                labelSpan.textContent = filter.label + ':';
+                chip.appendChild(labelSpan);
+
+                const valueText = document.createTextNode(' ' + filter.displayText);
+                chip.appendChild(valueText);
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'active-filter-chip-remove';
+                removeBtn.dataset.filterKey = filter.key;
+                removeBtn.setAttribute('aria-label', 'ลบตัวกรอง ' + filter.label + ' ' + filter.displayText);
+                
+                const removeIcon = document.createElement('i');
+                removeIcon.className = 'fa-solid fa-xmark';
+                removeIcon.setAttribute('aria-hidden', 'true');
+                
+                removeBtn.appendChild(removeIcon);
+                chip.appendChild(removeBtn);
+
+                chipsWrapper.appendChild(chip);
+            });
+        }
+
+        // Clear single filter control and trigger re-filter (Phase 6)
+        function clearSingleFilter(key) {
+            const searchInput = document.getElementById('searchInput');
+            const uniFilter = document.getElementById('uniFilter');
+            const uniSearch = document.getElementById('uniSearch');
+            const facultyFilter = document.getElementById('facultyFilter');
+            const facultySearch = document.getElementById('facultySearch');
+            const studentGPAX = document.getElementById('studentGPAX');
+            const studentPlan = document.getElementById('studentPlan');
+            const hasEnglish = document.getElementById('hasEnglish');
+            const hasAptitude = document.getElementById('hasAptitude');
+            const hasALevel = document.getElementById('hasALevel');
+
+            switch (key) {
+                case 'search':
+                    if (searchInput) searchInput.value = '';
+                    break;
+                case 'university':
+                    if (uniFilter) {
+                        uniFilter.value = '';
+                        updateFacultyDropdown();
+                    }
+                    break;
+                case 'faculty':
+                    if (facultyFilter) facultyFilter.value = '';
+                    if (facultySearch) facultySearch.value = '';
+                    break;
+                case 'gpax':
+                    if (studentGPAX) studentGPAX.value = '';
+                    break;
+                case 'plan':
+                    if (studentPlan) studentPlan.value = '';
+                    break;
+                case 'english':
+                    if (hasEnglish) hasEnglish.checked = false;
+                    break;
+                case 'aptitude':
+                    if (hasAptitude) hasAptitude.checked = false;
+                    break;
+                case 'alevel':
+                    if (hasALevel) hasALevel.checked = false;
+                    break;
+            }
+
+            filterData();
+        }
+
+        // Clear all optional filters while preserving active round (Phase 6)
+        function clearAllOptionalFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const uniSearch = document.getElementById('uniSearch');
+            const facultySearch = document.getElementById('facultySearch');
+            const uniFilter = document.getElementById('uniFilter');
+            const facultyFilter = document.getElementById('facultyFilter');
+            const studentGPAX = document.getElementById('studentGPAX');
+            const studentPlan = document.getElementById('studentPlan');
+            const hasEnglish = document.getElementById('hasEnglish');
+            const hasAptitude = document.getElementById('hasAptitude');
+            const hasALevel = document.getElementById('hasALevel');
+
+            if (searchInput) searchInput.value = '';
+            if (uniSearch) uniSearch.value = '';
+            if (facultySearch) facultySearch.value = '';
+
+            if (uniFilter) uniFilter.value = '';
+            if (facultyFilter) facultyFilter.value = '';
+
+            if (studentGPAX) studentGPAX.value = '';
+            if (studentPlan) studentPlan.value = '';
+
+            if (hasEnglish) hasEnglish.checked = false;
+            if (hasAptitude) hasAptitude.checked = false;
+            if (hasALevel) hasALevel.checked = false;
+
+            updateFacultyDropdown();
+            filterData();
+        }
 
         // Update Faculty Scope UI Hint below faculty dropdown (Phase 5B)
         function updateFacultyScopeHint() {
@@ -3407,6 +3735,11 @@
             });
 
             renderCards();
+            
+            // Sync active filter chips UI representation (Phase 6)
+            if (typeof renderActiveFilterChips === 'function') {
+                renderActiveFilterChips();
+            }
         }
 
         // Event listeners
@@ -3427,6 +3760,20 @@
         hasAptitude.addEventListener('change', filterData);
         hasALevel.addEventListener('change', filterData);
 
+
+        // Active Filter Chips Event Delegation & Clear All (Phase 6)
+        const activeFilterChips = document.getElementById('activeFilterChips');
+        if (activeFilterChips) {
+            activeFilterChips.addEventListener('click', event => {
+                const button = event.target.closest('[data-filter-key]');
+                if (!button) return;
+                clearSingleFilter(button.dataset.filterKey);
+            });
+        }
+        const clearAllFiltersBtn = document.getElementById('clearAllFiltersBtn');
+        if (clearAllFiltersBtn) {
+            clearAllFiltersBtn.addEventListener('click', clearAllOptionalFilters);
+        }
 
         // Collapsible Personalized panel helper
         window.togglePersonalizedPanel = function() {
