@@ -524,6 +524,53 @@
                 text-align: right;
             }
         }
+        
+        /* Progressive Results Loading Styling - Phase 8 */
+        .load-more-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.65rem;
+            margin: 1.5rem 0 2rem 0;
+            width: 100%;
+        }
+        .visible-results-status {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .load-more-results-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background-color: var(--primary-light);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 42px;
+            padding: 0.65rem 1.25rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+        .load-more-results-btn:hover {
+            background-color: #818cf8;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+        }
+        .load-more-results-btn:active {
+            transform: translateY(0);
+        }
+        .load-more-results-btn:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+        .load-more-results-btn i {
+            font-size: 0.8rem;
+        }
 
         @media (max-width: 768px) {
             .filters-row {
@@ -2360,6 +2407,15 @@
             <!-- Dynamic cards will go here -->
         </div>
 
+        <!-- Load More Section - Phase 8 -->
+        <div id="loadMoreSection" class="load-more-section" hidden>
+            <div id="visibleResultsStatus" class="visible-results-status" aria-live="polite"></div>
+            <button type="button" id="loadMoreResultsBtn" class="load-more-results-btn" aria-controls="cardsGrid">
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                แสดงผลเพิ่มเติม
+            </button>
+        </div>
+
         <!-- Back to Top Button -->
         <button id="backToTopBtn" title="กลับขึ้นด้านบน" onclick="scrollToTop()">
             <i class="fa-solid fa-chevron-up"></i>
@@ -2826,6 +2882,23 @@
 
             updateFacultyDropdown();
             filterData();
+        }
+
+        // Progressive Results Loading State (Phase 8)
+        let currentVisibleCount = 0;
+
+        function getInitialDisplayLimit() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            return isIOS ? 20 : 150;
+        }
+
+        function getDisplayBatchSize() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            return isIOS ? 20 : 100;
+        }
+
+        function resetVisibleResults() {
+            currentVisibleCount = getInitialDisplayLimit();
         }
 
         // Numeric normalization helper (Phase 7)
@@ -3465,14 +3538,11 @@
             const sortMode = sortSelect ? sortSelect.value : 'default';
             const sortedResults = getSortedResults(filteredData, sortMode);
 
-            // Detect iOS/low-memory devices and reduce render limit
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const displayLimit = isIOS ? 20 : 150;
-            const toDisplay = sortedResults.slice(0, displayLimit);
-            
-            if (filteredData.length > displayLimit) {
-                statsText.innerHTML += ` (แสดงผลเฉพาะ ${displayLimit} รายการแรก กรุณาค้นหาแบบเจาะจงเพิ่มเติม)`;
+            // Fetch current visible count for progressive results loading (Phase 8)
+            if (currentVisibleCount === 0) {
+                resetVisibleResults();
             }
+            const toDisplay = sortedResults.slice(0, currentVisibleCount);
 
             // Dynamic glow classes matching mockup card color highlights
             const glowClasses = ['glow-cyan', 'glow-purple', 'glow-pink', 'glow-orange', 'glow-blue', 'glow-teal'];
@@ -3637,6 +3707,28 @@
                 `;
                 cardsGrid.appendChild(card);
             });
+
+            // Progressive Results Loading UI update (Phase 8)
+            const loadMoreSection = document.getElementById('loadMoreSection');
+            const visibleStatus = document.getElementById('visibleResultsStatus');
+            const loadMoreBtn = document.getElementById('loadMoreResultsBtn');
+
+            if (loadMoreSection && visibleStatus && loadMoreBtn) {
+                const total = filteredData.length;
+                const shown = toDisplay.length;
+
+                if (total === 0 || shown === 0) {
+                    loadMoreSection.hidden = true;
+                } else if (shown >= total) {
+                    loadMoreSection.hidden = false;
+                    loadMoreBtn.style.display = 'none';
+                    visibleStatus.textContent = `แสดงครบทั้งหมด ${total} โครงการ`;
+                } else {
+                    loadMoreSection.hidden = false;
+                    loadMoreBtn.style.display = 'inline-flex';
+                    visibleStatus.textContent = `แสดง ${shown} จาก ${total} โครงการ`;
+                }
+            }
         }
 
         // Toggle collapsible criteria section with dynamic chunk loading
@@ -3882,6 +3974,7 @@
 
         // Filter Logic
         function filterData() {
+            resetVisibleResults(); // Reset progressive loading visible count when filters change (Phase 8)
             const query = searchInput.value.toLowerCase().trim();
             const selectedUni = uniFilter.value;
             const selectedFaculty = facultyFilter.value;
@@ -3990,10 +4083,24 @@
             clearAllFiltersBtn.addEventListener('click', clearAllOptionalFilters);
         }
 
+        // Progressive Results Load More Event (Phase 8)
+        const loadMoreResultsBtn = document.getElementById('loadMoreResultsBtn');
+        if (loadMoreResultsBtn) {
+            loadMoreResultsBtn.addEventListener('click', () => {
+                const batchSize = getDisplayBatchSize();
+                currentVisibleCount = Math.min(
+                    currentVisibleCount + batchSize,
+                    filteredData.length
+                );
+                renderCards();
+            });
+        }
+
         // Sorting Dropdown Change Listener (Phase 7)
         const sortResults = document.getElementById('sortResults');
         if (sortResults) {
             sortResults.addEventListener('change', () => {
+                resetVisibleResults(); // Reset progressive loading visible count when sorting changes (Phase 8)
                 renderCards();
                 updateSortStatus();
             });
