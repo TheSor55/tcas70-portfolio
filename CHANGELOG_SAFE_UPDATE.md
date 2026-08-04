@@ -145,3 +145,52 @@
   ```bash
   git revert <PHASE_2_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 3A — seats-badge prominence reduction (Applied: 2026-08-04 17:53:00)
+
+### Changes Made:
+1. **seats-badge Styling in CSS**:
+   * Removed full-width gradient container, heavy borders, shadow, and large font (`1rem`).
+   * Replaced with a modern, compact inline-flex badge (`align-self: flex-start; width: auto;`).
+   * Subtle transparent primary background (`rgba(99, 102, 241, 0.08)`), thin border (`1px solid rgba(99, 102, 241, 0.2)`), compact padding (`0.35rem 0.75rem`), and smaller font (`0.85rem`).
+2. **seats-badge in HTML Template (renderCards)**:
+   * Added `fa-user-group` FontAwesome icon.
+   * Standardized text representation: `รับจำนวน <span class="seats-count">${item.seats}</span> คน` (preserving value insertion via `item.seats` and the `.seats-count` target class).
+
+### CSS Added/Modified:
+```css
+        .seats-badge {
+            align-self: flex-start;
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--primary-light);
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+        .seats-badge i {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        .seats-count {
+            font-weight: 700;
+            color: #fff;
+        }
+```
+
+### Phase 3A Test Results:
+* **Functional Tests**: Passed. Correctly displays seat counts (e.g. 60, 200, 2) inside the new compact inline badge structure. Height of card is slightly reduced, improving the dashboard's information density. Filters, searches, bookmark system, modals, and chatbot operate securely without regressions.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 3A specifically**:
+  ```bash
+  git revert <PHASE_3A_COMMIT_HASH>
+  ```

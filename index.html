@@ -505,19 +505,29 @@
             gap: 1.25rem;
         }
 
-        /* Centered Intake Badge matching mockup image */
+        /* Compact Intake Badge style for Phase 3A */
         .seats-badge {
-            align-self: center;
-            width: 100%;
-            text-align: center;
-            background: linear-gradient(135deg, #00b4d8 0%, #7209b7 100%);
-            padding: 0.65rem 1.5rem;
-            border-radius: 50px;
+            align-self: flex-start;
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--primary-light);
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+        .seats-badge i {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        .seats-count {
             font-weight: 700;
             color: #fff;
-            font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.25);
-            letter-spacing: 0.5px;
         }
 
         /* Two-column requirements checklist */
@@ -2757,7 +2767,7 @@
 
                         <!-- Intake Badge Centered -->
                         <div class="seats-badge">
-                            จำนวนรับ: <span class="seats-count">&nbsp;${item.seats}&nbsp;</span> คน
+                            <i class="fa-solid fa-user-group"></i> รับจำนวน <span class="seats-count">${item.seats}</span> คน
                         </div>
                         
                         <!-- Checklist Requirements dynamically parsed -->
