@@ -473,3 +473,54 @@
   ```bash
   git revert <PHASE_7_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 8 — Safe Progressive Results Loading (Applied: 2026-08-04 19:23:00)
+
+### Existing Display Flow:
+On initial load or when any filter or query changes, `filterData()` computes `filteredData`. At the end of `filterData()`, `renderCards()` is called.
+Inside `renderCards()`, `sortedResults` is obtained from `getSortedResults(filteredData, sortMode)`.
+It checks user-agent for iOS: `const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;`
+Initial display limit is `20` on iOS and `150` on other devices.
+It slices: `const toDisplay = sortedResults.slice(0, displayLimit);`
+Then it iterates `toDisplay.forEach((item, index) => { ... })` and appends card elements to the DOM.
+If `filteredData.length > displayLimit`, it appends a helper text ` (แสดงผลเฉพาะ ${displayLimit} รายการแรก กรุณาค้นหาแบบเจาะจงเพิ่มเติม)` to the `statsText` container.
+
+### Progressive State Rules:
+* **Initial Display Limit**: Desktop = 150, iOS = 20.
+* **Display Batch Size**: Desktop = 100, iOS = 20.
+* **Reset Visible Count Rules**: `currentVisibleCount` resets to initial limit whenever any query changes, active round updates, sorting changes, a single chip is removed, or "ล้างตัวกรองทั้งหมด" is clicked.
+* **Persistence Safeguards**: Visible count state is kept purely in memory (view layer), and is not written to URL or LocalStorage.
+
+### Slicing Integration:
+* Sorted the complete array using `getSortedResults(filteredData, sortMode)` before slicing `currentVisibleCount` elements, ensuring that items shown after sorting represent the absolute highest/lowest values in the complete set.
+* Replaced the hard-coded slice length warning in `statsText` with a dynamic progress bar underneath the card grid.
+* Dynamically updates the text content of `#visibleResultsStatus` using safe `.textContent` to show progressive status (e.g. "แสดง 150 จาก 7,208 โครงการ" or "แสดงครบทั้งหมด 87 โครงการ" when fully loaded).
+
+### Phase 8 Test Results:
+* **Functional & Visual Tests**: Passed. Officially verified in browser with all 18 test cases succeeding:
+  1. Desktop load correctly displays 150 initial items.
+  2. iOS load correctly displays 20 initial items.
+  3. Load More button successfully increments visible cards by batch size.
+  4. Complete load safely hides Load More controls once all cards are displayed.
+  5. Search query updates successfully reset visible count.
+  6. University selections successfully reset visible count.
+  7. Faculty selections successfully reset visible count.
+  8. GPAX and Study Plan updates successfully reset visible count.
+  9. Exam checklist switches successfully reset visible count.
+  10. Sorting dropdown selections successfully reset visible count.
+  11. Round transitions successfully reset visible count.
+  12. Deleting single filter chips successfully resets visible count.
+  13. Clear All filters button successfully resets visible count.
+  14. Favorite states correctly map and persist on cards before/after loading more.
+  15. Accordion contents load correctly and keep ID unique.
+  16. External links match targeted indexes.
+  17. Empty results hide load more section completely.
+  18. Results size below initial limit hides load more button completely.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 8 specifically**:
+  ```bash
+  git revert <PHASE_8_COMMIT_HASH>
+  ```
