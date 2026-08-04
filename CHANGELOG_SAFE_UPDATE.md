@@ -194,3 +194,86 @@
   ```bash
   git revert <PHASE_3A_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 3B — Safe Data Status Mapping (Applied: 2026-08-04 17:58:00)
+
+### Changes Made:
+1. **Dynamic Requirement Status Classes (CSS)**:
+   * Added explicit accessibility-safe colors and FontAwesome icon colors for requirements:
+     * `.req-list li.status-required`: Emerald green (`#10b981`) for "ต้องใช้".
+     * `.req-list li.status-not-used`: Rose red (`#f43f5e`) for "ไม่ใช้".
+     * `.req-list li.status-warning`: Amber gold (`#fbbf24`) for "ใช้ GPAX แต่ไม่กำหนดเกณฑ์ขั้นต่ำ".
+     * `.req-list li.status-unknown`: Muted slate (`#94a3b8`) for "ไม่พบข้อมูล".
+2. **Display Mapping Functions (JS)**:
+   * Created `getRequirementStatusHTML(label, rawValue, hasKeyword)` helper function to map boolean flags and keywords into structured HTML list items without mutating raw database properties.
+   * Created `getGPAXStatusHTML(item, combinedText)` helper function to parse GPAX criteria and mapped it to the five target criteria statuses: "ต้องใช้ (GPAX ≥ score)", "ไม่กำหนด GPAX ขั้นต่ำ", "ใช้ GPAX แต่ไม่ระบุคะแนนขั้นต่ำ", "ไม่พบข้อมูล GPAX", and "ไม่พบข้อมูลที่ยืนยันได้" (as safe fallback).
+3. **getRequirementsHTML Signature & Call Update**:
+   * Updated `getRequirementsHTML` to accept `item` parameter.
+   * Adjusted call structure inside `renderCards()`: `getRequirementsHTML(item.criteria, item.condition, item)`.
+
+### Helper Functions Added:
+```javascript
+        // Display status formatter helper for generic requirements (Phase 3B)
+        function getRequirementStatusHTML(label, rawValue, hasKeyword) {
+            let statusText = "ไม่พบข้อมูล";
+            let statusClass = "status-unknown";
+            let iconClass = "fa-circle-question";
+            
+            if (rawValue === true) {
+                statusText = "ต้องใช้";
+                statusClass = "status-required";
+                iconClass = "fa-circle-check";
+            } else if (rawValue === false) {
+                statusText = "ไม่ใช้";
+                statusClass = "status-not-used";
+                iconClass = "fa-circle-xmark";
+            } else {
+                if (hasKeyword) {
+                    statusText = "ต้องใช้";
+                    statusClass = "status-required";
+                    iconClass = "fa-circle-check";
+                } else {
+                    statusText = "ไม่พบข้อมูล";
+                    statusClass = "status-unknown";
+                    iconClass = "fa-circle-question";
+                }
+            }
+            return `<li class="${statusClass}"><i class="fa-solid ${iconClass}"></i> ${label}: <strong>${statusText}</strong></li>`;
+        }
+
+        // Display status formatter helper for GPAX requirements (Phase 3B)
+        function getGPAXStatusHTML(item, combinedText) {
+            const gpaVal = extractGPAX(combinedText);
+            const dbGpa = item.min_gpax;
+            
+            if (dbGpa !== null && dbGpa !== undefined && dbGpa !== "") {
+                return `<li class="status-required"><i class="fa-solid fa-circle-check"></i> GPAX: <strong>GPAX ≥ ${dbGpa}</strong> (ต้องใช้)</li>`;
+            } else if (gpaVal) {
+                return `<li class="status-required"><i class="fa-solid fa-circle-check"></i> GPAX: <strong>GPAX ≥ ${gpaVal}</strong> (ต้องใช้)</li>`;
+            }
+            
+            const hasGpaKeywords = combinedText.includes('gpa') || combinedText.includes('เกรด') || combinedText.includes('เฉลี่ย');
+            const explicitlyNoLimit = combinedText.includes('ไม่กำหนดเกรด') || combinedText.includes('ไม่กำหนด gpax') || combinedText.includes('ไม่จำกัดเกรด') || combinedText.includes('ไม่จำกัด gpax') || combinedText.includes('ไม่กำหนดคะแนนเฉลี่ย');
+            
+            if (explicitlyNoLimit) {
+                return `<li class="status-not-used"><i class="fa-solid fa-circle-minus"></i> GPAX: <strong>ไม่กำหนด GPAX ขั้นต่ำ</strong></li>`;
+            } else if (hasGpaKeywords) {
+                return `<li class="status-warning"><i class="fa-solid fa-circle-exclamation"></i> GPAX: <strong>ใช้ GPAX แต่ไม่ระบุคะแนนขั้นต่ำ</strong></li>`;
+            } else if (item.criteria === null || item.criteria === undefined || item.criteria === "") {
+                return `<li class="status-unknown"><i class="fa-solid fa-circle-question"></i> GPAX: <strong>ไม่พบข้อมูล GPAX</strong></li>`;
+            } else {
+                return `<li class="status-unknown"><i class="fa-solid fa-circle-question"></i> GPAX: <strong>ไม่พบข้อมูลที่ยืนยันได้</strong></li>`;
+            }
+        }
+```
+
+### Phase 3B Test Results:
+* **Functional & Visual Tests**: Passed. The requirements checklists render with clear, descriptive statuses and matching icons. No raw `null`, `undefined`, or `N/A` text leaked to UI. Card heights are clean and consistent. Filters, searches, and lazy details continue to operate normally.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 3B specifically**:
+  ```bash
+  git revert <PHASE_3B_COMMIT_HASH>
+  ```

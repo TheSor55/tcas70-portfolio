@@ -1910,6 +1910,33 @@
                 gap: 4px;
             }
         }
+        /* Dynamic Requirement status classes for Phase 3B */
+        .req-list li.status-required {
+            color: #10b981; /* Emerald Green */
+        }
+        .req-list li.status-required i {
+            color: #10b981;
+        }
+        .req-list li.status-not-used {
+            color: #f43f5e; /* Rose Red */
+            opacity: 0.85;
+        }
+        .req-list li.status-not-used i {
+            color: #f43f5e;
+        }
+        .req-list li.status-warning {
+            color: #fbbf24; /* Amber Gold */
+        }
+        .req-list li.status-warning i {
+            color: #fbbf24;
+        }
+        .req-list li.status-unknown {
+            color: #94a3b8; /* Muted Slate */
+            opacity: 0.75;
+        }
+        .req-list li.status-unknown i {
+            color: #64748b;
+        }
     </style>
 </head>
 <body>
@@ -2589,48 +2616,86 @@
             return html;
         }
 
+        // Display status formatter helper for generic requirements (Phase 3B)
+        function getRequirementStatusHTML(label, rawValue, hasKeyword) {
+            let statusText = "ไม่พบข้อมูล";
+            let statusClass = "status-unknown";
+            let iconClass = "fa-circle-question";
+            
+            if (rawValue === true) {
+                statusText = "ต้องใช้";
+                statusClass = "status-required";
+                iconClass = "fa-circle-check";
+            } else if (rawValue === false) {
+                statusText = "ไม่ใช้";
+                statusClass = "status-not-used";
+                iconClass = "fa-circle-xmark";
+            } else {
+                // For values that are null/undefined (like SOP and Portfolio which are parsed client-side)
+                if (hasKeyword) {
+                    statusText = "ต้องใช้";
+                    statusClass = "status-required";
+                    iconClass = "fa-circle-check";
+                } else {
+                    statusText = "ไม่พบข้อมูล";
+                    statusClass = "status-unknown";
+                    iconClass = "fa-circle-question";
+                }
+            }
+            return `<li class="${statusClass}"><i class="fa-solid ${iconClass}"></i> ${label}: <strong>${statusText}</strong></li>`;
+        }
+
+        // Display status formatter helper for GPAX requirements (Phase 3B)
+        function getGPAXStatusHTML(item, combinedText) {
+            const gpaVal = extractGPAX(combinedText);
+            
+            // Check pre-computed database field
+            const dbGpa = item.min_gpax;
+            
+            if (dbGpa !== null && dbGpa !== undefined && dbGpa !== "") {
+                return `<li class="status-required"><i class="fa-solid fa-circle-check"></i> GPAX: <strong>GPAX ≥ ${dbGpa}</strong> (ต้องใช้)</li>`;
+            } else if (gpaVal) {
+                return `<li class="status-required"><i class="fa-solid fa-circle-check"></i> GPAX: <strong>GPAX ≥ ${gpaVal}</strong> (ต้องใช้)</li>`;
+            }
+            
+            // If no numeric GPAX is detected
+            const hasGpaKeywords = combinedText.includes('gpa') || combinedText.includes('เกรด') || combinedText.includes('เฉลี่ย');
+            const explicitlyNoLimit = combinedText.includes('ไม่กำหนดเกรด') || combinedText.includes('ไม่กำหนด gpax') || combinedText.includes('ไม่จำกัดเกรด') || combinedText.includes('ไม่จำกัด gpax') || combinedText.includes('ไม่กำหนดคะแนนเฉลี่ย');
+            
+            if (explicitlyNoLimit) {
+                return `<li class="status-not-used"><i class="fa-solid fa-circle-minus"></i> GPAX: <strong>ไม่กำหนด GPAX ขั้นต่ำ</strong></li>`;
+            } else if (hasGpaKeywords) {
+                return `<li class="status-warning"><i class="fa-solid fa-circle-exclamation"></i> GPAX: <strong>ใช้ GPAX แต่ไม่ระบุคะแนนขั้นต่ำ</strong></li>`;
+            } else if (item.criteria === null || item.criteria === undefined || item.criteria === "") {
+                return `<li class="status-unknown"><i class="fa-solid fa-circle-question"></i> GPAX: <strong>ไม่พบข้อมูล GPAX</strong></li>`;
+            } else {
+                return `<li class="status-unknown"><i class="fa-solid fa-circle-question"></i> GPAX: <strong>ไม่พบข้อมูลที่ยืนยันได้</strong></li>`;
+            }
+        }
+
         // Generate dynamic checklist of requirements from criteria text
-        function getRequirementsHTML(criteria, condition) {
+        function getRequirementsHTML(criteria, condition, item) {
             const combinedText = ((criteria || '') + ' ' + (condition || '')).toLowerCase();
             const items = [];
             
             // 1. GPAX
-            const gpaVal = extractGPAX(combinedText);
-            if (gpaVal) {
-                items.push(`<li><i class="fa-solid fa-circle-check"></i> <strong>GPAX ≥ ${gpaVal}</strong></li>`);
-            } else if (combinedText.includes('gpa') || combinedText.includes('เกรด') || combinedText.includes('เฉลี่ย')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> GPAX เกณฑ์ขั้นต่ำ</li>');
-            } else {
-                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> GPAX (ไม่ระบุขั้นต่ำ)</li>');
-            }
+            items.push(getGPAXStatusHTML(item, combinedText));
             
             // 2. IELTS / English
-            if (combinedText.includes('ielts') || combinedText.includes('toefl') || combinedText.includes('toeic') || combinedText.includes('ภาษาอังกฤษ') || combinedText.includes('english')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> IELTS / English Req.</li>');
-            } else {
-                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> IELTS (ไม่ระบุเกณฑ์)</li>');
-            }
+            const hasEngKeyword = combinedText.includes('ielts') || combinedText.includes('toefl') || combinedText.includes('toeic') || combinedText.includes('ภาษาอังกฤษ') || combinedText.includes('english');
+            items.push(getRequirementStatusHTML('IELTS / อังกฤษ', item.req_english, hasEngKeyword));
 
             // 3. Portfolio
-            if (combinedText.includes('portfolio') || combinedText.includes('พอร์ต') || combinedText.includes('ผลงาน') || combinedText.includes('แฟ้มสะสม')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> Portfolio required</li>');
-            } else {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> Portfolio required</li>');
-            }
+            const hasPortKeyword = combinedText.includes('portfolio') || combinedText.includes('พอร์ต') || combinedText.includes('ผลงาน') || combinedText.includes('แฟ้มสะสม');
+            items.push(getRequirementStatusHTML('Portfolio (พอร์ต)', null, hasPortKeyword));
 
             // 4. SAT/ACT
-            if (combinedText.includes('sat') || combinedText.includes('act') || combinedText.includes('tpat') || combinedText.includes('tgat') || combinedText.includes('cutep') || combinedText.includes('tu-get')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> SAT / TGAT / TPAT</li>');
-            } else {
-                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> SAT/ACT (ไม่ใช้คะแนน)</li>');
-            }
+            const hasSatKeyword = combinedText.includes('sat') || combinedText.includes('act') || combinedText.includes('tpat') || combinedText.includes('tgat') || combinedText.includes('cutep') || combinedText.includes('tu-get');
+            items.push(getRequirementStatusHTML('SAT / TGAT / TPAT', item.req_aptitude, hasSatKeyword));
 
             // 5. SOP
-            if (combinedText.includes('sop') || combinedText.includes('เรียงความ') || combinedText.includes('statement') || combinedText.includes('จดหมายแนะนำ')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> SOP (เรียงความแนะนำตัว)</li>');
-            } else {
-                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> SOP (ไม่ระบุส่ง)</li>');
-            }
+            const hasSopKeyword = combinedText.includes('sop') || combinedText.includes('เรียงความ') || combinedText.includes('statement') || combinedText.includes('จดหมายแนะนำ');
+            items.push(getRequirementStatusHTML('SOP (เรียงความ)', null, hasSopKeyword));
 
             return `<ul class="req-list">${items.join('')}</ul>`;
         }
@@ -2771,7 +2836,7 @@
                         </div>
                         
                         <!-- Checklist Requirements dynamically parsed -->
-                        ${getRequirementsHTML(item.criteria, item.condition)}
+                        ${getRequirementsHTML(item.criteria, item.condition, item)}
 
                         <!-- High School Curriculum Eligibility Tags (Match official site style) -->
                         <div class="eligibility-box">
