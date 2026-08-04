@@ -420,3 +420,40 @@
   ```bash
   git revert <PHASE_6_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 7 — Safe Results Sorting Controls (Applied: 2026-08-04 19:15:00)
+
+### Sort Audit Matrix:
+* **filteredData**: Global variable declared using `let`.
+* **renderCards()**: Reads directly from `filteredData` and slices using `filteredData.slice(0, displayLimit)`.
+* **Stable Identifiers**: `university_id`, `faculty_id`, `program_id`, `project_id`. Unique key combines `${item.program_id}-${item.project_id}`.
+* **Favorite State**: Uses stable `program_id` and `project_id` matching, independent of index values.
+* **Accordion Details**: Iterates through display subset with `.forEach((item, index) => { ... })` and maps collapse tags and `toggleCriteria` calls to `crit-content-[type]-${index}` safely.
+
+### Field Types & Null Handling:
+* **seats**: Numeric type. Nulls / empty strings are treated as nullable and kept at the end of lists in both ascending and descending directions.
+* **min_gpax**: Numeric type or null. Nulls/empty values are placed at the end.
+* **university_name / program_name**: Thai String types. Checked using stable localeCompare and empty strings sent to the end.
+
+### Sort Options:
+1. `default`: Keeps original order from `filterData()` output.
+2. `seats-desc`: Total seats descending.
+3. `seats-asc`: Total seats ascending.
+4. `gpax-asc`: Minimum GPAX requirement ascending.
+5. `university-asc`: University name alphabetical ascending (Thai ก-ฮ).
+6. `program-asc`: Program/major name alphabetical ascending (Thai ก-ฮ).
+
+### Integration Point:
+* Performs shallow clone copy `const sortedResults = getSortedResults(filteredData, sortMode);` inside `renderCards()` before applying the low-memory display limit slice, which preserves the original `filteredData` array completely intact.
+* Re-triggers rendering safely by binding change listener on `#sortResults` select dropdown.
+
+### Phase 7 Test Results:
+* **Functional & Visual Tests**: Passed. Sorting controls are correctly positioned beside the section heading. Numerical comparisons and Thai localeCompare function flawlessly with stable tie-breakers. Mobile responsive wrapping works cleanly. State matches all criteria.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 7 specifically**:
+  ```bash
+  git revert <PHASE_7_COMMIT_HASH>
+  ```

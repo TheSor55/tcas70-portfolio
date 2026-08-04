@@ -447,6 +447,83 @@
         .active-filter-chip-remove:focus-visible {
             outline: 2px solid var(--primary-light);
         }
+        
+        /* Results Toolbar and Sorting Control - Phase 7 */
+        .results-toolbar {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .results-toolbar-summary {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.15rem;
+        }
+        .results-toolbar-summary .section-title {
+            margin-bottom: 0 !important;
+        }
+        .results-sort-status {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .sort-control {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+        }
+        .sort-control-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .sort-control-label i {
+            color: var(--primary-light);
+            font-size: 0.8rem;
+        }
+        .sort-control select {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            padding-right: 0.5rem;
+            font-weight: 600;
+        }
+        .sort-control select:focus {
+            outline: none;
+        }
+        @media (max-width: 768px) {
+            .results-toolbar {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .sort-control {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .sort-control select {
+                flex: 1;
+                text-align: right;
+            }
+        }
 
         @media (max-width: 768px) {
             .filters-row {
@@ -2248,8 +2325,28 @@
             <div id="activeFilterChips" class="active-filter-chips" aria-live="polite"></div>
         </div>
 
-        <!-- Featured Programs Section Title -->
-        <h2 class="section-title">ผลการค้นหาโครงการ</h2>
+        <!-- Results Toolbar Section - Phase 7 -->
+        <div class="results-toolbar">
+            <div class="results-toolbar-summary">
+                <h2 class="section-title">ผลการค้นหาโครงการ</h2>
+                <span id="resultsSortStatus" class="results-sort-status">แสดงตามลำดับข้อมูลเริ่มต้น</span>
+            </div>
+
+            <label class="sort-control">
+                <span class="sort-control-label">
+                    <i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i>
+                    เรียงตาม
+                </span>
+                <select id="sortResults">
+                    <option value="default">ค่าเริ่มต้น</option>
+                    <option value="seats-desc">จำนวนรับ: มาก → น้อย</option>
+                    <option value="seats-asc">จำนวนรับ: น้อย → มาก</option>
+                    <option value="gpax-asc">GPAX ขั้นต่ำ: ต่ำ → สูง</option>
+                    <option value="university-asc">ชื่อมหาวิทยาลัย: ก → ฮ</option>
+                    <option value="program-asc">ชื่อหลักสูตร: ก → ฮ</option>
+                </select>
+            </label>
+        </div>
 
         <!-- Stats Bar -->
         <div class="stats-bar">
@@ -2729,6 +2826,119 @@
 
             updateFacultyDropdown();
             filterData();
+        }
+
+        // Numeric normalization helper (Phase 7)
+        function normalizeSortNumber(value) {
+            if (value === null || value === undefined || value === '') {
+                return null;
+            }
+            const parsed = Number(value);
+            return Number.isFinite(parsed) ? parsed : null;
+        }
+
+        // Compare nullable numbers with null always at the end (Phase 7)
+        function compareNullableNumbers(a, b, direction) {
+            if (a === null && b === null) return 0;
+            if (a === null) return 1;
+            if (b === null) return -1;
+            return direction === 'asc' ? a - b : b - a;
+        }
+
+        // Thai text comparator helper (Phase 7)
+        function compareThaiText(a, b) {
+            const strA = String(a || '').trim();
+            const strB = String(b || '').trim();
+            if (strA === '' && strB === '') return 0;
+            if (strA === '') return 1;
+            if (strB === '') return -1;
+            return strA.localeCompare(strB, 'th', {
+                sensitivity: 'base',
+                numeric: true
+            });
+        }
+
+        // Stable program identity tie-breaker comparator (Phase 7)
+        function compareProgramIdentity(a, b) {
+            return (
+                compareThaiText(a.university_name, b.university_name) ||
+                compareThaiText(a.faculty_name, b.faculty_name) ||
+                compareThaiText(a.program_name, b.program_name) ||
+                compareThaiText(a.project_name, b.project_name) ||
+                compareThaiText(a.program_id, b.program_id) ||
+                compareThaiText(a.project_id, b.project_id)
+            );
+        }
+
+        // Get sorted results without mutating origin data (Phase 7)
+        function getSortedResults(data, sortMode) {
+            const results = [...data];
+            if (sortMode === 'default') {
+                return results;
+            }
+            results.sort((a, b) => {
+                let comparison = 0;
+                switch (sortMode) {
+                    case 'seats-desc': {
+                        const valA = normalizeSortNumber(a.seats);
+                        const valB = normalizeSortNumber(b.seats);
+                        comparison = compareNullableNumbers(valA, valB, 'desc');
+                        break;
+                    }
+                    case 'seats-asc': {
+                        const valA = normalizeSortNumber(a.seats);
+                        const valB = normalizeSortNumber(b.seats);
+                        comparison = compareNullableNumbers(valA, valB, 'asc');
+                        break;
+                    }
+                    case 'gpax-asc': {
+                        const valA = normalizeSortNumber(a.min_gpax);
+                        const valB = normalizeSortNumber(b.min_gpax);
+                        comparison = compareNullableNumbers(valA, valB, 'asc');
+                        break;
+                    }
+                    case 'university-asc': {
+                        comparison = compareThaiText(a.university_name, b.university_name);
+                        break;
+                    }
+                    case 'program-asc': {
+                        comparison = compareThaiText(a.program_name, b.program_name);
+                        break;
+                    }
+                }
+                // Apply stable tie-breaker if values are equal
+                return comparison !== 0 ? comparison : compareProgramIdentity(a, b);
+            });
+            return results;
+        }
+
+        // Update Sort status hint text feedback (Phase 7)
+        function updateSortStatus() {
+            const hintEl = document.getElementById('resultsSortStatus');
+            const sortSelect = document.getElementById('sortResults');
+            if (!hintEl || !sortSelect) return;
+            
+            const mode = sortSelect.value;
+            switch (mode) {
+                case 'seats-desc':
+                    hintEl.textContent = 'เรียงตาม: จำนวนรับ มาก → น้อย';
+                    break;
+                case 'seats-asc':
+                    hintEl.textContent = 'เรียงตาม: จำนวนรับ น้อย → มาก';
+                    break;
+                case 'gpax-asc':
+                    hintEl.textContent = 'เรียงตาม: GPAX ขั้นต่ำ ต่ำ → สูง';
+                    break;
+                case 'university-asc':
+                    hintEl.textContent = 'เรียงตาม: ชื่อมหาวิทยาลัย ก → ฮ';
+                    break;
+                case 'program-asc':
+                    hintEl.textContent = 'เรียงตาม: ชื่อหลักสูตร ก → ฮ';
+                    break;
+                default:
+                    hintEl.textContent = 'แสดงตามลำดับข้อมูลเริ่มต้น';
+                    break;
+            }
         }
 
         // Update Faculty Scope UI Hint below faculty dropdown (Phase 5B)
@@ -3250,10 +3460,15 @@
                 return;
             }
 
+            // Sort filtered results before slicing display limit (Phase 7)
+            const sortSelect = document.getElementById('sortResults');
+            const sortMode = sortSelect ? sortSelect.value : 'default';
+            const sortedResults = getSortedResults(filteredData, sortMode);
+
             // Detect iOS/low-memory devices and reduce render limit
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             const displayLimit = isIOS ? 20 : 150;
-            const toDisplay = filteredData.slice(0, displayLimit);
+            const toDisplay = sortedResults.slice(0, displayLimit);
             
             if (filteredData.length > displayLimit) {
                 statsText.innerHTML += ` (แสดงผลเฉพาะ ${displayLimit} รายการแรก กรุณาค้นหาแบบเจาะจงเพิ่มเติม)`;
@@ -3773,6 +3988,15 @@
         const clearAllFiltersBtn = document.getElementById('clearAllFiltersBtn');
         if (clearAllFiltersBtn) {
             clearAllFiltersBtn.addEventListener('click', clearAllOptionalFilters);
+        }
+
+        // Sorting Dropdown Change Listener (Phase 7)
+        const sortResults = document.getElementById('sortResults');
+        if (sortResults) {
+            sortResults.addEventListener('change', () => {
+                renderCards();
+                updateSortStatus();
+            });
         }
 
         // Collapsible Personalized panel helper
