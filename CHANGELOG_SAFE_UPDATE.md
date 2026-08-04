@@ -277,3 +277,25 @@
   ```bash
   git revert <PHASE_3B_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 3C — Compact and Expandable Program Card (Applied: 2026-08-04 18:09:00)
+
+### Changes Made:
+1. **Simplified Main Card view (JS)**:
+   * Updated `getRequirementsHTML()` to render **GPAX status only** in the main card checklist. This dramatically reduces card height and visual clutter on load.
+2. **Prepend Secondary Requirements inside Collapsible Section**:
+   * Updated `window.toggleCriteria` (specifically type `'cond'`) to dynamically prepend the secondary requirements checklist (IELTS/English, Portfolio, SAT/ACT, SOP) at the top of the details panel.
+   * Utilizes database flags `match.req_english`, `match.req_aptitude`, and keyword matching on fetched criteria/condition text.
+3. **Unconditional Accordion Rendering (HTML)**:
+   * Modified the "Conditions" accordion rendering in `renderCards()` to output unconditionally for all cards, renamed to "เกณฑ์คุณสมบัติและเงื่อนไข (Requirements)", so users can always expand to see the secondary requirements checklist.
+
+### Phase 3C Test Results:
+* **Functional Tests**: Passed. Main card displays are compact. Expanding the accordion correctly fetches the university chunk, prepends the secondary checklist (IELTS, Portfolio, SAT/ACT, SOP) dynamically, and appends the detailed text. Expand/collapse, favorites, searches, and filters continue to work normally.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 3C specifically**:
+  ```bash
+  git revert <PHASE_3C_COMMIT_HASH>
+  ```
