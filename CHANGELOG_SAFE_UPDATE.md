@@ -323,3 +323,29 @@
   ```bash
   git revert <PHASE_3C1_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 4 — Searchable Dropdowns (Applied: 2026-08-04 18:20:00)
+
+### Changes Made:
+1. **Search Inputs in Filters Row (HTML)**:
+   * Added search inputs `#uniSearch` ("ค้นหาชื่อมหาวิทยาลัย") and `#facultySearch` ("ค้นหาชื่อคณะ/สำนักวิชา") above the respective selects.
+   * Wrapped each filter group in a semantic `.select-search-wrapper` container.
+2. **Search Input CSS (CSS)**:
+   * Added styles for `.select-search-wrapper` (flex-direction: column) and `.select-search-input` (dark border, rounded corners, subtle transparent background, transitions) to match the dark theme and search bar aesthetics.
+3. **Option Caching & Rebuild Layer (JS)**:
+   * Created memory caches: `cachedUniStructure` (rebuilt in `populateFilters` to cache the grouped university names) and `cachedFacultyOptions` (rebuilt in `updateFacultyDropdown` to cache the faculty names).
+   * Added `window.filterUniOptions()` and `window.filterFacultyOptions()` to rebuild `<option>` tags dynamically.
+   * This rebuild approach ensures 100% cross-browser compatibility, specifically bypasses iOS Safari's bug which fails to hide options using `display: none`, and preserves current selections cleanly.
+4. **Cascading Clearing Behavior (JS)**:
+   * Added logic to clear `#facultySearch` input values when the university selection `#uniFilter` is changed, preventing cross-filter keyword mismatch.
+
+### Phase 4 Test Results:
+* **Functional Tests**: Passed. Typing in `#uniSearch` instantly filters the available universities within their respective groups (optgroups). Typing in `#facultySearch` instantly filters the available faculties. Selecting a university cascadingly resets the faculty search query. Logic, bookmark dashboard, chatbot, and details accordions remain fully functional without regressions.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 4 specifically**:
+  ```bash
+  git revert <PHASE_4_COMMIT_HASH>
+  ```

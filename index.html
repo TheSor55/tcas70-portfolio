@@ -322,6 +322,30 @@
             grid-template-columns: 1fr 1fr 1fr;
             gap: 1.25rem;
         }
+        
+        /* Select Search Wrapper and Input - Phase 4 */
+        .select-search-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+        .select-search-input {
+            width: 100%;
+            background-color: rgba(11, 15, 25, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.55rem 0.85rem;
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-family: inherit;
+            transition: all 0.25s ease;
+        }
+        .select-search-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background-color: rgba(11, 15, 25, 0.6);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+        }
 
         @media (max-width: 768px) {
             .filters-row {
@@ -2033,18 +2057,24 @@
 
             <!-- Filters Row -->
             <div class="filters-row">
-                <!-- University Dropdown -->
-                <div class="select-wrapper">
-                    <select id="uniFilter">
-                        <option value="">เลือกมหาวิทยาลัย (Universities)</option>
-                    </select>
+                <!-- University Dropdown with Search -->
+                <div class="select-search-wrapper">
+                    <input type="text" id="uniSearch" class="select-search-input" placeholder="🔍 ค้นหาชื่อมหาวิทยาลัย..." oninput="filterUniOptions()">
+                    <div class="select-wrapper">
+                        <select id="uniFilter">
+                            <option value="">เลือกมหาวิทยาลัย (Universities)</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Faculty Dropdown (derived dynamically) -->
-                <div class="select-wrapper">
-                    <select id="facultyFilter">
-                        <option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>
-                    </select>
+                <!-- Faculty Dropdown with Search (derived dynamically) -->
+                <div class="select-search-wrapper">
+                    <input type="text" id="facultySearch" class="select-search-input" placeholder="🔍 ค้นหาชื่อคณะ/สำนักวิชา..." oninput="filterFacultyOptions()">
+                    <div class="select-wrapper">
+                        <select id="facultyFilter">
+                            <option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Admission Round Filter -->
@@ -2354,6 +2384,80 @@
         let filteredData = [];
         let activeRoundData = [];
 
+        // Searchable dropdowns structure caching variables (Phase 4)
+        let cachedUniStructure = [];
+        let cachedFacultyOptions = [];
+        const specialUniOptions = [
+            { value: 'COTMES', text: '🩺 กลุ่ม กสพท (แพทย์/ทันตะ/เภสัช/สัตวแพทย์)' }
+        ];
+
+        // Rebuild university select options from cached list based on search query (Phase 4)
+        window.filterUniOptions = function() {
+            const uniSearch = document.getElementById('uniSearch');
+            const uniFilter = document.getElementById('uniFilter');
+            if (!uniSearch || !uniFilter) return;
+
+            const query = uniSearch.value.trim().toLowerCase();
+            const currentSelection = uniFilter.value;
+            
+            uniFilter.innerHTML = '<option value="">เลือกมหาวิทยาลัย (Universities)</option>';
+            
+            // Render special options
+            specialUniOptions.forEach(opt => {
+                if (!query || opt.text.toLowerCase().includes(query)) {
+                    const optEl = document.createElement('option');
+                    optEl.value = opt.value;
+                    optEl.textContent = opt.text;
+                    optEl.style.fontWeight = 'bold';
+                    optEl.style.color = '#c084fc';
+                    uniFilter.appendChild(optEl);
+                }
+            });
+            
+            // Render groups and options dynamically (safari compatible Rebuild)
+            cachedUniStructure.forEach(group => {
+                const filteredOpts = group.options.filter(opt => !query || opt.text.toLowerCase().includes(query));
+                if (filteredOpts.length > 0) {
+                    const groupEl = document.createElement('optgroup');
+                    groupEl.label = group.label;
+                    filteredOpts.forEach(opt => {
+                        const optEl = document.createElement('option');
+                        optEl.value = opt.value;
+                        optEl.textContent = opt.text;
+                        groupEl.appendChild(optEl);
+                    });
+                    uniFilter.appendChild(groupEl);
+                }
+            });
+            
+            // Restore selection state
+            uniFilter.value = currentSelection;
+        };
+
+        // Rebuild faculty select options from cached list based on search query (Phase 4)
+        window.filterFacultyOptions = function() {
+            const facultySearch = document.getElementById('facultySearch');
+            const facultyFilter = document.getElementById('facultyFilter');
+            if (!facultySearch || !facultyFilter) return;
+
+            const query = facultySearch.value.trim().toLowerCase();
+            const currentSelection = facultyFilter.value;
+            
+            facultyFilter.innerHTML = '<option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>';
+            
+            cachedFacultyOptions.forEach(fac => {
+                if (!query || fac.toLowerCase().includes(query)) {
+                    const opt = document.createElement('option');
+                    opt.value = fac;
+                    opt.textContent = fac;
+                    facultyFilter.appendChild(opt);
+                }
+            });
+            
+            // Restore selection state
+            facultyFilter.value = currentSelection;
+        };
+
         // Debounce helper to prevent rapid keypress re-render spikes
         function debounce(func, delay) {
             let timeout;
@@ -2495,29 +2599,21 @@
                 }
             });
             
-            // Clear existing options except placeholder
-            uniFilter.innerHTML = '<option value="">เลือกมหาวิทยาลัย (Universities)</option>';
+            // Clear uniSearch filter on layout reset
+            const uniSearch = document.getElementById('uniSearch');
+            if (uniSearch) uniSearch.value = '';
+
+            // Rebuild cached university structure (Phase 4)
+            cachedUniStructure = [];
             
-            // Add COTMES as a special custom option right after the placeholder
-            const cotmesOpt = document.createElement('option');
-            cotmesOpt.value = 'COTMES';
-            cotmesOpt.textContent = '🩺 กลุ่ม กสพท (แพทย์/ทันตะ/เภสัช/สัตวแพทย์)';
-            cotmesOpt.style.fontWeight = 'bold';
-            cotmesOpt.style.color = '#c084fc';
-            uniFilter.appendChild(cotmesOpt);
-            
-            // Helper function to add a group
+            // Helper function to add a group to cache
             function addGroup(label, list) {
                 if (list.length > 0) {
-                    const group = document.createElement('optgroup');
-                    group.label = label;
+                    const groupData = { label: label, options: [] };
                     list.forEach(uni => {
-                        const opt = document.createElement('option');
-                        opt.value = uni;
-                        opt.textContent = uni;
-                        group.appendChild(opt);
+                        groupData.options.push({ value: uni, text: uni });
                     });
-                    uniFilter.appendChild(group);
+                    cachedUniStructure.push(groupData);
                 }
             }
             
@@ -2529,14 +2625,15 @@
             addGroup('🧪 กลุ่มสถาบัน / วิทยาลัย (Institutes & Colleges)', instituteList);
             addGroup('💼 มหาวิทยาลัยเอกชน (Private Universities)', privateList);
 
+            // Rebuild uni filter options dynamically using filterUniOptions (Phase 4)
+            filterUniOptions();
+
             // Populate unique faculty names initially
             updateFacultyDropdown();
         }
 
         // Update Faculty dropdown based on selected university
         function updateFacultyDropdown() {
-            facultyFilter.innerHTML = '<option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>';
-            
             const selectedUni = uniFilter.value;
             let targetData = activeRoundData;
             
@@ -2555,13 +2652,11 @@
                 }
             }
             
-            const faculties = [...new Set(targetData.map(item => item.faculty_name))].sort();
-            faculties.forEach(fac => {
-                const opt = document.createElement('option');
-                opt.value = fac;
-                opt.textContent = fac;
-                facultyFilter.appendChild(opt);
-            });
+            // Cache faculty options list (Phase 4)
+            cachedFacultyOptions = [...new Set(targetData.map(item => item.faculty_name))].sort();
+            
+            // Build and render faculty option list using filter helper
+            filterFacultyOptions();
         }
 
         // Dynamic GPAX extractor
@@ -3255,6 +3350,10 @@
         btnSearchSubmit.addEventListener('click', filterData);
         
         uniFilter.addEventListener('change', () => {
+            // Clear faculty search query when university selection changes
+            const facultySearch = document.getElementById('facultySearch');
+            if (facultySearch) facultySearch.value = '';
+            
             updateFacultyDropdown();
             filterData();
         });
