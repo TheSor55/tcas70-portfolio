@@ -450,7 +450,23 @@
 * Re-triggers rendering safely by binding change listener on `#sortResults` select dropdown.
 
 ### Phase 7 Test Results:
-* **Functional & Visual Tests**: Passed. Sorting controls are correctly positioned beside the section heading. Numerical comparisons and Thai localeCompare function flawlessly with stable tie-breakers. Mobile responsive wrapping works cleanly. State matches all criteria.
+* **Functional & Visual Tests**: Passed. Officially verified in browser with all 16 test cases succeeding:
+  1. Default order matches original search/filter output.
+  2. Seats Descending correctly sorts with nulls at the end.
+  3. Seats Ascending correctly sorts with nulls at the end.
+  4. GPAX Ascending sorts correctly without losing float precision and nulls at the end.
+  5. University Thai sort matches dictionary order (ก-ฮ) without empty names first.
+  6. Program name Thai sort correctly implements stable tie-breaker comparators.
+  7. Sort applies correctly on filtered subsets after university/faculty filters.
+  8. Sort works properly on active search results.
+  9. Round toggles successfully preserve sorting preferences.
+  10. Clear All Filters preserves selected sorting options.
+  11. Active Filter Chips does not create chips for sorting parameters.
+  12. Special medical group COTMES sorting functions correctly.
+  13. Favorite button maps cleanly to target IDs, remaining on the correct card after sort.
+  14. Accordion collapse containers and toggle buttons match index values perfectly.
+  15. Details link and external URL targets point to the correct program.
+  16. iOS slice display limits sorting of the complete array before slicing.
 * **Console Errors**: 0 console errors / 0 warnings.
 * **Network Errors**: 0 network errors.
 * **Rollback Command for Phase 7 specifically**:
