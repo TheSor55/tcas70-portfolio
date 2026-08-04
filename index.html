@@ -346,6 +346,17 @@
             background-color: rgba(11, 15, 25, 0.6);
             box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
         }
+        
+        /* Faculty Scope Hint Styling - Phase 5B */
+        .faculty-scope-hint {
+            font-size: 0.78rem;
+            color: var(--primary-light);
+            margin-top: 0.15rem;
+            padding-left: 0.25rem;
+            text-align: left;
+            min-height: 1.1rem;
+            display: none;
+        }
 
         @media (max-width: 768px) {
             .filters-row {
@@ -2075,6 +2086,7 @@
                             <option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>
                         </select>
                     </div>
+                    <div id="facultyScopeHint" class="faculty-scope-hint"></div>
                 </div>
 
                 <!-- Admission Round Filter -->
@@ -2391,6 +2403,25 @@
             { value: 'COTMES', text: '🩺 กลุ่ม กสพท (แพทย์/ทันตะ/เภสัช/สัตวแพทย์)' }
         ];
 
+        // Update Faculty Scope UI Hint below faculty dropdown (Phase 5B)
+        function updateFacultyScopeHint() {
+            const hintEl = document.getElementById('facultyScopeHint');
+            if (!hintEl) return;
+            
+            const selectedUni = uniFilter.value;
+            if (selectedUni) {
+                hintEl.style.display = 'block';
+                if (selectedUni === 'COTMES') {
+                    hintEl.textContent = 'แสดงเฉพาะคณะและหลักสูตรในกลุ่ม กสพท.';
+                } else {
+                    hintEl.textContent = 'แสดงเฉพาะคณะ / หน่วยงานของ ' + selectedUni;
+                }
+            } else {
+                hintEl.style.display = 'none';
+                hintEl.textContent = '';
+            }
+        }
+
         // Rebuild university select options from cached list based on search query (Phase 4)
         window.filterUniOptions = function() {
             const uniSearch = document.getElementById('uniSearch');
@@ -2599,9 +2630,15 @@
                 }
             });
             
-            // Clear uniSearch filter on layout reset
+            // Save previous university select value and check validity for the new active round (Phase 5B)
+            const previousUni = uniFilter.value;
+            const isUniValid = universities.includes(previousUni) || previousUni === 'COTMES';
+
+            // Clear select search query inputs on layout reset
             const uniSearch = document.getElementById('uniSearch');
             if (uniSearch) uniSearch.value = '';
+            const facultySearch = document.getElementById('facultySearch');
+            if (facultySearch) facultySearch.value = '';
 
             // Rebuild cached university structure (Phase 4)
             cachedUniStructure = [];
@@ -2627,8 +2664,15 @@
 
             // Rebuild uni filter options dynamically using filterUniOptions (Phase 4)
             filterUniOptions();
+            
+            // Restore selection if still valid, otherwise reset safely to empty (Phase 5B)
+            if (isUniValid) {
+                uniFilter.value = previousUni;
+            } else {
+                uniFilter.value = '';
+            }
 
-            // Populate unique faculty names initially
+            // Populate unique faculty names initially based on updated university value
             updateFacultyDropdown();
         }
 
@@ -2652,11 +2696,31 @@
                 }
             }
             
+            // Save previous selection state of Faculty Filter before rebuilding options (Phase 5B)
+            const previousFaculty = facultyFilter.value;
+            
             // Cache faculty options list (Phase 4)
             cachedFacultyOptions = [...new Set(targetData.map(item => item.faculty_name))].sort();
             
+            // Check if previousFaculty is still valid under new cached list (Phase 5B)
+            const isFacultyStillValid = cachedFacultyOptions.includes(previousFaculty);
+            
+            if (isFacultyStillValid) {
+                // Restore selection state
+                facultyFilter.value = previousFaculty;
+            } else {
+                // Reset Selection
+                facultyFilter.value = '';
+                // Clear query input if selection became invalid
+                const facultySearch = document.getElementById('facultySearch');
+                if (facultySearch) facultySearch.value = '';
+            }
+            
             // Build and render faculty option list using filter helper
             filterFacultyOptions();
+            
+            // Update UI hint below dropdown
+            updateFacultyScopeHint();
         }
 
         // Dynamic GPAX extractor
@@ -3350,10 +3414,6 @@
         btnSearchSubmit.addEventListener('click', filterData);
         
         uniFilter.addEventListener('change', () => {
-            // Clear faculty search query when university selection changes
-            const facultySearch = document.getElementById('facultySearch');
-            if (facultySearch) facultySearch.value = '';
-            
             updateFacultyDropdown();
             filterData();
         });

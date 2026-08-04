@@ -349,3 +349,28 @@
   ```bash
   git revert <PHASE_4_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 5B — Minimal Cascading State Safety Patch (Applied: 2026-08-04 18:38:00)
+
+### Changes Made:
+1. **UI Feedback Helper Element (HTML & CSS)**:
+   * Added a text element `<div id="facultyScopeHint" class="faculty-scope-hint"></div>` below the Faculty select tag container.
+   * Styled `.faculty-scope-hint` in CSS with high-contrast text (`var(--primary-light)` / `#6366f1`) and size `0.78rem` to match the layout cleanly.
+   * Added `updateFacultyScopeHint()` in JavaScript which uses `textContent` to safely show active university scope (or COTMES specific message) or hides itself if no university is selected.
+2. **Cascading State Preservation Logic (JS)**:
+   * Updated `updateFacultyDropdown()` to cache the previous faculty select value before rebuilding. It checks if the previous selection is still present in the updated `cachedFacultyOptions`. If valid, it preserves the selection; otherwise, it resets `facultyFilter.value = ''` and clears `facultySearch.value = ''`.
+3. **Round Transition State Safety (JS)**:
+   * Updated `populateFilters()` to check if the previous university selection remains valid inside the new round. If it is valid, it is preserved; if not, the university select value is reset to `""` and both `#uniSearch` and `#facultySearch` queries are safely cleared.
+4. **Event Handler Optimization (JS)**:
+   * Updated `uniFilter` change listener to delegate dropdown rebuilds and query clears directly to `updateFacultyDropdown()`, preventing redundant state resets and double-filtering triggers.
+
+### Phase 5B Test Results:
+* **Functional & Visual Tests**: Passed. Selection state preservation works seamlessly. Selecting a university restricts the faculty dropdown options cleanly. The scope hint displays correct text (e.g. "แสดงเฉพาะคณะ / หน่วยงานของ จุฬาลงกรณ์มหาวิทยาลัย") or hides when clear. Stale selection and invalid cross-university combinations are 100% prevented.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 5B specifically**:
+  ```bash
+  git revert <PHASE_5_COMMIT_HASH>
+  ```
