@@ -602,3 +602,50 @@ If `filteredData.length > displayLimit`, it appends a helper text ` (แสด�
   ```bash
   git revert <PHASE_10_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 11 — Accessibility, Keyboard Navigation and Focus Safety Audit (Applied: 2026-08-05 20:26:00)
+
+### Keyboard Navigation & Semantics:
+* Updated page layout structure: Wrapped main content inside `<main class="container">` and moved the footer elements outside into a dedicated `<footer class="footer-section container">` tag to satisfy landmark compliance.
+* Converted critical interactive controls from non-semantic `div`/`span` elements to native `<button type="button">` tags:
+  - `#floatingChatBtn`
+  - `#floatingTargetsBtn`
+  - `.panel-header`
+  - `.degree-info-btn` (rendered dynamically in card results)
+* Added specific styling resets inside CSS rules of these converted elements to preserve their exact original designs, dimensions, padding, colors, margins, and hover effects.
+* Explicitly set `type="button"` on all close buttons, theme option buttons, quick prompt options, clear options, and other interactive button controls.
+* Added `:focus-visible` CSS rules providing custom focus outline rings (bright purple outline) when navigating elements using keyboard tab actions in Dark Theme.
+
+### Form & Control Labels:
+* Added specific `aria-label` tags to inputs lacking visible textual label associations: `#searchInput`, `#uniSearch`, `#uniFilter`, `#facultySearch`, `#facultyFilter`, and `#roundFilter`.
+* Kept native checkbox wrappers as-is without adding redundant `for` attributes to avoid duplicate label associations.
+* Added descriptive hidden context via `.sr-only` class to program details links ("รายละเอียดเพิ่มเติม") to support screen reader users.
+
+### Dynamic ARIA Updates:
+* Configured dynamic `aria-pressed` ("true"/"false") and descriptive `aria-label` updates on the bookmarking buttons (`.bookmark-btn` and `.remove-target-btn`) relative to current favorite status.
+* Embedded `aria-expanded` and `aria-controls` on panel header (`.panel-header`) and criteria triggers (`.criteria-trigger`) to reflect visibility status.
+* Placed `aria-live="polite" aria-atomic="true"` on `#statsText` to announce result counts dynamically.
+* Specified `aria-hidden="true"` on decorative icons and indicators to filter out distracting screen reader announcements.
+
+### Focus Safety Strategy:
+* Engineered a global `safeFocus(elementOrId)` helper using `requestAnimationFrame` to safely shift focus to elements only when they exist, are enabled, and visible in the viewport.
+* Restored focus to corresponding controls when removing single filter chips from the Active Filters section or the Empty State diagnostic list.
+* Restored focus to `#searchInput` when clearing all optional filters.
+* Restored focus to `#visibleResultsStatus` when the Load More button becomes hidden after listing all results.
+* Safely tracked and restored focus back to the triggering `.degree-info-btn` button when closing the Degree Info modal.
+* Suppressed autofocus during initial page load, URL state restoration, or back history navigation (`popstate`).
+
+### Scoped prefers-reduced-motion:
+* Replaced the global universal selector `*` with a targeted, scoped media query specifically disabling cosmetic transformations, animations, and transitions on cards, buttons, badges, and modals.
+* Kept progress spinners and typing indicator animations running steady to prevent appearing frozen or crashed.
+
+### Phase 11 Test Results:
+* **Functional & Syntax Tests**: Verified JS syntax via `extract_and_check_syntax.js` - Passed (`SYNTAX_RESULT: PASS`). Checked landmarks, tag conversions, ARIA states, and focus behavior successfully using a custom node validation script - Passed.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 11 specifically**:
+  ```bash
+  git revert <PHASE_11_COMMIT_HASH>
+  ```

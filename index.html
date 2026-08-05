@@ -1331,6 +1331,11 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: #ef4444;
             font-size: 1.5rem;
+            /* Reset button defaults */
+            padding: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
         }
         .floating-targets-badge:hover {
             transform: scale(1.1) translateY(-5px);
@@ -1377,6 +1382,15 @@
             align-items: center;
             cursor: pointer;
             user-select: none;
+            /* Reset button defaults */
+            background: transparent;
+            border: none;
+            padding: 0;
+            width: 100%;
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            text-align: left;
         }
         .panel-header h3 {
             font-size: 1.1rem;
@@ -1866,6 +1880,11 @@
             transition: all 0.2s ease;
             vertical-align: middle;
             margin-left: 0.35rem;
+            /* Reset button defaults */
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
+            line-height: normal;
         }
         .degree-info-btn:hover {
             background: rgba(255, 255, 255, 0.15);
@@ -1925,6 +1944,12 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: #fff;
             font-size: 1.5rem;
+            /* Reset button defaults */
+            padding: 0;
+            border: none;
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
         }
         .floating-chat-btn:hover {
             transform: scale(1.1) translateY(-5px);
@@ -2237,14 +2262,58 @@
             }
         }
 
-        /* 4. CSS Media Query for prefers-reduced-motion to disable transitions and animations */
+        /* Scoped prefers-reduced-motion (Phase 11) */
         @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+            html {
                 scroll-behavior: auto !important;
             }
+            .card, 
+            .floating-chat-btn, 
+            .floating-targets-badge, 
+            .btn-search, 
+            .btn-location,
+            .theme-opt-btn,
+            .bookmark-btn,
+            .criteria-trigger,
+            .modal-overlay,
+            .modal-container,
+            .chat-window,
+            .quick-prompts button {
+                transition: none !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            /* Essential progress spinning animations remain functional to prevent appearing frozen */
+            .spinner,
+            .fa-spin,
+            .chat-loading span {
+                animation-duration: 1.5s !important;
+            }
+        }
+
+        /* Accessibility Focus-Visible outlines in Dark Theme (Phase 11) */
+        :where(button, input, select, a):focus-visible {
+            outline: 2px solid var(--primary-light) !important;
+            outline-offset: 2px !important;
+        }
+        button.panel-header:focus-visible {
+            outline: 2px dashed var(--primary-light) !important;
+            outline-offset: 4px !important;
+        }
+        .sort-control select:focus-visible {
+            outline: 2px solid var(--primary-light) !important;
+            outline-offset: 2px !important;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
 
 
@@ -2462,29 +2531,29 @@
         </nav>
     </header>
 
-    <div class="container">
+    <main class="container">
         <!-- Controls Search Panel matching mockup image -->
         <div class="controls-panel">
             <!-- Search Row -->
             <div class="search-row">
                 <div class="search-wrapper">
-                    <input type="text" id="searchInput" class="search-input" placeholder="ค้นหามหาวิทยาลัย คณะ สาขา โครงการ หรือคุณสมบัติ">
+                    <input type="text" id="searchInput" class="search-input" placeholder="ค้นหามหาวิทยาลัย คณะ สาขา โครงการ หรือคุณสมบัติ" aria-label="ค้นหาโครงการเกณฑ์ TCAS">
                 <!-- Search Hint -->
                 <div class="search-hint">
                     ตัวอย่าง: วิศวกรรมคอมพิวเตอร์, เด็กซิ่ว, GPAX 3.00, Portfolio
                 </div>
                 </div>
-                <button class="btn-search" id="btnSearchSubmit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button class="btn-location"><i class="fa-solid fa-location-dot"></i></button>
+                <button type="button" class="btn-search" id="btnSearchSubmit" aria-label="ค้นหา"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
+                <button type="button" class="btn-location" aria-label="ตำแหน่งที่ตั้ง"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></button>
             </div>
 
             <!-- Filters Row -->
             <div class="filters-row">
                 <!-- University Dropdown with Search -->
                 <div class="select-search-wrapper">
-                    <input type="text" id="uniSearch" class="select-search-input" placeholder="🔍 ค้นหาชื่อมหาวิทยาลัย..." oninput="filterUniOptions()">
+                    <input type="text" id="uniSearch" class="select-search-input" placeholder="🔍 ค้นหาชื่อมหาวิทยาลัย..." oninput="filterUniOptions()" aria-label="ค้นหาชื่อมหาวิทยาลัย">
                     <div class="select-wrapper">
-                        <select id="uniFilter">
+                        <select id="uniFilter" aria-label="เลือกมหาวิทยาลัย">
                             <option value="">เลือกมหาวิทยาลัย (Universities)</option>
                         </select>
                     </div>
@@ -2492,9 +2561,9 @@
 
                 <!-- Faculty Dropdown with Search (derived dynamically) -->
                 <div class="select-search-wrapper">
-                    <input type="text" id="facultySearch" class="select-search-input" placeholder="🔍 ค้นหาชื่อคณะ/สำนักวิชา..." oninput="filterFacultyOptions()">
+                    <input type="text" id="facultySearch" class="select-search-input" placeholder="🔍 ค้นหาชื่อคณะ/สำนักวิชา..." oninput="filterFacultyOptions()" aria-label="ค้นหาชื่อคณะ/สำนักวิชา">
                     <div class="select-wrapper">
-                        <select id="facultyFilter">
+                        <select id="facultyFilter" aria-label="เลือกคณะ / วิทยาลัย / สำนักวิชา">
                             <option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>
                         </select>
                     </div>
@@ -2503,7 +2572,7 @@
 
                 <!-- Admission Round Filter -->
                 <div class="select-wrapper">
-                    <select id="roundFilter" onchange="handleRoundChange()">
+                    <select id="roundFilter" onchange="handleRoundChange()" aria-label="รอบการสมัคร">
                         <option value="1" selected>รอบที่ 1 Portfolio</option>
                         <option value="2">รอบที่ 2 Quota</option>
                         <option value="3">รอบที่ 3 Admission</option>
@@ -2515,10 +2584,10 @@
 
         <!-- Personalized Filter Panel (Collapsible Card) -->
         <div class="personalized-panel">
-            <div class="panel-header" onclick="togglePersonalizedPanel()">
-                <h3><i class="fa-solid fa-sliders"></i> 🎯 การจัดการคุณสมบัติและการกรองสิทธิ์</h3>
-                <i class="fa-solid fa-chevron-down" id="panelChevron"></i>
-            </div>
+            <button type="button" class="panel-header" onclick="togglePersonalizedPanel()" aria-expanded="false" aria-controls="panelBody">
+                <h3><i class="fa-solid fa-sliders" aria-hidden="true"></i> 🎯 การจัดการคุณสมบัติและการกรองสิทธิ์</h3>
+                <i class="fa-solid fa-chevron-down" id="panelChevron" aria-hidden="true"></i>
+            </button>
             <div class="panel-body" id="panelBody">
                 <div class="panel-group">
                     <label for="studentGPAX">เกรดเฉลี่ยสะสม (GPAX 5 เทอม):</label>
@@ -2590,7 +2659,7 @@
                     <i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i>
                     เรียงตาม
                 </span>
-                <select id="sortResults">
+                <select id="sortResults" aria-label="เรียงลำดับผลลัพธ์">
                     <option value="default">ค่าเริ่มต้น</option>
                     <option value="seats-desc">จำนวนรับ: มาก → น้อย</option>
                     <option value="seats-asc">จำนวนรับ: น้อย → มาก</option>
@@ -2603,7 +2672,7 @@
 
         <!-- Stats Bar -->
         <div class="stats-bar">
-            <div class="stats-text" id="statsText">
+            <div class="stats-text" id="statsText" aria-live="polite" aria-atomic="true">
                 กำลังค้นหาโครงการ...
             </div>
         </div>
@@ -2615,7 +2684,7 @@
 
         <!-- Load More Section - Phase 8 -->
         <div id="loadMoreSection" class="load-more-section" hidden>
-            <div id="visibleResultsStatus" class="visible-results-status" aria-live="polite"></div>
+            <div id="visibleResultsStatus" class="visible-results-status" aria-live="polite" tabindex="-1"></div>
             <button type="button" id="loadMoreResultsBtn" class="load-more-results-btn" aria-controls="cardsGrid">
                 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
                 แสดงผลเพิ่มเติม
@@ -2623,16 +2692,19 @@
         </div>
 
         <!-- Back to Top Button -->
-        <button id="backToTopBtn" title="กลับขึ้นด้านบน" onclick="scrollToTop()">
-            <i class="fa-solid fa-chevron-up"></i>
+        <button type="button" id="backToTopBtn" aria-label="กลับขึ้นด้านบน" title="กลับขึ้นด้านบน" onclick="scrollToTop()">
+            <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
         </button>
 
         <!-- System Disclaimer Safeguard -->
         <div class="system-disclaimer">
-            <i class="fa-solid fa-circle-exclamation"></i>
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
             <span>ข้อมูลในระบบเป็นข้อมูลสรุปเพื่อช่วยค้นหา ผู้สมัครควรตรวจสอบประกาศฉบับทางการของมหาวิทยาลัยก่อนสมัครทุกครั้ง</span>
         </div>
+    </main>
 
+    <!-- Site Footer outside <main> - Phase 11 -->
+    <footer class="footer-section container" style="padding-top: 0; margin-top: -1.5rem;">
         <!-- Mockup Footer Divider -->
         <div class="divider"></div>
 
@@ -2644,16 +2716,16 @@
                 <span>© 2026 TCAS70</span>
             </div>
             <div class="footer-socials">
-                <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook" aria-hidden="true"></i></a>
+                <a href="#" aria-label="Twitter/X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
             </div>
         </div>
 
         <!-- Admin Credit Footer with QR Code -->
         <div class="admin-credit" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1.5rem;">
-            <a href="https://line.me/ti/g2/LZO6E3ufrr2Xx0K0xOsNaGPYfOn8x5AoEKcFvg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+            <a href="https://line.me/ti/g2/LZO6E3ufrr2Xx0K0xOsNaGPYfOn8x5AoEKcFvg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;" aria-label="ลิงก์เข้าร่วมกลุ่ม LINE OpenChat">
                 <img src="line_openchat_qrcode.png" alt="LINE OpenChat QR Code" style="width: 120px; height: 120px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                 <span style="font-size: 0.8rem; color: var(--secondary-light); font-weight: 600; text-decoration: underline;">คลิกหรือสแกนเพื่อเข้าร่วมกลุ่ม LINE OpenChat</span>
             </a>
@@ -2664,20 +2736,20 @@
                 <span style="font-size: 0.75rem; opacity: 0.7;">พัฒนาขึ้นเพื่อจิตอาสาและเป็นประโยชน์ทางการศึกษาของเยาวชนไทยและผู้ปกครอง</span>
             </div>
         </div>
-    </div>
+    </footer>
 
-    <!-- Floating Targets Pulse Badge -->
-    <div class="floating-targets-badge" id="floatingTargetsBtn" onclick="toggleTargetsModal()">
-        <i class="fa-solid fa-heart"></i>
+    <!-- Floating Targets Pulse Badge - Phase 11 -->
+    <button type="button" class="floating-targets-badge" id="floatingTargetsBtn" onclick="toggleTargetsModal()" aria-label="เปิดรายการเป้าหมาย">
+        <i class="fa-solid fa-heart" aria-hidden="true"></i>
         <span class="badge-count" id="targetCountBadge">0</span>
-    </div>
+    </button>
 
-    <!-- Targets List Modal Overlay -->
-    <div class="modal-overlay" id="targetsModal">
+    <!-- Targets List Modal Overlay - Phase 11 -->
+    <div class="modal-overlay" id="targetsModal" role="dialog" aria-modal="true" aria-labelledby="targetsModalTitle">
         <div class="modal-container">
             <div class="modal-header">
-                <h2><i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i> 💖 คณะเป้าหมายของฉัน (My Target List)</h2>
-                <button class="modal-close-btn" onclick="toggleTargetsModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h2 id="targetsModalTitle"><i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);" aria-hidden="true"></i> 💖 คณะเป้าหมายของฉัน (My Target List)</h2>
+                <button type="button" class="modal-close-btn" onclick="toggleTargetsModal()" aria-label="ปิดกล่องรายการเป้าหมาย"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body" id="modalBody">
                 <!-- Saved items list dynamically populated -->
@@ -2686,41 +2758,41 @@
             <div class="theme-selector-container" style="padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 0.5rem;">
                 <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-align: left;">เลือกธีมสีการ์ดสรุป:</label>
                 <div class="theme-options" style="display: flex; gap: 0.75rem;">
-                    <button class="theme-opt-btn active" onclick="selectCardTheme('midnight')" data-theme="midnight" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(99,102,241,0.5); background: rgba(99,102,241,0.15); color: #fff; cursor: pointer; font-family: inherit; transition: all 0.2s;">🌌 Midnight</button>
-                    <button class="theme-opt-btn" onclick="selectCardTheme('pastel')" data-theme="pastel" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🌸 Pastel</button>
-                    <button class="theme-opt-btn" onclick="selectCardTheme('mint')" data-theme="mint" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🍵 Mint</button>
-                    <button class="theme-opt-btn" onclick="selectCardTheme('slate')" data-theme="slate" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🖤 Slate</button>
+                    <button type="button" class="theme-opt-btn active" onclick="selectCardTheme('midnight')" data-theme="midnight" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(99,102,241,0.5); background: rgba(99,102,241,0.15); color: #fff; cursor: pointer; font-family: inherit; transition: all 0.2s;">🌌 Midnight</button>
+                    <button type="button" class="theme-opt-btn" onclick="selectCardTheme('pastel')" data-theme="pastel" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🌸 Pastel</button>
+                    <button type="button" class="theme-opt-btn" onclick="selectCardTheme('mint')" data-theme="mint" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🍵 Mint</button>
+                    <button type="button" class="theme-opt-btn" onclick="selectCardTheme('slate')" data-theme="slate" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🖤 Slate</button>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-btn btn-secondary" onclick="toggleTargetsModal()">ปิดหน้าต่าง</button>
-                <button class="modal-btn btn-primary" onclick="exportShareCard()"><i class="fa-solid fa-share-nodes"></i> สร้างรูปภาพสรุปเกณฑ์ (แชร์ต่อ LINE)</button>
+                <button type="button" class="modal-btn btn-secondary" onclick="toggleTargetsModal()">ปิดหน้าต่าง</button>
+                <button type="button" class="modal-btn btn-primary" onclick="exportShareCard()"><i class="fa-solid fa-share-nodes" aria-hidden="true"></i> สร้างรูปภาพสรุปเกณฑ์ (แชร์ต่อ LINE)</button>
             </div>
         </div>
     </div>
 
 
-    <!-- Floating Chatbot Toggle Button -->
-    <div class="floating-chat-btn" id="floatingChatBtn" onclick="toggleChatWindow()">
-        <i class="fa-solid fa-comments"></i>
-        <div class="chat-pulse"></div>
-    </div>
+    <!-- Floating Chatbot Toggle Button - Phase 11 -->
+    <button type="button" class="floating-chat-btn" id="floatingChatBtn" onclick="toggleChatWindow()" aria-label="แชตถามตอบด้วยพี่ AI" aria-expanded="false">
+        <i class="fa-solid fa-comments" aria-hidden="true"></i>
+        <div class="chat-pulse" aria-hidden="true"></div>
+    </button>
 
-    <!-- Chatbot Window -->
-    <div class="chat-window" id="chatWindow">
+    <!-- Chatbot Window - Phase 11 -->
+    <div class="chat-window" id="chatWindow" role="dialog" aria-modal="false" aria-label="กล่องข้อความแชตถามตอบด้วยพี่ AI">
         <div class="chat-header">
-            <div class="chat-header-title">
-                <i class="fa-solid fa-robot"></i>
+            <div class="chat-header-title" id="chatHeaderTitle">
+                <i class="fa-solid fa-robot" aria-hidden="true"></i>
                 <div class="title-text">
                     <h4>พี่ AI TCAS70</h4>
                     <span class="online-indicator"><span class="dot"></span> Online (Free tier)</span>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <button onclick="clearChatHistory()" title="ล้างประวัติการคุย" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.78rem; display: flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); font-family: inherit; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='rgba(255,255,255,0.1)'">
-                    <i class="fa-solid fa-trash-can"></i> ล้างแชต
+                <button type="button" onclick="clearChatHistory()" title="ล้างประวัติการคุย" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.78rem; display: flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); font-family: inherit; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='rgba(255,255,255,0.1)'">
+                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i> ล้างแชต
                 </button>
-                <button class="chat-close-btn" onclick="toggleChatWindow()"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="chat-close-btn" onclick="toggleChatWindow()" aria-label="ปิดกล่องแชต"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
         </div>
         <div class="chat-body" id="chatBody">
@@ -2728,32 +2800,32 @@
                 สวัสดีครับน้องๆ และผู้ปกครอง! ยินดีต้อนรับสู่ระบบแนะนำเกณฑ์ TCAS70 รอบ Portfolio ครับ 🎓 พี่ AI สามารถช่วยน้องๆ เช็กเกณฑ์คณะต่างๆ ตรวจสอบเงื่อนไขเด็กซิ่ว/ปวช/สายวิทย์-คอม หรืออธิบายความหมายของวุฒิการศึกษาได้เลยครับ! น้องๆ อยากถามอะไรพิมพ์มาได้เลย หรือเลือกดูคำถามแนะนำด้านล่างนี้ได้ครับ 👇
             </div>
             <div class="quick-prompts">
-                <button onclick="sendQuickPrompt('วิศวะ จุฬา ต้องใช้ GPAX เท่าไหร่?')">วิศวะ จุฬา ใช้ GPAX เท่าไหร่?</button>
-                <button onclick="sendQuickPrompt('วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?')">วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?</button>
-                <button onclick="sendQuickPrompt('ครุศาสตร์ เครื่องกล 5 ปี จบมาได้กี่วุฒิ?')">ครุฯ เครื่องกล 5 ปี ได้กี่วุฒิ?</button>
-                <button onclick="sendQuickPrompt('เด็กซิ่วยื่นรอบพอร์ตได้ไหม?')">เด็กซิ่วยื่นรอบพอร์ตได้ไหม?</button>
+                <button type="button" onclick="sendQuickPrompt('วิศวะ จุฬา ต้องใช้ GPAX เท่าไหร่?')">วิศวะ จุฬา ใช้ GPAX เท่าไหร่?</button>
+                <button type="button" onclick="sendQuickPrompt('วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?')">วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?</button>
+                <button type="button" onclick="sendQuickPrompt('ครุศาสตร์ เครื่องกล 5 ปี จบมาได้กี่วุฒิ?')">ครุฯ เครื่องกล 5 ปี ได้กี่วุฒิ?</button>
+                <button type="button" onclick="sendQuickPrompt('เด็กซิ่วยื่นรอบพอร์ตได้ไหม?')">เด็กซิ่วยื่นรอบพอร์ตได้ไหม?</button>
             </div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="ถามคำถามพี่ AI ที่นี่... (เช่น วิศวะ คอม มทส)" onkeydown="handleChatInputKey(event)">
-            <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            <input type="text" id="chatInput" placeholder="ถามคำถามพี่ AI ที่นี่... (เช่น วิศวะ คอม มทส)" onkeydown="handleChatInputKey(event)" aria-label="คำถามถึงพี่ AI">
+            <button type="button" class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()" aria-label="ส่งข้อความ"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
         </div>
     </div>
 
 
 
-    <!-- Image Preview Modal Overlay (For mobile long-press saving) -->
-    <div class="modal-overlay" id="imagePreviewModal" style="z-index: 1200;">
+    <!-- Image Preview Modal Overlay (For mobile long-press saving) - Phase 11 -->
+    <div class="modal-overlay" id="imagePreviewModal" style="z-index: 1200;" role="dialog" aria-modal="true" aria-labelledby="imagePreviewModalTitle">
         <div class="modal-container" style="max-width: 480px; width: 92%; background: #0f172a; border: 1px solid rgba(255,255,255,0.1);">
             <div class="modal-header" style="padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <h3 style="font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-regular fa-image" style="color: var(--primary-light);"></i> รูปภาพเป้าหมายของคุณ
+                <h3 id="imagePreviewModalTitle" style="font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-regular fa-image" style="color: var(--primary-light);" aria-hidden="true"></i> รูปภาพเป้าหมายของคุณ
                 </h3>
-                <button class="modal-close-btn" onclick="toggleImagePreviewModal()"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="modal-close-btn" onclick="toggleImagePreviewModal()" aria-label="ปิดรูปภาพตัวอย่าง"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body" style="padding: 1.25rem; text-align: center; display: flex; flex-direction: column; gap: 1rem;">
                 <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); padding: 0.75rem; border-radius: 8px; font-size: 0.82rem; color: #e2e8f0; line-height: 1.4; text-align: left;">
-                    <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-light);"></i> <strong>วิธีบันทึกภาพลงมือถือ:</strong><br>
+                    <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-light);" aria-hidden="true"></i> <strong>วิธีบันทึกภาพลงมือถือ:</strong><br>
                     แตะค้างที่รูปภาพด้านล่าง แล้วเลือก <strong>"บันทึกรูปภาพ" (Save Image)</strong> หรือ <strong>"คัดลอก/แชร์" (Share)</strong> ลง Line, IG, FB ได้โดยตรงและบันทึกเข้าคลังภาพได้ทันทีครับ
                 </div>
                 
@@ -2763,20 +2835,20 @@
                 </div>
             </div>
             <div class="modal-footer" style="padding: 0.85rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 0.75rem;">
-                <button class="modal-btn btn-secondary" style="flex: 1;" onclick="toggleImagePreviewModal()">ปิด</button>
+                <button type="button" class="modal-btn btn-secondary" style="flex: 1;" onclick="toggleImagePreviewModal()">ปิด</button>
                 <a id="downloadFallbackBtn" href="" download="tcas70_my_targets.png" class="modal-btn btn-primary" style="flex: 1.2; background: var(--gradient-primary); border: none; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem; color: #fff;">
-                    <i class="fa-solid fa-download"></i> ดาวน์โหลดรูปภาพ
+                    <i class="fa-solid fa-download" aria-hidden="true"></i> ดาวน์โหลดรูปภาพ
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- About Modal Overlay (Volunteer Mission Detail) -->
-    <div class="modal-overlay" id="aboutModal">
+    <!-- About Modal Overlay (Volunteer Mission Detail) - Phase 11 -->
+    <div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle">
         <div class="modal-container" style="max-width: 600px;">
             <div class="modal-header">
-                <h2><i class="fa-solid fa-circle-info" style="color: var(--primary-light);"></i> เกี่ยวกับโปรเจกต์ TCAS70 Portfolio Finder</h2>
-                <button class="modal-close-btn" onclick="toggleAboutModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h2 id="aboutModalTitle"><i class="fa-solid fa-circle-info" style="color: var(--primary-light);" aria-hidden="true"></i> เกี่ยวกับโปรเจกต์ TCAS70 Portfolio Finder</h2>
+                <button type="button" class="modal-close-btn" onclick="toggleAboutModal()" aria-label="ปิดหน้าต่างเกี่ยวกับโปรเจกต์"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body" style="line-height: 1.6; font-size: 0.92rem; color: #e2e8f0; text-align: left; display: flex; flex-direction: column; gap: 0.9rem;">
                 <div style="text-align: center; margin-bottom: 0.25rem;">
@@ -2810,23 +2882,23 @@
                 </p>
             </div>
             <div class="modal-footer">
-                <button class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleAboutModal()">ปิดหน้าต่าง</button>
+                <button type="button" class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleAboutModal()">ปิดหน้าต่าง</button>
             </div>
         </div>
     </div>
 
-    <!-- Degree Info Modal Overlay -->
-    <div class="modal-overlay" id="degreeInfoModal">
+    <!-- Degree Info Modal Overlay - Phase 11 -->
+    <div class="modal-overlay" id="degreeInfoModal" role="dialog" aria-modal="true" aria-labelledby="degreeModalTitle">
         <div class="modal-container" style="max-width: 500px;">
             <div class="modal-header">
                 <h2 id="degreeModalTitle"></h2>
-                <button class="modal-close-btn" onclick="toggleDegreeModal()"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="modal-close-btn" onclick="toggleDegreeModal()" aria-label="ปิดกล่องข้อมูลปริญญา"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body" id="degreeModalBody" style="line-height: 1.6; font-size: 0.95rem; color: #e2e8f0; text-align: left;">
                 <!-- Content dynamically populated -->
             </div>
             <div class="modal-footer">
-                <button class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleDegreeModal()">เข้าใจแล้ว</button>
+                <button type="button" class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleDegreeModal()">เข้าใจแล้ว</button>
             </div>
         </div>
     </div>
@@ -2855,6 +2927,27 @@
 
     <!-- Main JS -->
     <script>
+        // Focus recovery strategy (Phase 11)
+        function safeFocus(elementOrId) {
+            window.requestAnimationFrame(() => {
+                const element = typeof elementOrId === 'string'
+                    ? document.getElementById(elementOrId)
+                    : elementOrId;
+
+                if (
+                    element &&
+                    !element.hidden &&
+                    !element.disabled &&
+                    element.style.display !== 'none' &&
+                    element.style.visibility !== 'hidden' &&
+                    !element.closest('[hidden]') &&
+                    typeof element.focus === 'function'
+                ) {
+                    element.focus();
+                }
+            });
+        }
+
         let allData = [];
         let filteredData = [];
         let activeRoundData = [];
@@ -3057,6 +3150,34 @@
             }
 
             filterData();
+
+            // Focus recovery strategy (Phase 11)
+            switch (key) {
+                case 'search':
+                    safeFocus('searchInput');
+                    break;
+                case 'university':
+                    safeFocus('uniFilter');
+                    break;
+                case 'faculty':
+                    safeFocus('facultyFilter');
+                    break;
+                case 'gpax':
+                    safeFocus('studentGPAX');
+                    break;
+                case 'plan':
+                    safeFocus('studentPlan');
+                    break;
+                case 'english':
+                    safeFocus('hasEnglish');
+                    break;
+                case 'aptitude':
+                    safeFocus('hasAptitude');
+                    break;
+                case 'alevel':
+                    safeFocus('hasALevel');
+                    break;
+            }
         }
 
         // Clear all optional filters while preserving active round (Phase 6)
@@ -3088,6 +3209,9 @@
 
             updateFacultyDropdown();
             filterData();
+
+            // Focus recovery strategy (Phase 11)
+            safeFocus('searchInput');
         }
 
         // No-Results Recovery and Diagnostics (Phase 10)
@@ -4010,13 +4134,13 @@
             const escapedName = name.replace(/'/g, "\\'").replace(/"/g, '\\"');
             
             if (name.includes('ครุศาสตร์อุตสาหกรรม') || name.includes('ค.อ.บ.')) {
-                html += ` <span class="degree-info-btn degree-kob" onclick="showDegreeInfo('kob', '${escapedName}')" title="ข้อมูลปริญญา ค.อ.บ."><i class="fa-solid fa-circle-question"></i> ค.อ.บ.</span>`;
+                html += ` <button type="button" class="degree-info-btn degree-kob" onclick="showDegreeInfo('kob', '${escapedName}')" title="ข้อมูลปริญญา ค.อ.บ." aria-haspopup="dialog" aria-controls="degreeInfoModal" aria-expanded="false"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> ค.อ.บ.</button>`;
             } else if (name.includes('เทคโนโลยีบัณฑิต') || name.includes('ทล.บ.')) {
-                html += ` <span class="degree-info-btn degree-tolob" onclick="showDegreeInfo('tolob', '${escapedName}')" title="ข้อมูลปริญญา ทล.บ."><i class="fa-solid fa-circle-question"></i> ทล.บ.</span>`;
+                html += ` <button type="button" class="degree-info-btn degree-tolob" onclick="showDegreeInfo('tolob', '${escapedName}')" title="ข้อมูลปริญญา ทล.บ." aria-haspopup="dialog" aria-controls="degreeInfoModal" aria-expanded="false"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> ทล.บ.</button>`;
             } else if (name.includes('อุตสาหกรรมศาสตรบัณฑิต') || name.includes('อส.บ.')) {
-                html += ` <span class="degree-info-btn degree-osob" onclick="showDegreeInfo('osob', '${escapedName}')" title="ข้อมูลปริญญา อส.บ."><i class="fa-solid fa-circle-question"></i> อส.บ.</span>`;
+                html += ` <button type="button" class="degree-info-btn degree-osob" onclick="showDegreeInfo('osob', '${escapedName}')" title="ข้อมูลปริญญา อส.บ." aria-haspopup="dialog" aria-controls="degreeInfoModal" aria-expanded="false"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> อส.บ.</button>`;
             } else if (name.includes('วิศวกรรมศาสตรบัณฑิต') || name.includes('วศ.บ.') || (name.includes('วิศวกรรม') && !name.includes('เทคโนโลยีบัณฑิต') && !name.includes('อุตสาหกรรมศาสตรบัณฑิต'))) {
-                html += ` <span class="degree-info-btn degree-wosob" onclick="showDegreeInfo('wosob', '${escapedName}')" title="ข้อมูลปริญญา วศ.บ."><i class="fa-solid fa-circle-question"></i> วศ.บ.</span>`;
+                html += ` <button type="button" class="degree-info-btn degree-wosob" onclick="showDegreeInfo('wosob', '${escapedName}')" title="ข้อมูลปริญญา วศ.บ." aria-haspopup="dialog" aria-controls="degreeInfoModal" aria-expanded="false"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> วศ.บ.</button>`;
             }
             return html;
         }
@@ -4179,9 +4303,17 @@
                 }
                 specialBadgesHTML += `</div>`;
                 
+                const cleanProgramName = item.program_name.replace(/"/g, '&quot;');
+                const cleanProjectName = item.project_name.replace(/"/g, '&quot;');
+                const cleanUniName = item.university_name.replace(/"/g, '&quot;');
+                const projTitle = `${cleanProgramName} (${cleanProjectName}) ของ ${cleanUniName}`;
+                const bookmarkLabel = isBookmarked 
+                    ? `นำโครงการ ${projTitle} ออกจากรายการเป้าหมาย` 
+                    : `เพิ่มโครงการ ${projTitle} ในรายการเป้าหมาย`;
+
                 card.innerHTML = `
-                    <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" id="bookmark-${item.program_id}-${item.project_id}" title="บันทึกคณะเป้าหมาย">
-                        <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                    <button type="button" class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" id="bookmark-${item.program_id}-${item.project_id}" title="${isBookmarked ? 'นำออกจากเป้าหมาย' : 'บันทึกคณะเป้าหมาย'}" aria-pressed="${isBookmarked ? 'true' : 'false'}" aria-label="${bookmarkLabel}">
+                        <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-heart" aria-hidden="true"></i>
                     </button>
                     <div class="card-header">
                         <img class="uni-logo" src="${logoUrl}" alt="${item.university_name} Logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
@@ -4197,7 +4329,7 @@
                         
                         <div class="project-details">
                             <div class="project-title">
-                                <i class="fa-solid fa-star-of-life"></i>
+                                <i class="fa-solid fa-star-of-life" aria-hidden="true"></i>
                                 <span>${item.project_name}</span>
                             </div>
                             <!-- Focus Highlight Badge -->
@@ -4206,7 +4338,7 @@
 
                         <!-- Intake Badge Centered -->
                         <div class="seats-badge">
-                            <i class="fa-solid fa-user-group"></i> รับจำนวน <span class="seats-count">${item.seats}</span> คน
+                            <i class="fa-solid fa-user-group" aria-hidden="true"></i> รับจำนวน <span class="seats-count">${item.seats}</span> คน
                         </div>
                         
                         <!-- Checklist Requirements dynamically parsed -->
@@ -4214,35 +4346,35 @@
 
                         <!-- High School Curriculum Eligibility Tags (Match official site style) -->
                         <div class="eligibility-box">
-                            <div class="eligibility-title"><i class="fa-solid fa-graduation-cap"></i> แผนการเรียนที่รับสมัคร:</div>
+                            <div class="eligibility-title"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> แผนการเรียนที่รับสมัคร:</div>
                             <div class="eligibility-tags">
                                 <span class="tag ${item.only_formal === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ม.ปลายสามัญ
+                                    <i class="fa-solid ${item.only_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> ม.ปลายสามัญ
                                 </span>
                                 <span class="tag ${item.only_vocational === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_vocational === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> อาชีวะ / สายอาชีพ
+                                    <i class="fa-solid ${item.only_vocational === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> อาชีวะ / สายอาชีพ
                                 </span>
                                 <span class="tag ${item.only_ged === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_ged === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> GED เทียบเท่า
+                                    <i class="fa-solid ${item.only_ged === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> GED เทียบเท่า
                                 </span>
                                 <span class="tag ${item.only_international === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_international === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> นานาชาติ
+                                    <i class="fa-solid ${item.only_international === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> นานาชาติ
                                 </span>
                                 <span class="tag ${item.only_non_formal === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_non_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> กศน.
+                                    <i class="fa-solid ${item.only_non_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> กศน.
                                 </span>
                             </div>
                         </div>
 
                         <!-- Collapsible Conditions detail (Rendered unconditionally in Phase 3C) -->
                         <div class="criteria-accordion" style="margin-bottom: 0.5rem;">
-                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'cond', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})">
-                                <span><i class="fa-solid fa-circle-info"></i> เกณฑ์คุณสมบัติและเงื่อนไข (Requirements)</span>
-                                <i class="fa-solid fa-chevron-down"></i>
+                            <button type="button" class="criteria-trigger" onclick="toggleCriteria(this, 'cond', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})" aria-expanded="false" aria-controls="crit-content-cond-${index}">
+                                <span><i class="fa-solid fa-circle-info" aria-hidden="true"></i> เกณฑ์คุณสมบัติและเงื่อนไข (Requirements)</span>
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
                             </button>
-                            <div class="criteria-content" id="crit-content-cond-${index}">
+                            <div class="criteria-content" id="crit-content-cond-${index}" aria-hidden="true">
                                 <div class="criteria-inner" style="border-top: 1px solid rgba(255, 255, 255, 0.05); color: #f8fafc; background-color: rgba(99, 102, 241, 0.03);">
-                                    <i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+                                    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> กำลังโหลดข้อมูล...
                                 </div>
                             </div>
                         </div>
@@ -4250,13 +4382,13 @@
                         <!-- Collapsible Criteria detail -->
                         ${item.has_criteria ? `
                         <div class="criteria-accordion">
-                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'crit', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})">
-                                <span><i class="fa-solid fa-list-check"></i> เกณฑ์พอร์ตโฟลิโอแบบเต็ม (Criteria)</span>
-                                <i class="fa-solid fa-chevron-down"></i>
+                            <button type="button" class="criteria-trigger" onclick="toggleCriteria(this, 'crit', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})" aria-expanded="false" aria-controls="crit-content-crit-${index}">
+                                <span><i class="fa-solid fa-list-check" aria-hidden="true"></i> เกณฑ์พอร์ตโฟลิโอแบบเต็ม (Criteria)</span>
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
                             </button>
-                            <div class="criteria-content" id="crit-content-crit-${index}">
+                            <div class="criteria-content" id="crit-content-crit-${index}" aria-hidden="true">
                                 <div class="criteria-inner">
-                                    <i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+                                    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> กำลังโหลดข้อมูล...
                                 </div>
                             </div>
                         </div>
@@ -4272,9 +4404,9 @@
                                 return 'https://admission.psu.ac.th/';
                             }
                             return url;
-                        })() : 'https://www.mytcas.com'}" target="_blank" class="btn-apply">
+                        })() : 'https://www.mytcas.com'}" target="_blank" class="btn-apply" aria-label="รายละเอียดเพิ่มเติมโครงการ ${cleanProgramName} ของ ${cleanUniName}">
                             <span>รายละเอียดเพิ่มเติม</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
                         </a>
                     </div>
                 `;
@@ -4314,6 +4446,8 @@
             button.classList.toggle('active');
             
             if (button.classList.contains('active')) {
+                button.setAttribute('aria-expanded', 'true');
+                if (contentContainer) contentContainer.setAttribute('aria-hidden', 'false');
                 const innerDiv = contentContainer.querySelector('.criteria-inner');
                 
                 // If details are not loaded for this university, fetch the chunk
@@ -4361,7 +4495,7 @@
                         secondaryReqsHTML = `
                             <div class="secondary-requirements-box">
                                 <div class="secondary-requirements-title">
-                                    <i class="fa-solid fa-clipboard-list"></i> เกณฑ์คุณสมบัติเพิ่มเติม:
+                                    <i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> เกณฑ์คุณสมบัติเพิ่มเติม:
                                 </div>
                                 <ul class="req-list">${itemsList.join('')}</ul>
                             </div>
@@ -4376,6 +4510,8 @@
                 // Force layout update for heights
                 contentContainer.style.maxHeight = contentContainer.scrollHeight + "px";
             } else {
+                button.setAttribute('aria-expanded', 'false');
+                if (contentContainer) contentContainer.setAttribute('aria-hidden', 'true');
                 contentContainer.style.maxHeight = "0px";
             }
         };
@@ -4409,6 +4545,12 @@
 
         // Degree Info Modal controllers
         window.showDegreeInfo = function(type, programName) {
+            // Track trigger button and update ARIA state
+            window.lastActiveDegreeBtn = document.activeElement;
+            if (window.lastActiveDegreeBtn && typeof window.lastActiveDegreeBtn.setAttribute === 'function') {
+                window.lastActiveDegreeBtn.setAttribute('aria-expanded', 'true');
+            }
+
             const title = document.getElementById('degreeModalTitle');
             const body = document.getElementById('degreeModalBody');
             
@@ -4421,7 +4563,7 @@
             const dualNotice = isDualQ ? `
                 <div style="background: rgba(99, 102, 241, 0.12); padding: 0.85rem; border-radius: 8px; font-size: 0.82rem; border: 1px solid rgba(99, 102, 241, 0.35); margin-bottom: 1.25rem; text-align: left; color: #a5b4fc; line-height: 1.5;">
                     <strong style="color: #c7d2fe; display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.4rem;">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> 🌟 หลักสูตรควบ 2 คุณวุฒิวิชาชีพ (Dual Qualification):
+                        <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> 🌟 หลักสูตรควบ 2 คุณวุฒิวิชาชีพ (Dual Qualification):
                     </strong>
                     หลักสูตรครุศาสตร์อุตสาหกรรม 5 ปี นี้ ได้รับการรับรองให้ผู้สำเร็จการศึกษาได้รับสิทธิ์วิชาชีพ 2 ด้านพร้อมกัน:<br>
                     1. ⚙️ <strong>สิทธิ์สอบใบ กว. (สภาวิศวกร):</strong> เพื่อทำงานเป็นวิศวกรวิชาชีพควบคุม (กว. เครื่องกล, ไฟฟ้า, โยธา ตามสาขา)<br>
@@ -4430,7 +4572,7 @@
             ` : '';
             
             if (type === 'kob') {
-                title.innerHTML = `<i class="fa-solid fa-user-tie" style="color: var(--secondary-light);"></i> ปริญญา ค.อ.บ. คืออะไร?`;
+                title.innerHTML = `<i class="fa-solid fa-user-tie" style="color: var(--secondary-light);" aria-hidden="true"></i> ปริญญา ค.อ.บ. คืออะไร?`;
                 body.innerHTML = `
                     ${dualNotice}
                     <p style="margin-bottom: 1rem;"><strong>ค.อ.บ. (ครุศาสตร์อุตสาหกรรมบัณฑิต)</strong> คือ ปริญญาตรีที่ผสานระหว่าง <strong>"วิศวกรรมศาสตร์สายปฏิบัติการ"</strong> และ <strong>"จิตวิทยาการสอน/ครูช่าง"</strong> เข้าไว้ด้วยกันครับ</p>
@@ -4444,7 +4586,7 @@
                     </div>
                 `;
             } else if (type === 'tolob') {
-                title.innerHTML = `<i class="fa-solid fa-microchip" style="color: #34d399;"></i> ปริญญา ทล.บ. คืออะไร?`;
+                title.innerHTML = `<i class="fa-solid fa-microchip" style="color: #34d399;" aria-hidden="true"></i> ปริญญา ทล.บ. คืออะไร?`;
                 body.innerHTML = `
                     <p style="margin-bottom: 1rem;"><strong>ทล.บ. (เทคโนโลยีบัณฑิต / Bachelor of Technology)</strong> คือ ปริญญาตรีที่มุ่งเน้น <strong>"การประยุกต์ใช้เทคโนโลยีและการลงมือปฏิบัติการเชิงวิชาชีพขั้นสูง"</strong> เพื่อพัฒนากำลังคนในอุตสาหกรรมเทคโนโลยีสมัยใหม่ครับ</p>
                     <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
@@ -4457,7 +4599,7 @@
                     </div>
                 `;
             } else if (type === 'osob') {
-                title.innerHTML = `<i class="fa-solid fa-industry" style="color: #fbbf24;"></i> ปริญญา อส.บ. คืออะไร?`;
+                title.innerHTML = `<i class="fa-solid fa-industry" style="color: #fbbf24;" aria-hidden="true"></i> ปริญญา อส.บ. คืออะไร?`;
                 body.innerHTML = `
                     <p style="margin-bottom: 1rem;"><strong>อส.บ. (อุตสาหกรรมศาสตรบัณฑิต / Bachelor of Industrial Technology)</strong> คือ ปริญญาตรีที่เน้น <strong>"เทคโนโลยีและกระบวนการทำงานในโรงงานอุตสาหกรรม"</strong> ผสมผสานกับการบริหารจัดการงานผลิตครับ</p>
                     <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
@@ -4470,7 +4612,7 @@
                     </div>
                 `;
             } else if (type === 'wosob') {
-                title.innerHTML = `<i class="fa-solid fa-helmet-safety" style="color: var(--primary-light);"></i> ปริญญา วศ.บ. คืออะไร?`;
+                title.innerHTML = `<i class="fa-solid fa-helmet-safety" style="color: var(--primary-light);" aria-hidden="true"></i> ปริญญา วศ.บ. คืออะไร?`;
                 body.innerHTML = `
                     ${dualNotice}
                     <p style="margin-bottom: 1rem;"><strong>วศ.บ. (วิศวกรรมศาสตรบัณฑิต)</strong> คือ ปริญญาตรีสายวิชาชีพวิศวกรรมศาสตร์โดยตรง มุ่งเน้นการคิดค้น วิเคราะห์ ออกแบบคำนวณ และควบคุมดูแลโครงการด้านวิศวกรรมครับ</p>
@@ -4486,10 +4628,25 @@
             }
             
             document.getElementById('degreeInfoModal').classList.add('active');
+            
+            // Focus Close button inside modal (first focusable element inside the modal header)
+            const modalCloseBtn = document.querySelector('#degreeInfoModal .modal-close-btn');
+            if (modalCloseBtn) {
+                safeFocus(modalCloseBtn);
+            }
         };
         
         window.toggleDegreeModal = function() {
             document.getElementById('degreeInfoModal').classList.remove('active');
+            
+            // Set trigger button aria-expanded back to false and recover focus
+            if (window.lastActiveDegreeBtn) {
+                if (typeof window.lastActiveDegreeBtn.setAttribute === 'function') {
+                    window.lastActiveDegreeBtn.setAttribute('aria-expanded', 'false');
+                }
+                safeFocus(window.lastActiveDegreeBtn);
+                window.lastActiveDegreeBtn = null;
+            }
         };
 
         // Helper to check study plan eligibility dynamically (optimized to avoid string scanning on load)
@@ -4669,6 +4826,11 @@
                     filteredData.length
                 );
                 renderCards();
+                
+                // Focus recovery strategy (Phase 11)
+                if (currentVisibleCount >= filteredData.length) {
+                    safeFocus('visibleResultsStatus');
+                }
             });
         }
 
@@ -4769,6 +4931,12 @@
             if (!item) return;
 
             const idx = savedTargets.findIndex(t => t.program_id === programId && t.project_id === projectId);
+            
+            const cleanProgramName = item.program_name.replace(/"/g, '&quot;');
+            const cleanProjectName = item.project_name.replace(/"/g, '&quot;');
+            const cleanUniName = item.university_name.replace(/"/g, '&quot;');
+            const projTitle = `${cleanProgramName} (${cleanProjectName}) ของ ${cleanUniName}`;
+
             if (idx > -1) {
                 // Remove target
                 savedTargets.splice(idx, 1);
@@ -4777,6 +4945,9 @@
                 if (btn) {
                     btn.classList.remove('active');
                     btn.querySelector('i').className = 'fa-regular fa-heart';
+                    btn.setAttribute('aria-pressed', 'false');
+                    btn.setAttribute('aria-label', `เพิ่มโครงการ ${projTitle} ในรายการเป้าหมาย`);
+                    btn.setAttribute('title', 'บันทึกคณะเป้าหมาย');
                 }
             } else {
                 // Add target
@@ -4786,6 +4957,9 @@
                 if (btn) {
                     btn.classList.add('active');
                     btn.querySelector('i').className = 'fa-solid fa-heart';
+                    btn.setAttribute('aria-pressed', 'true');
+                    btn.setAttribute('aria-label', `นำโครงการ ${projTitle} ออกจากรายการเป้าหมาย`);
+                    btn.setAttribute('title', 'นำออกจากเป้าหมาย');
                 }
             }
 
@@ -4810,7 +4984,7 @@
             if (savedTargets.length === 0) {
                 body.innerHTML = `
                     <div class="empty-saved">
-                        <i class="fa-solid fa-folder-open"></i>
+                        <i class="fa-solid fa-folder-open" aria-hidden="true"></i>
                         <p style="font-size: 0.95rem; font-weight: 600;">ยังไม่มีคณะเป้าหมายที่บันทึกไว้</p>
                         <p style="font-size: 0.8rem; margin-top: 0.5rem;">กดรูปหัวใจ 💖 บนการ์ดวิชาที่ชอบเพื่อเก็บรวบรวมเข้า Target List</p>
                     </div>
@@ -4822,17 +4996,22 @@
                 const logoUrl = `https://assets.mytcas.com/i/logo/${item.university_id}.png`;
                 const div = document.createElement('div');
                 div.className = 'saved-item';
+                
+                const cleanProgramName = item.program_name.replace(/"/g, '&quot;');
+                const cleanProjectName = item.project_name.replace(/"/g, '&quot;');
+                const cleanUniName = item.university_name.replace(/"/g, '&quot;');
+
                 div.innerHTML = `
                     <div class="saved-item-info">
-                        <img class="saved-item-logo" src="${logoUrl}" alt="logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
+                        <img class="saved-item-logo" src="${logoUrl}" alt="${item.university_name} Logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
                         <div class="saved-item-details">
                             <h4>${item.program_name}</h4>
                             <p>${item.university_name} | ${item.faculty_name} | <span style="color:var(--primary-light); font-weight:600;">รอบที่ ${item.round || 1}</span></p>
                             <p style="font-size: 0.75rem; color: var(--secondary-light); margin-top: 0.15rem;">${item.project_name} (รับ ${item.seats} คน)</p>
                         </div>
                     </div>
-                    <button class="remove-target-btn" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" title="ลบออก">
-                        <i class="fa-solid fa-trash-can"></i>
+                    <button type="button" class="remove-target-btn" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" title="ลบออก" aria-label="นำโครงการ ${cleanProgramName} (${cleanProjectName}) ของ ${cleanUniName} ออกจากรายการเป้าหมาย">
+                        <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
                     </button>
                 `;
                 body.appendChild(div);
@@ -4937,12 +5116,16 @@
 
         window.toggleChatWindow = function() {
             const win = document.getElementById('chatWindow');
+            const btn = document.getElementById('floatingChatBtn');
             isChatOpen = !isChatOpen;
             if (isChatOpen) {
                 win.classList.add('active');
-                document.getElementById('chatInput').focus();
+                if (btn) btn.setAttribute('aria-expanded', 'true');
+                safeFocus('chatInput');
             } else {
                 win.classList.remove('active');
+                if (btn) btn.setAttribute('aria-expanded', 'false');
+                safeFocus('floatingChatBtn');
             }
         };
 
