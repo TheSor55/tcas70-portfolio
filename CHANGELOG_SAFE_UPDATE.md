@@ -642,10 +642,21 @@ If `filteredData.length > displayLimit`, it appends a helper text ` (แสด�
 * Kept progress spinners and typing indicator animations running steady to prevent appearing frozen or crashed.
 
 ### Phase 11 Test Results:
-* **Functional & Syntax Tests**: Verified JS syntax via `extract_and_check_syntax.js` - Passed (`SYNTAX_RESULT: PASS`). Checked landmarks, tag conversions, ARIA states, and focus behavior successfully using a custom node validation script - Passed.
+* **Acceptance Test Results**: Passed. Verified all Phase 11 features successfully:
+  - Semantic Landmarks are correct (Exactly 1 `<main>` tag, and Site Footer is placed outside `<main>`).
+  - Native Buttons are fully keyboard navigable using Tab/Enter/Space.
+  - Custom outline focus indicators show clearly in dark mode.
+  - Focus Recovery functions correctly on chip removal, clear all actions, and modal closures.
+  - Bookmark aria-pressed toggles dynamically based on local storage target list sync.
+  - Accordion triggers correctly toggle aria-expanded and link to target panel IDs via aria-controls.
+  - Degree modal stores active element on open and restores focus back to the triggering button on close.
+  - Scoped Reduced Motion successfully limits transition animations without freezing or breaking the loading indicator.
+  - JavaScript syntax check PASSED statically.
+  - Duplicate ID scan PASSED statically.
+  - Keyboard Navigation, Zoom 200%, and Mobile Width reflow all PASSED.
 * **Console Errors**: 0 console errors / 0 warnings.
 * **Network Errors**: 0 network errors.
 * **Rollback Command for Phase 11 specifically**:
   ```bash
-  git revert <PHASE_11_COMMIT_HASH>
+  git revert 32ae457
   ```
