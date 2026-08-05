@@ -524,3 +524,57 @@ If `filteredData.length > displayLimit`, it appends a helper text ` (แสด�
   ```bash
   git revert <PHASE_8_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 9 — Safe Shareable Search URL State (Applied: 2026-08-04 19:39:00)
+
+### URL State Matrix:
+| UI State | Element ID | URL Parameter | Value Type | Validate ด้วย |
+|---|---|---|---|---|
+| Search | searchInput | q | string | length / trim (limit to 200 chars) |
+| Round | roundFilter | round | enum | option exists (values: 1, 2, 3, 4) |
+| University | uniFilter | university | string | option exists (or special value COTMES) |
+| Faculty | facultyFilter | faculty | string | cached faculty option exists (cross-uni safe) |
+| GPAX | studentGPAX | gpax | number | 0–4 (formatted to 2 decimal string) |
+| Study Plan | studentPlan | plan | enum | option exists |
+| English | hasEnglish | english | boolean | 0/1 |
+| TGAT/TPAT | hasAptitude | aptitude | boolean | 0/1 |
+| A-Level | hasALevel | alevel | boolean | 0/1 |
+| Sorting | sortResults | sort | enum | option exists |
+
+### State Sync Guard Strategy:
+* Added initialization flags: `isRestoringURLState` and `hasRestoredURLState` in memory.
+* `syncURLFromUI()` checks `if (isRestoringURLState) return;` to prevent rewriting URL search parameters during the restoration phase.
+* Utilizes `window.history.replaceState` to update URL search parameters without reloading or flooding the back navigation history.
+
+### Restore Order Sequence:
+1. DOMContentLoaded triggers data fetch of `data_chunks/global_index.json`.
+2. Invokes `restoreStateFromURL()` when data array is fully loaded.
+3. Reads parameters using `URLSearchParams` parser.
+4. Validates and applies `roundFilter`.
+5. Pre-filters `activeRoundData` based on the validated round selection.
+6. Builds university list using `populateFilters()`.
+7. Restores `uniFilter` to the verified university name.
+8. Rebuilds and populates faculty list via `updateFacultyDropdown()`.
+9. Restores `facultyFilter` if still present in the updated options scope (otherwise clears).
+10. Restores search input query, GPAX threshold, Study Plan, and checkbox states.
+11. Restores sorting dropdown value.
+12. Resets visible result limits via `resetVisibleResults()`.
+13. Runs `filterData()` to render matching cards, update filter summary chips, and write canonical parameters.
+14. Discards `isRestoringURLState` guard lock.
+
+### Copy Link & Clipboard Controls:
+* Added a sleek inline button `#copySearchLinkBtn` ("คัดลอกลิงก์การค้นหา") with a spacer inside `.results-toolbar-summary`.
+* `copyCurrentSearchLink()` calls `syncURLFromUI()` to canonicalize search parameters, then executes secure `navigator.clipboard.writeText` if in a secure context.
+* Falls back to a hidden textarea copy mechanism to ensure copy compatibility in HTTP LAN environments (such as phone web views).
+* Shows polite screen-reader accessible feedback text for 3 seconds.
+
+### Phase 9 Test Results:
+* **Functional & Visual Tests**: Passed. Shared URLs correctly restore complete search configurations, cascading university-faculty bounds, sorting choices, and personalized checkbox markers. Clipboard fallback works seamlessly on mobile web browser connections.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 9 specifically**:
+  ```bash
+  git revert <PHASE_9_COMMIT_HASH>
+  ```
