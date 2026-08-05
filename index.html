@@ -2951,6 +2951,8 @@
         let allData = [];
         let filteredData = [];
         let activeRoundData = [];
+        let currentSortedResults = [];
+        let currentSortedMode = 'default';
 
         // Searchable dropdowns structure caching variables (Phase 4)
         let cachedUniStructure = [];
@@ -3391,7 +3393,14 @@
                 (query ? '?' + query : '') +
                 window.location.hash;
 
-            window.history.replaceState(null, '', nextURL);
+            const currentURL =
+                window.location.pathname +
+                window.location.search +
+                window.location.hash;
+
+            if (nextURL !== currentURL) {
+                window.history.replaceState(null, '', nextURL);
+            }
         }
 
         function readSearchStateFromURL() {
@@ -3632,6 +3641,12 @@
             return direction === 'asc' ? a - b : b - a;
         }
 
+        // Reusable Intl.Collator instance (Phase 12)
+        const thaiCollator = new Intl.Collator('th', {
+            sensitivity: 'base',
+            numeric: true
+        });
+
         // Thai text comparator helper (Phase 7)
         function compareThaiText(a, b) {
             const strA = String(a || '').trim();
@@ -3639,10 +3654,7 @@
             if (strA === '' && strB === '') return 0;
             if (strA === '') return 1;
             if (strB === '') return -1;
-            return strA.localeCompare(strB, 'th', {
-                sensitivity: 'base',
-                numeric: true
-            });
+            return thaiCollator.compare(strA, strB);
         }
 
         // Stable program identity tie-breaker comparator (Phase 7)
@@ -3697,6 +3709,14 @@
                 return comparison !== 0 ? comparison : compareProgramIdentity(a, b);
             });
             return results;
+        }
+
+        // Refresh sorted results render cache (Phase 12)
+        function refreshSortedResults() {
+            const sortSelect = document.getElementById('sortResults');
+            const sortMode = sortSelect ? sortSelect.value : 'default';
+            currentSortedResults = getSortedResults(filteredData, sortMode);
+            currentSortedMode = sortMode;
         }
 
         // Update Sort status hint text feedback (Phase 7)
@@ -3856,6 +3876,12 @@
         const hasEnglish = document.getElementById('hasEnglish');
         const hasAptitude = document.getElementById('hasAptitude');
         const hasALevel = document.getElementById('hasALevel');
+
+        // Static Cached DOM References (Phase 12)
+        const sortResults = document.getElementById('sortResults');
+        const loadMoreSection = document.getElementById('loadMoreSection');
+        const visibleResultsStatus = document.getElementById('visibleResultsStatus');
+        const loadMoreResultsBtn = document.getElementById('loadMoreResultsBtn');
 
         // Fetch data on load
         window.addEventListener('DOMContentLoaded', async () => {
@@ -4230,16 +4256,11 @@
                 return;
             }
 
-            // Sort filtered results before slicing display limit (Phase 7)
-            const sortSelect = document.getElementById('sortResults');
-            const sortMode = sortSelect ? sortSelect.value : 'default';
-            const sortedResults = getSortedResults(filteredData, sortMode);
-
             // Fetch current visible count for progressive results loading (Phase 8)
             if (currentVisibleCount === 0) {
                 resetVisibleResults();
             }
-            const toDisplay = sortedResults.slice(0, currentVisibleCount);
+            const toDisplay = currentSortedResults.slice(0, currentVisibleCount);
 
             // Dynamic glow classes matching mockup card color highlights
             const glowClasses = ['glow-cyan', 'glow-purple', 'glow-pink', 'glow-orange', 'glow-blue', 'glow-teal'];
@@ -4414,11 +4435,7 @@
             });
 
             // Progressive Results Loading UI update (Phase 8)
-            const loadMoreSection = document.getElementById('loadMoreSection');
-            const visibleStatus = document.getElementById('visibleResultsStatus');
-            const loadMoreBtn = document.getElementById('loadMoreResultsBtn');
-
-            if (loadMoreSection && visibleStatus && loadMoreBtn) {
+            if (loadMoreSection && visibleResultsStatus && loadMoreResultsBtn) {
                 const total = filteredData.length;
                 const shown = toDisplay.length;
 
@@ -4426,12 +4443,12 @@
                     loadMoreSection.hidden = true;
                 } else if (shown >= total) {
                     loadMoreSection.hidden = false;
-                    loadMoreBtn.style.display = 'none';
-                    visibleStatus.textContent = `แสดงครบทั้งหมด ${total} โครงการ`;
+                    loadMoreResultsBtn.style.display = 'none';
+                    visibleResultsStatus.textContent = `แสดงครบทั้งหมด ${total} โครงการ`;
                 } else {
                     loadMoreSection.hidden = false;
-                    loadMoreBtn.style.display = 'inline-flex';
-                    visibleStatus.textContent = `แสดง ${shown} จาก ${total} โครงการ`;
+                    loadMoreResultsBtn.style.display = 'inline-flex';
+                    visibleResultsStatus.textContent = `แสดง ${shown} จาก ${total} โครงการ`;
                 }
             }
 
@@ -4441,6 +4458,8 @@
 
         // Toggle collapsible criteria section with dynamic chunk loading
         let cachedUniDetails = {};
+        const criteriaRequestCache = new Map();
+
         window.toggleCriteria = async function(button, type, uniId, programId, projectId, index) {
             const contentContainer = document.getElementById(`crit-content-${type}-${index}`);
             button.classList.toggle('active');
@@ -4452,13 +4471,25 @@
                 
                 // If details are not loaded for this university, fetch the chunk
                 if (!cachedUniDetails[uniId]) {
+                    // Check if there is already a pending fetch request for this university (Phase 12)
+                    if (!criteriaRequestCache.has(uniId)) {
+                        const fetchPromise = (async () => {
+                            const res = await fetch(`data_chunks/uni_${uniId}.json`);
+                            if (!res.ok) throw new Error("Failed to load chunk");
+                            const data = await res.json();
+                            cachedUniDetails[uniId] = data;
+                            criteriaRequestCache.delete(uniId); // Cleanup pending promise from cache on success
+                            return data;
+                        })();
+                        criteriaRequestCache.set(uniId, fetchPromise);
+                    }
+                    
                     try {
-                        const res = await fetch(`data_chunks/uni_${uniId}.json`);
-                        if (!res.ok) throw new Error("Failed to load chunk");
-                        cachedUniDetails[uniId] = await res.json();
+                        await criteriaRequestCache.get(uniId);
                     } catch (err) {
                         console.error("Error loading chunk:", err);
-                        innerDiv.innerHTML = '<span style="color:var(--accent);"><i class="fa-solid fa-triangle-exclamation"></i> ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง</span>';
+                        criteriaRequestCache.delete(uniId); // Cleanup failed promise from cache so user can retry
+                        innerDiv.innerHTML = '<span style="color:var(--accent);"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง</span>';
                         return;
                     }
                 }
@@ -4775,6 +4806,7 @@
                 return matchesQuery && matchesUni && matchesFaculty;
             });
 
+            refreshSortedResults();
             renderCards();
             
             // Sync active filter chips UI representation (Phase 6)
@@ -4817,7 +4849,6 @@
         }
 
         // Progressive Results Load More Event (Phase 8)
-        const loadMoreResultsBtn = document.getElementById('loadMoreResultsBtn');
         if (loadMoreResultsBtn) {
             loadMoreResultsBtn.addEventListener('click', () => {
                 const batchSize = getDisplayBatchSize();
@@ -4874,10 +4905,10 @@
         }
 
         // Sorting Dropdown Change Listener (Phase 7)
-        const sortResults = document.getElementById('sortResults');
         if (sortResults) {
             sortResults.addEventListener('change', () => {
                 resetVisibleResults(); // Reset progressive loading visible count when sorting changes (Phase 8)
+                refreshSortedResults();
                 renderCards();
                 updateSortStatus();
             });
