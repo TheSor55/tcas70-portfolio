@@ -525,6 +525,46 @@
             }
         }
         
+        /* Copy Search Link - Phase 9 */
+        .results-toolbar-sub {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.15rem;
+        }
+        .results-toolbar-separator {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.8rem;
+        }
+        .copy-search-link-btn {
+            background: none;
+            border: none;
+            color: var(--primary-light);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0;
+            transition: color 0.15s ease;
+        }
+        .copy-search-link-btn:hover {
+            color: #818cf8;
+            text-decoration: underline;
+        }
+        .copy-search-link-btn:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        .copy-search-link-status {
+            font-size: 0.76rem;
+            color: #10b981; /* Emerald green for success feedback */
+            font-weight: 500;
+        }
+
         /* Progressive Results Loading Styling - Phase 8 */
         .load-more-section {
             display: flex;
@@ -2376,7 +2416,15 @@
         <div class="results-toolbar">
             <div class="results-toolbar-summary">
                 <h2 class="section-title">ผลการค้นหาโครงการ</h2>
-                <span id="resultsSortStatus" class="results-sort-status">แสดงตามลำดับข้อมูลเริ่มต้น</span>
+                <div class="results-toolbar-sub">
+                    <span id="resultsSortStatus" class="results-sort-status">แสดงตามลำดับข้อมูลเริ่มต้น</span>
+                    <span class="results-toolbar-separator">•</span>
+                    <button type="button" id="copySearchLinkBtn" class="copy-search-link-btn">
+                        <i class="fa-solid fa-link" aria-hidden="true"></i>
+                        คัดลอกลิงก์การค้นหา
+                    </button>
+                    <span id="copySearchLinkStatus" class="copy-search-link-status" aria-live="polite"></span>
+                </div>
             </div>
 
             <label class="sort-control">
@@ -2884,6 +2932,265 @@
             filterData();
         }
 
+        // URL Shareable Search State (Phase 9)
+        let isRestoringURLState = false;
+        let hasRestoredURLState = false;
+
+        function getShareableStateFromUI() {
+            return {
+                q: searchInput ? searchInput.value.trim() : "",
+                round: roundFilter ? roundFilter.value : "1",
+                university: uniFilter ? uniFilter.value : "",
+                faculty: facultyFilter ? facultyFilter.value : "",
+                gpax: studentGPAX ? studentGPAX.value.trim() : "",
+                plan: studentPlan ? studentPlan.value : "",
+                english: hasEnglish ? hasEnglish.checked : false,
+                aptitude: hasAptitude ? hasAptitude.checked : false,
+                alevel: hasALevel ? hasALevel.checked : false,
+                sort: sortResults ? sortResults.value : "default"
+            };
+        }
+
+        function buildShareableSearchParams() {
+            const state = getShareableStateFromUI();
+            const params = new URLSearchParams();
+
+            if (state.q) params.set('q', state.q);
+            params.set('round', state.round);
+
+            if (state.university) params.set('university', state.university);
+            if (state.faculty) params.set('faculty', state.faculty);
+            if (state.gpax) params.set('gpax', state.gpax);
+            if (state.plan) params.set('plan', state.plan);
+            
+            if (state.english) params.set('english', '1');
+            if (state.aptitude) params.set('aptitude', '1');
+            if (state.alevel) params.set('alevel', '1');
+
+            if (state.sort && state.sort !== 'default') {
+                params.set('sort', state.sort);
+            }
+
+            return params;
+        }
+
+        function syncURLFromUI() {
+            if (isRestoringURLState) return;
+            const params = buildShareableSearchParams();
+            const query = params.toString();
+
+            const nextURL =
+                window.location.pathname +
+                (query ? '?' + query : '') +
+                window.location.hash;
+
+            window.history.replaceState(null, '', nextURL);
+        }
+
+        function readSearchStateFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                q: params.get('q'),
+                round: params.get('round'),
+                university: params.get('university'),
+                faculty: params.get('faculty'),
+                gpax: params.get('gpax'),
+                plan: params.get('plan'),
+                english: params.get('english'),
+                aptitude: params.get('aptitude'),
+                alevel: params.get('alevel'),
+                sort: params.get('sort')
+            };
+        }
+
+        function selectHasValue(selectElement, value) {
+            if (!selectElement || value === null) return false;
+            return Array.from(selectElement.options)
+                .some(option => option.value === value);
+        }
+
+        function parseBooleanParam(value) {
+            return value === '1';
+        }
+
+        function normalizeGPAXParam(value) {
+            if (value === null || value.trim() === '') return '';
+            const number = Number(value);
+            if (!Number.isFinite(number)) return '';
+            if (number < 0 || number > 4) return '';
+            return number.toFixed(2);
+        }
+
+        function restoreStateFromURL() {
+            const state = readSearchStateFromURL();
+            if (!state.round && !state.q && !state.university && !state.faculty && !state.gpax && !state.plan && !state.english && !state.aptitude && !state.alevel && !state.sort) {
+                hasRestoredURLState = true;
+                handleRoundChange();
+                return;
+            }
+
+            isRestoringURLState = true;
+
+            // 1. Restore roundFilter
+            const roundFilter = document.getElementById('roundFilter');
+            if (roundFilter) {
+                if (state.round && selectHasValue(roundFilter, state.round)) {
+                    roundFilter.value = state.round;
+                } else {
+                    roundFilter.value = "1";
+                }
+            }
+
+            // 2. Build activeRoundData
+            const selectedRoundVal = parseInt(roundFilter ? roundFilter.value : "1") || 1;
+            activeRoundData = allData.filter(item => {
+                const matchesRound = (item.round || 1) === selectedRoundVal;
+                if (!matchesRound) return false;
+                if (item.project_name === 'ไม่มีข้อมูลโครงการ' || item.project_name === 'ไม่มีข้อมูลรอบ Portfolio') {
+                    return false;
+                }
+                return true;
+            });
+
+            // 3. populateFilters()
+            populateFilters();
+
+            // 4. Restore university
+            const uniFilter = document.getElementById('uniFilter');
+            if (uniFilter) {
+                if (state.university && selectHasValue(uniFilter, state.university)) {
+                    uniFilter.value = state.university;
+                } else {
+                    uniFilter.value = "";
+                }
+            }
+
+            // 5. updateFacultyDropdown()
+            updateFacultyDropdown();
+
+            // 6. Restore faculty
+            const facultyFilter = document.getElementById('facultyFilter');
+            if (facultyFilter) {
+                if (state.faculty && selectHasValue(facultyFilter, state.faculty)) {
+                    facultyFilter.value = state.faculty;
+                } else {
+                    facultyFilter.value = "";
+                }
+            }
+
+            // 7. Restore searchInput
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                if (state.q !== null) {
+                    searchInput.value = state.q.trim().slice(0, 200);
+                } else {
+                    searchInput.value = "";
+                }
+            }
+
+            // 8. Restore studentGPAX
+            const studentGPAX = document.getElementById('studentGPAX');
+            if (studentGPAX) {
+                if (state.gpax !== null) {
+                    studentGPAX.value = normalizeGPAXParam(state.gpax);
+                } else {
+                    studentGPAX.value = "";
+                }
+            }
+
+            // 9. Restore studentPlan
+            const studentPlan = document.getElementById('studentPlan');
+            if (studentPlan) {
+                if (state.plan && selectHasValue(studentPlan, state.plan)) {
+                    studentPlan.value = state.plan;
+                } else {
+                    studentPlan.value = "";
+                }
+            }
+
+            // 10. Restore checkboxes
+            const hasEnglish = document.getElementById('hasEnglish');
+            const hasAptitude = document.getElementById('hasAptitude');
+            const hasALevel = document.getElementById('hasALevel');
+            if (hasEnglish) hasEnglish.checked = parseBooleanParam(state.english);
+            if (hasAptitude) hasAptitude.checked = parseBooleanParam(state.aptitude);
+            if (hasALevel) hasALevel.checked = parseBooleanParam(state.alevel);
+
+            // 11. Restore sortResults
+            const sortResults = document.getElementById('sortResults');
+            if (sortResults) {
+                if (state.sort && selectHasValue(sortResults, state.sort)) {
+                    sortResults.value = state.sort;
+                } else {
+                    sortResults.value = "default";
+                }
+            }
+
+            // 12. Complete Guard
+            isRestoringURLState = false;
+            hasRestoredURLState = true;
+
+            // 13. Re-render, sync URL (canonicalize)
+            resetVisibleResults();
+            filterData();
+            updateSortStatus();
+            syncURLFromUI();
+        }
+
+        async function copyCurrentSearchLink() {
+            syncURLFromUI();
+            const url = window.location.href;
+            
+            // Attempt clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(url);
+                    showCopyLinkFeedback("คัดลอกลิงก์แล้ว");
+                    return;
+                } catch (err) {
+                    console.warn("navigator.clipboard failed, falling back", err);
+                }
+            }
+
+            // Fallback for non-secure contexts (e.g. mobile testing on HTTP LAN)
+            try {
+                const textArea = document.createElement("textarea");
+                textArea.value = url;
+                textArea.style.top = "0";
+                textArea.style.left = "0";
+                textArea.style.position = "fixed";
+                textArea.style.opacity = "0";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                const successful = document.execCommand("copy");
+                document.body.removeChild(textArea);
+
+                if (successful) {
+                    showCopyLinkFeedback("คัดลอกลิงก์แล้ว");
+                } else {
+                    showCopyLinkFeedback("ไม่สามารถคัดลอกได้ กรุณาคัดลอกจากแถบที่อยู่");
+                }
+            } catch (err) {
+                console.error("Fallback copy failed", err);
+                showCopyLinkFeedback("ไม่สามารถคัดลอกได้ กรุณาคัดลอกจากแถบที่อยู่");
+            }
+        }
+
+        let copyFeedbackTimeout = null;
+        function showCopyLinkFeedback(message) {
+            const statusEl = document.getElementById('copySearchLinkStatus');
+            if (!statusEl) return;
+            statusEl.textContent = message;
+            
+            if (copyFeedbackTimeout) {
+                clearTimeout(copyFeedbackTimeout);
+            }
+            copyFeedbackTimeout = setTimeout(() => {
+                statusEl.textContent = "";
+            }, 3000);
+        }
+
         // Progressive Results Loading State (Phase 8)
         let currentVisibleCount = 0;
 
@@ -3153,8 +3460,8 @@
                 }
                 allData = await response.json();
                 
-                // Initialize default round (Round 1 Portfolio)
-                handleRoundChange();
+                // Restore state from URL - Phase 9 (will initialize default round if no parameters exist)
+                restoreStateFromURL();
                  
                 // Update saved targets badge count
                 updateBadgeCount();
@@ -3729,6 +4036,9 @@
                     visibleStatus.textContent = `แสดง ${shown} จาก ${total} โครงการ`;
                 }
             }
+
+            // Sync URL State (Phase 9)
+            syncURLFromUI();
         }
 
         // Toggle collapsible criteria section with dynamic chunk loading
@@ -4094,6 +4404,18 @@
                 );
                 renderCards();
             });
+        }
+
+        // Popstate history listener (Phase 9)
+        window.addEventListener('popstate', () => {
+            if (isRestoringURLState) return;
+            restoreStateFromURL();
+        });
+
+        // Copy Search Link Button Event (Phase 9)
+        const copySearchLinkBtn = document.getElementById('copySearchLinkBtn');
+        if (copySearchLinkBtn) {
+            copySearchLinkBtn.addEventListener('click', copyCurrentSearchLink);
         }
 
         // Sorting Dropdown Change Listener (Phase 7)
