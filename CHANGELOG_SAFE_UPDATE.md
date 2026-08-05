@@ -578,3 +578,27 @@ If `filteredData.length > displayLimit`, it appends a helper text ` (แสด�
   ```bash
   git revert <PHASE_9_COMMIT_HASH>
   ```
+
+---
+
+## PHASE 10 — Safe No-Results Recovery and Filter Diagnostics (Applied: 2026-08-05 19:45:00)
+
+### UI/UX Diagnostics & Recovery Box:
+* Created `#noResultsRecovery` inside `#cardsGrid` when `filteredData.length === 0`.
+* Standardized Case 1 (No Active Optional Filters): Shows "ยังไม่พบข้อมูลโครงการในรอบนี้" with an explanation about missing round data.
+* Standardized Case 2 (Filter Conflict Present): Shows "ไม่พบโครงการที่ตรงกับเงื่อนไขนี้", a summary checklist of active filters inside `#noResultsActiveFilters`, and custom action buttons to recover (e.g. "ล้างคำค้นหา", "ล้างตัวกรองทั้งหมด").
+* Used `.textContent` securely when displaying the search query inside `#noResultsQueryMessage` to protect against XSS injection attacks.
+* Hides the progressive loading section `#loadMoreSection` completely when there are no results to show, preventing orphaned pagination buttons.
+
+### Event Delegation:
+* Attached a central click event listener on the parent `#cardsGrid` element to delegate click events from dynamic child elements inside `#noResultsRecovery`.
+* Triggers existing helper functions `clearSingleFilter(key)` and `clearAllOptionalFilters()` to reset UI values, sync URL search parameters, reset display slicing limit, and reload cards instantly.
+
+### Phase 10 Test Results:
+* **Functional & Visual Tests**: Passed. Checked Case 1 (no active filters) and Case 2 (filter conflicts) successfully. The diagnostic items render beautifully matching the dark theme. Clearing individual filters or all filters correctly updates the results, chips, and URL search parameters without error. Console and network logs remain completely clean.
+* **Console Errors**: 0 console errors / 0 warnings.
+* **Network Errors**: 0 network errors.
+* **Rollback Command for Phase 10 specifically**:
+  ```bash
+  git revert <PHASE_10_COMMIT_HASH>
+  ```
