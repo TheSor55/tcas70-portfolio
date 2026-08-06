@@ -337,7 +337,7 @@
 3. **Option Caching & Rebuild Layer (JS)**:
    * Created memory caches: `cachedUniStructure` (rebuilt in `populateFilters` to cache the grouped university names) and `cachedFacultyOptions` (rebuilt in `updateFacultyDropdown` to cache the faculty names).
    * Added `window.filterUniOptions()` and `window.filterFacultyOptions()` to rebuild `<option>` tags dynamically.
-   * This rebuild approach ensures 100% cross-browser compatibility, specifically bypasses iOS Safari's bug which fails to hide options using `display: none`, and preserves current selections cleanly.
+   * This rebuild approach ensures cross-browser compatibility, specifically bypasses iOS Safari's bug which fails to hide options using `display: none`, and preserves current selections cleanly.
 4. **Cascading Clearing Behavior (JS)**:
    * Added logic to clear `#facultySearch` input values when the university selection `#uniFilter` is changed, preventing cross-filter keyword mismatch.
 
@@ -694,7 +694,7 @@ If `filteredData.length > displayLimit`, it appends a helper text ` (แสด�
   - Duplicate IDs: 0
   - tabindex > 0: 0
   - Main & Footer landmark elements count: Correct (1 main, 1 footer)
-  - Performance improvements successfully verified on browser (Sorting 7,415 items reduced from ~3,318.58 ms to ~133.74 ms, Load More no longer re-sorts array, resulting in O(0.11 ms) slices).
+  - Performance improvements successfully verified on Chrome Desktop browser (Sorting 7,415 items reduced from ~3,318.58 ms to ~133.74 ms, Load More no longer re-sorts array, resulting in O(0.11 ms) slices).
   - Filter logic and Raw Data remain completely unchanged.
 * **Console Errors**: 0 console errors / 0 warnings.
 * **Network Errors**: 0 network errors.
