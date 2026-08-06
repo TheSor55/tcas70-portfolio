@@ -322,6 +322,453 @@
             grid-template-columns: 1fr 1fr 1fr;
             gap: 1.25rem;
         }
+        
+        /* Select Search Wrapper and Input - Phase 4 */
+        .select-search-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+        .select-search-input {
+            width: 100%;
+            background-color: rgba(11, 15, 25, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.55rem 0.85rem;
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-family: inherit;
+            transition: all 0.25s ease;
+        }
+        .select-search-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background-color: rgba(11, 15, 25, 0.6);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+        }
+        
+        /* Faculty Scope Hint Styling - Phase 5B */
+        .faculty-scope-hint {
+            font-size: 0.78rem;
+            color: var(--primary-light);
+            margin-top: 0.15rem;
+            padding-left: 0.25rem;
+            text-align: left;
+            min-height: 1.1rem;
+            display: none;
+        }
+        
+        /* Active Filters & Reset Container Styling - Phase 6 */
+        .active-filters-section {
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 0.85rem 1.1rem;
+            margin-top: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        .active-filters-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .active-filters-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .active-filters-title i {
+            color: var(--primary-light);
+            font-size: 0.8rem;
+        }
+        .clear-all-filters-btn {
+            background: none;
+            border: none;
+            color: var(--primary-light);
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .clear-all-filters-btn:hover {
+            color: #818cf8;
+            background-color: rgba(99, 102, 241, 0.08);
+        }
+        .clear-all-filters-btn:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+        }
+        .active-filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .active-filter-chip {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 6px;
+            padding: 0.35rem 0.6rem;
+            font-size: 0.8rem;
+            color: #fff;
+            gap: 0.4rem;
+        }
+        .active-filter-chip-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .active-filter-chip-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.1rem;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            width: 18px;
+            height: 18px;
+        }
+        .active-filter-chip-remove:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .active-filter-chip-remove:focus-visible {
+            outline: 2px solid var(--primary-light);
+        }
+        
+        /* Results Toolbar and Sorting Control - Phase 7 */
+        .results-toolbar {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .results-toolbar-summary {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.15rem;
+        }
+        .results-toolbar-summary .section-title {
+            margin-bottom: 0 !important;
+        }
+        .results-sort-status {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .sort-control {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+        }
+        .sort-control-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .sort-control-label i {
+            color: var(--primary-light);
+            font-size: 0.8rem;
+        }
+        .sort-control select {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            padding-right: 0.5rem;
+            font-weight: 600;
+        }
+        .sort-control select:focus {
+            outline: none;
+        }
+        @media (max-width: 768px) {
+            .results-toolbar {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .sort-control {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .sort-control select {
+                flex: 1;
+                text-align: right;
+            }
+        }
+        
+        /* No-Results Recovery Styling - Phase 10 */
+        .no-results-recovery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            background-color: rgba(30, 41, 59, 0.25);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            width: 100%;
+            margin: 1rem 0;
+            box-sizing: border-box;
+        }
+        .no-results-icon {
+            font-size: 2.5rem;
+            color: var(--primary-light);
+            margin-bottom: 0.75rem;
+            opacity: 0.95;
+        }
+        .no-results-title {
+            font-size: 1.15rem;
+            color: #fff;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+        }
+        .no-results-query-message {
+            font-size: 0.88rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+            max-width: 500px;
+        }
+        .no-results-description {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin: 0 0 0.75rem 0;
+            max-width: 480px;
+            line-height: 1.5;
+        }
+        .no-results-context {
+            font-size: 0.8rem;
+            color: var(--primary-light);
+            font-weight: 600;
+            background-color: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        .no-results-active-filters {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 1.5rem;
+            background-color: rgba(15, 23, 42, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            padding: 0.75rem;
+            box-sizing: border-box;
+        }
+        .no-results-filter-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 0.35rem 0.65rem;
+            gap: 0.5rem;
+        }
+        .no-results-filter-label {
+            font-size: 0.82rem;
+            color: #e2e8f0;
+            text-align: left;
+            word-break: break-word;
+            flex: 1;
+        }
+        .no-results-filter-title-part {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .no-results-filter-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 2px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: color 0.15s ease;
+            min-height: 24px;
+            min-width: 24px;
+        }
+        .no-results-filter-remove:hover {
+            color: #f43f5e;
+        }
+        .no-results-filter-remove:focus-visible {
+            outline: 2px solid #f43f5e;
+            border-radius: 4px;
+        }
+        .no-results-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .no-results-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: rgba(30, 41, 59, 0.4);
+            color: #cbd5e1;
+            transition: all 0.2s ease;
+        }
+        .no-results-action-btn:hover {
+            background-color: rgba(30, 41, 59, 0.8);
+            color: #fff;
+        }
+        .no-results-action-primary {
+            background-color: var(--primary-light);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+        }
+        .no-results-action-primary:hover {
+            background-color: #818cf8;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+        }
+        .no-results-action-btn:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+        @media (max-width: 480px) {
+            .no-results-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .no-results-action-btn {
+                width: 100%;
+            }
+        }
+
+        /* Copy Search Link - Phase 9 */
+        .results-toolbar-sub {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.15rem;
+        }
+        .results-toolbar-separator {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.8rem;
+        }
+        .copy-search-link-btn {
+            background: none;
+            border: none;
+            color: var(--primary-light);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0;
+            transition: color 0.15s ease;
+        }
+        .copy-search-link-btn:hover {
+            color: #818cf8;
+            text-decoration: underline;
+        }
+        .copy-search-link-btn:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        .copy-search-link-status {
+            font-size: 0.76rem;
+            color: #10b981; /* Emerald green for success feedback */
+            font-weight: 500;
+        }
+
+        /* Progressive Results Loading Styling - Phase 8 */
+        .load-more-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.65rem;
+            margin: 1.5rem 0 2rem 0;
+            width: 100%;
+        }
+        .visible-results-status {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .load-more-results-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background-color: var(--primary-light);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 42px;
+            padding: 0.65rem 1.25rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+        .load-more-results-btn:hover {
+            background-color: #818cf8;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+        }
+        .load-more-results-btn:active {
+            transform: translateY(0);
+        }
+        .load-more-results-btn:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+        .load-more-results-btn i {
+            font-size: 0.8rem;
+        }
 
         @media (max-width: 768px) {
             .filters-row {
@@ -505,19 +952,29 @@
             gap: 1.25rem;
         }
 
-        /* Centered Intake Badge matching mockup image */
+        /* Compact Intake Badge style for Phase 3A */
         .seats-badge {
-            align-self: center;
-            width: 100%;
-            text-align: center;
-            background: linear-gradient(135deg, #00b4d8 0%, #7209b7 100%);
-            padding: 0.65rem 1.5rem;
-            border-radius: 50px;
+            align-self: flex-start;
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--primary-light);
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+        .seats-badge i {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        .seats-count {
             font-weight: 700;
             color: #fff;
-            font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.25);
-            letter-spacing: 0.5px;
         }
 
         /* Two-column requirements checklist */
@@ -874,6 +1331,11 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: #ef4444;
             font-size: 1.5rem;
+            /* Reset button defaults */
+            padding: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
         }
         .floating-targets-badge:hover {
             transform: scale(1.1) translateY(-5px);
@@ -920,6 +1382,15 @@
             align-items: center;
             cursor: pointer;
             user-select: none;
+            /* Reset button defaults */
+            background: transparent;
+            border: none;
+            padding: 0;
+            width: 100%;
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            text-align: left;
         }
         .panel-header h3 {
             font-size: 1.1rem;
@@ -1409,6 +1880,11 @@
             transition: all 0.2s ease;
             vertical-align: middle;
             margin-left: 0.35rem;
+            /* Reset button defaults */
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
+            line-height: normal;
         }
         .degree-info-btn:hover {
             background: rgba(255, 255, 255, 0.15);
@@ -1468,6 +1944,12 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: #fff;
             font-size: 1.5rem;
+            /* Reset button defaults */
+            padding: 0;
+            border: none;
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
         }
         .floating-chat-btn:hover {
             transform: scale(1.1) translateY(-5px);
@@ -1780,14 +2262,58 @@
             }
         }
 
-        /* 4. CSS Media Query for prefers-reduced-motion to disable transitions and animations */
+        /* Scoped prefers-reduced-motion (Phase 11) */
         @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+            html {
                 scroll-behavior: auto !important;
             }
+            .card, 
+            .floating-chat-btn, 
+            .floating-targets-badge, 
+            .btn-search, 
+            .btn-location,
+            .theme-opt-btn,
+            .bookmark-btn,
+            .criteria-trigger,
+            .modal-overlay,
+            .modal-container,
+            .chat-window,
+            .quick-prompts button {
+                transition: none !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            /* Essential progress spinning animations remain functional to prevent appearing frozen */
+            .spinner,
+            .fa-spin,
+            .chat-loading span {
+                animation-duration: 1.5s !important;
+            }
+        }
+
+        /* Accessibility Focus-Visible outlines in Dark Theme (Phase 11) */
+        :where(button, input, select, a):focus-visible {
+            outline: 2px solid var(--primary-light) !important;
+            outline-offset: 2px !important;
+        }
+        button.panel-header:focus-visible {
+            outline: 2px dashed var(--primary-light) !important;
+            outline-offset: 4px !important;
+        }
+        .sort-control select:focus-visible {
+            outline: 2px solid var(--primary-light) !important;
+            outline-offset: 2px !important;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
 
 
@@ -1864,6 +2390,114 @@
             -webkit-text-fill-color: transparent;
         }
 
+        .search-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: -0.25rem;
+            margin-bottom: 0.75rem;
+            padding-left: 0.5rem;
+            text-align: left;
+        }
+        .system-disclaimer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1rem;
+            margin: 1.5rem 0 1rem 0;
+            text-align: center;
+            line-height: 1.4;
+        }
+        .system-disclaimer i {
+            color: var(--primary-light);
+            font-size: 0.95rem;
+        }
+        @media (max-width: 768px) {
+            .system-disclaimer {
+                font-size: 0.75rem;
+                padding: 0.6rem 0.85rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 4px;
+            }
+        }
+        /* Dynamic Requirement status classes for Phase 3B/3C.1 */
+        .req-list li.status-required {
+            color: #10b981; /* Emerald Green */
+        }
+        .req-list li.status-required i {
+            color: #10b981;
+        }
+        .req-list li.status-not-used {
+            color: #64748b; /* Neutral Slate Gray - Changed in Phase 3C.1 */
+            opacity: 0.85;
+        }
+        .req-list li.status-not-used i {
+            color: #64748b;
+        }
+        .req-list li.status-warning {
+            color: #fbbf24; /* Amber Gold */
+        }
+        .req-list li.status-warning i {
+            color: #fbbf24;
+        }
+        .req-list li.status-unknown {
+            color: #cbd5e1; /* Increased Contrast Light Slate - Changed in Phase 3C.1 */
+            opacity: 0.9;
+        }
+        .req-list li.status-unknown i {
+            color: #94a3b8;
+        }
+
+        /* Requirement layout styling inside collapsible accordion - Phase 3C.1 */
+        .secondary-requirements-box {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .secondary-requirements-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .secondary-requirements-box .req-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.65rem;
+            margin-bottom: 0;
+            list-style: none;
+            padding: 0;
+        }
+        .secondary-requirements-box .req-list li {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .secondary-requirements-box .req-list li strong {
+            margin-left: 0.25rem;
+        }
+        @media (max-width: 768px) {
+            .secondary-requirements-box .req-list {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            .secondary-requirements-box .req-list li {
+                white-space: normal; /* Wrap text naturally on mobile */
+            }
+        }
     </style>
 </head>
 <body>
@@ -1897,37 +2531,48 @@
         </nav>
     </header>
 
-    <div class="container">
+    <main class="container">
         <!-- Controls Search Panel matching mockup image -->
         <div class="controls-panel">
             <!-- Search Row -->
             <div class="search-row">
                 <div class="search-wrapper">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Search universities, programs, or criteria...">
+                    <input type="text" id="searchInput" class="search-input" placeholder="ค้นหามหาวิทยาลัย คณะ สาขา โครงการ หรือคุณสมบัติ" aria-label="ค้นหาโครงการเกณฑ์ TCAS">
+                <!-- Search Hint -->
+                <div class="search-hint">
+                    ตัวอย่าง: วิศวกรรมคอมพิวเตอร์, เด็กซิ่ว, GPAX 3.00, Portfolio
                 </div>
-                <button class="btn-search" id="btnSearchSubmit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button class="btn-location"><i class="fa-solid fa-location-dot"></i></button>
+                </div>
+                <button type="button" class="btn-search" id="btnSearchSubmit" aria-label="ค้นหา"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
+                <button type="button" class="btn-location" aria-label="ตำแหน่งที่ตั้ง"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></button>
             </div>
 
             <!-- Filters Row -->
             <div class="filters-row">
-                <!-- University Dropdown -->
-                <div class="select-wrapper">
-                    <select id="uniFilter">
-                        <option value="">เลือกมหาวิทยาลัย (Universities)</option>
-                    </select>
+                <!-- University Dropdown with Search -->
+                <div class="select-search-wrapper">
+                    <input type="text" id="uniSearch" class="select-search-input" placeholder="🔍 ค้นหาชื่อมหาวิทยาลัย..." oninput="filterUniOptions()" aria-label="ค้นหาชื่อมหาวิทยาลัย">
+                    <div class="select-wrapper">
+                        <select id="uniFilter" aria-label="เลือกมหาวิทยาลัย">
+                            <option value="">เลือกมหาวิทยาลัย (Universities)</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Faculty Dropdown (derived dynamically) -->
-                <div class="select-wrapper">
-                    <select id="facultyFilter">
-                        <option value="">เลือกคณะ (Faculties)</option>
-                    </select>
+                <!-- Faculty Dropdown with Search (derived dynamically) -->
+                <div class="select-search-wrapper">
+                    <input type="text" id="facultySearch" class="select-search-input" placeholder="🔍 ค้นหาชื่อคณะ/สำนักวิชา..." oninput="filterFacultyOptions()" aria-label="ค้นหาชื่อคณะ/สำนักวิชา">
+                    <div class="select-wrapper">
+                        <select id="facultyFilter" aria-label="เลือกคณะ / วิทยาลัย / สำนักวิชา">
+                            <option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>
+                        </select>
+                    </div>
+                    <div id="facultyScopeHint" class="faculty-scope-hint"></div>
                 </div>
 
                 <!-- Admission Round Filter -->
                 <div class="select-wrapper">
-                    <select id="roundFilter" onchange="handleRoundChange()">
+                    <select id="roundFilter" onchange="handleRoundChange()" aria-label="รอบการสมัคร">
                         <option value="1" selected>รอบที่ 1 Portfolio</option>
                         <option value="2">รอบที่ 2 Quota</option>
                         <option value="3">รอบที่ 3 Admission</option>
@@ -1939,10 +2584,10 @@
 
         <!-- Personalized Filter Panel (Collapsible Card) -->
         <div class="personalized-panel">
-            <div class="panel-header" onclick="togglePersonalizedPanel()">
-                <h3><i class="fa-solid fa-sliders"></i> 🎯 การจัดการคุณสมบัติและการกรองสิทธิ์</h3>
-                <i class="fa-solid fa-chevron-down" id="panelChevron"></i>
-            </div>
+            <button type="button" class="panel-header" onclick="togglePersonalizedPanel()" aria-expanded="false" aria-controls="panelBody">
+                <h3><i class="fa-solid fa-sliders" aria-hidden="true"></i> 🎯 การจัดการคุณสมบัติและการกรองสิทธิ์</h3>
+                <i class="fa-solid fa-chevron-down" id="panelChevron" aria-hidden="true"></i>
+            </button>
             <div class="panel-body" id="panelBody">
                 <div class="panel-group">
                     <label for="studentGPAX">เกรดเฉลี่ยสะสม (GPAX 5 เทอม):</label>
@@ -1980,12 +2625,54 @@
             </div>
         </div>
 
-        <!-- Featured Programs Section Title -->
-        <h2 class="section-title">Featured Programs</h2>
+        <!-- Active Filters Summarizer Section - Phase 6 -->
+        <div id="activeFiltersSection" class="active-filters-section" hidden>
+            <div class="active-filters-header">
+                <span class="active-filters-title">
+                    <i class="fa-solid fa-filter" aria-hidden="true"></i>
+                    ตัวกรองที่ใช้งาน
+                </span>
+                <button type="button" id="clearAllFiltersBtn" class="clear-all-filters-btn">
+                    ล้างตัวกรองทั้งหมด
+                </button>
+            </div>
+            <div id="activeFilterChips" class="active-filter-chips" aria-live="polite"></div>
+        </div>
+
+        <!-- Results Toolbar Section - Phase 7 -->
+        <div class="results-toolbar">
+            <div class="results-toolbar-summary">
+                <h2 class="section-title">ผลการค้นหาโครงการ</h2>
+                <div class="results-toolbar-sub">
+                    <span id="resultsSortStatus" class="results-sort-status">แสดงตามลำดับข้อมูลเริ่มต้น</span>
+                    <span class="results-toolbar-separator">•</span>
+                    <button type="button" id="copySearchLinkBtn" class="copy-search-link-btn">
+                        <i class="fa-solid fa-link" aria-hidden="true"></i>
+                        คัดลอกลิงก์การค้นหา
+                    </button>
+                    <span id="copySearchLinkStatus" class="copy-search-link-status" aria-live="polite"></span>
+                </div>
+            </div>
+
+            <label class="sort-control">
+                <span class="sort-control-label">
+                    <i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i>
+                    เรียงตาม
+                </span>
+                <select id="sortResults" aria-label="เรียงลำดับผลลัพธ์">
+                    <option value="default">ค่าเริ่มต้น</option>
+                    <option value="seats-desc">จำนวนรับ: มาก → น้อย</option>
+                    <option value="seats-asc">จำนวนรับ: น้อย → มาก</option>
+                    <option value="gpax-asc">GPAX ขั้นต่ำ: ต่ำ → สูง</option>
+                    <option value="university-asc">ชื่อมหาวิทยาลัย: ก → ฮ</option>
+                    <option value="program-asc">ชื่อหลักสูตร: ก → ฮ</option>
+                </select>
+            </label>
+        </div>
 
         <!-- Stats Bar -->
         <div class="stats-bar">
-            <div class="stats-text" id="statsText">
+            <div class="stats-text" id="statsText" aria-live="polite" aria-atomic="true">
                 กำลังค้นหาโครงการ...
             </div>
         </div>
@@ -1995,11 +2682,29 @@
             <!-- Dynamic cards will go here -->
         </div>
 
+        <!-- Load More Section - Phase 8 -->
+        <div id="loadMoreSection" class="load-more-section" hidden>
+            <div id="visibleResultsStatus" class="visible-results-status" aria-live="polite" tabindex="-1"></div>
+            <button type="button" id="loadMoreResultsBtn" class="load-more-results-btn" aria-controls="cardsGrid">
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                แสดงผลเพิ่มเติม
+            </button>
+        </div>
+
         <!-- Back to Top Button -->
-        <button id="backToTopBtn" title="กลับขึ้นด้านบน" onclick="scrollToTop()">
-            <i class="fa-solid fa-chevron-up"></i>
+        <button type="button" id="backToTopBtn" aria-label="กลับขึ้นด้านบน" title="กลับขึ้นด้านบน" onclick="scrollToTop()">
+            <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
         </button>
 
+        <!-- System Disclaimer Safeguard -->
+        <div class="system-disclaimer">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+            <span>ข้อมูลในระบบเป็นข้อมูลสรุปเพื่อช่วยค้นหา ผู้สมัครควรตรวจสอบประกาศฉบับทางการของมหาวิทยาลัยก่อนสมัครทุกครั้ง</span>
+        </div>
+    </main>
+
+    <!-- Site Footer outside <main> - Phase 11 -->
+    <footer class="footer-section container" style="padding-top: 0; margin-top: -1.5rem;">
         <!-- Mockup Footer Divider -->
         <div class="divider"></div>
 
@@ -2011,16 +2716,16 @@
                 <span>© 2026 TCAS70</span>
             </div>
             <div class="footer-socials">
-                <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook" aria-hidden="true"></i></a>
+                <a href="#" aria-label="Twitter/X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
             </div>
         </div>
 
         <!-- Admin Credit Footer with QR Code -->
         <div class="admin-credit" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1.5rem;">
-            <a href="https://line.me/ti/g2/LZO6E3ufrr2Xx0K0xOsNaGPYfOn8x5AoEKcFvg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+            <a href="https://line.me/ti/g2/LZO6E3ufrr2Xx0K0xOsNaGPYfOn8x5AoEKcFvg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;" aria-label="ลิงก์เข้าร่วมกลุ่ม LINE OpenChat">
                 <img src="line_openchat_qrcode.png" alt="LINE OpenChat QR Code" style="width: 120px; height: 120px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                 <span style="font-size: 0.8rem; color: var(--secondary-light); font-weight: 600; text-decoration: underline;">คลิกหรือสแกนเพื่อเข้าร่วมกลุ่ม LINE OpenChat</span>
             </a>
@@ -2031,20 +2736,20 @@
                 <span style="font-size: 0.75rem; opacity: 0.7;">พัฒนาขึ้นเพื่อจิตอาสาและเป็นประโยชน์ทางการศึกษาของเยาวชนไทยและผู้ปกครอง</span>
             </div>
         </div>
-    </div>
+    </footer>
 
-    <!-- Floating Targets Pulse Badge -->
-    <div class="floating-targets-badge" id="floatingTargetsBtn" onclick="toggleTargetsModal()">
-        <i class="fa-solid fa-heart"></i>
+    <!-- Floating Targets Pulse Badge - Phase 11 -->
+    <button type="button" class="floating-targets-badge" id="floatingTargetsBtn" onclick="toggleTargetsModal()" aria-label="เปิดรายการเป้าหมาย">
+        <i class="fa-solid fa-heart" aria-hidden="true"></i>
         <span class="badge-count" id="targetCountBadge">0</span>
-    </div>
+    </button>
 
-    <!-- Targets List Modal Overlay -->
-    <div class="modal-overlay" id="targetsModal">
+    <!-- Targets List Modal Overlay - Phase 11 -->
+    <div class="modal-overlay" id="targetsModal" role="dialog" aria-modal="true" aria-labelledby="targetsModalTitle">
         <div class="modal-container">
             <div class="modal-header">
-                <h2><i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i> 💖 คณะเป้าหมายของฉัน (My Target List)</h2>
-                <button class="modal-close-btn" onclick="toggleTargetsModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h2 id="targetsModalTitle"><i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);" aria-hidden="true"></i> 💖 คณะเป้าหมายของฉัน (My Target List)</h2>
+                <button type="button" class="modal-close-btn" onclick="toggleTargetsModal()" aria-label="ปิดกล่องรายการเป้าหมาย"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body" id="modalBody">
                 <!-- Saved items list dynamically populated -->
@@ -2053,41 +2758,41 @@
             <div class="theme-selector-container" style="padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 0.5rem;">
                 <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-align: left;">เลือกธีมสีการ์ดสรุป:</label>
                 <div class="theme-options" style="display: flex; gap: 0.75rem;">
-                    <button class="theme-opt-btn active" onclick="selectCardTheme('midnight')" data-theme="midnight" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(99,102,241,0.5); background: rgba(99,102,241,0.15); color: #fff; cursor: pointer; font-family: inherit; transition: all 0.2s;">🌌 Midnight</button>
-                    <button class="theme-opt-btn" onclick="selectCardTheme('pastel')" data-theme="pastel" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🌸 Pastel</button>
-                    <button class="theme-opt-btn" onclick="selectCardTheme('mint')" data-theme="mint" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🍵 Mint</button>
-                    <button class="theme-opt-btn" onclick="selectCardTheme('slate')" data-theme="slate" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🖤 Slate</button>
+                    <button type="button" class="theme-opt-btn active" onclick="selectCardTheme('midnight')" data-theme="midnight" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(99,102,241,0.5); background: rgba(99,102,241,0.15); color: #fff; cursor: pointer; font-family: inherit; transition: all 0.2s;">🌌 Midnight</button>
+                    <button type="button" class="theme-opt-btn" onclick="selectCardTheme('pastel')" data-theme="pastel" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🌸 Pastel</button>
+                    <button type="button" class="theme-opt-btn" onclick="selectCardTheme('mint')" data-theme="mint" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🍵 Mint</button>
+                    <button type="button" class="theme-opt-btn" onclick="selectCardTheme('slate')" data-theme="slate" style="flex: 1; padding: 0.45rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s;">🖤 Slate</button>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-btn btn-secondary" onclick="toggleTargetsModal()">ปิดหน้าต่าง</button>
-                <button class="modal-btn btn-primary" onclick="exportShareCard()"><i class="fa-solid fa-share-nodes"></i> สร้างรูปภาพสรุปเกณฑ์ (แชร์ต่อ LINE)</button>
+                <button type="button" class="modal-btn btn-secondary" onclick="toggleTargetsModal()">ปิดหน้าต่าง</button>
+                <button type="button" class="modal-btn btn-primary" onclick="exportShareCard()"><i class="fa-solid fa-share-nodes" aria-hidden="true"></i> สร้างรูปภาพสรุปเกณฑ์ (แชร์ต่อ LINE)</button>
             </div>
         </div>
     </div>
 
 
-    <!-- Floating Chatbot Toggle Button -->
-    <div class="floating-chat-btn" id="floatingChatBtn" onclick="toggleChatWindow()">
-        <i class="fa-solid fa-comments"></i>
-        <div class="chat-pulse"></div>
-    </div>
+    <!-- Floating Chatbot Toggle Button - Phase 11 -->
+    <button type="button" class="floating-chat-btn" id="floatingChatBtn" onclick="toggleChatWindow()" aria-label="แชตถามตอบด้วยพี่ AI" aria-expanded="false">
+        <i class="fa-solid fa-comments" aria-hidden="true"></i>
+        <div class="chat-pulse" aria-hidden="true"></div>
+    </button>
 
-    <!-- Chatbot Window -->
-    <div class="chat-window" id="chatWindow">
+    <!-- Chatbot Window - Phase 11 -->
+    <div class="chat-window" id="chatWindow" role="dialog" aria-modal="false" aria-label="กล่องข้อความแชตถามตอบด้วยพี่ AI">
         <div class="chat-header">
-            <div class="chat-header-title">
-                <i class="fa-solid fa-robot"></i>
+            <div class="chat-header-title" id="chatHeaderTitle">
+                <i class="fa-solid fa-robot" aria-hidden="true"></i>
                 <div class="title-text">
                     <h4>พี่ AI TCAS70</h4>
                     <span class="online-indicator"><span class="dot"></span> Online (Free tier)</span>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <button onclick="clearChatHistory()" title="ล้างประวัติการคุย" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.78rem; display: flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); font-family: inherit; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='rgba(255,255,255,0.1)'">
-                    <i class="fa-solid fa-trash-can"></i> ล้างแชต
+                <button type="button" onclick="clearChatHistory()" title="ล้างประวัติการคุย" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.78rem; display: flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); font-family: inherit; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='rgba(255,255,255,0.1)'">
+                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i> ล้างแชต
                 </button>
-                <button class="chat-close-btn" onclick="toggleChatWindow()"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="chat-close-btn" onclick="toggleChatWindow()" aria-label="ปิดกล่องแชต"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
         </div>
         <div class="chat-body" id="chatBody">
@@ -2095,32 +2800,32 @@
                 สวัสดีครับน้องๆ และผู้ปกครอง! ยินดีต้อนรับสู่ระบบแนะนำเกณฑ์ TCAS70 รอบ Portfolio ครับ 🎓 พี่ AI สามารถช่วยน้องๆ เช็กเกณฑ์คณะต่างๆ ตรวจสอบเงื่อนไขเด็กซิ่ว/ปวช/สายวิทย์-คอม หรืออธิบายความหมายของวุฒิการศึกษาได้เลยครับ! น้องๆ อยากถามอะไรพิมพ์มาได้เลย หรือเลือกดูคำถามแนะนำด้านล่างนี้ได้ครับ 👇
             </div>
             <div class="quick-prompts">
-                <button onclick="sendQuickPrompt('วิศวะ จุฬา ต้องใช้ GPAX เท่าไหร่?')">วิศวะ จุฬา ใช้ GPAX เท่าไหร่?</button>
-                <button onclick="sendQuickPrompt('วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?')">วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?</button>
-                <button onclick="sendQuickPrompt('ครุศาสตร์ เครื่องกล 5 ปี จบมาได้กี่วุฒิ?')">ครุฯ เครื่องกล 5 ปี ได้กี่วุฒิ?</button>
-                <button onclick="sendQuickPrompt('เด็กซิ่วยื่นรอบพอร์ตได้ไหม?')">เด็กซิ่วยื่นรอบพอร์ตได้ไหม?</button>
+                <button type="button" onclick="sendQuickPrompt('วิศวะ จุฬา ต้องใช้ GPAX เท่าไหร่?')">วิศวะ จุฬา ใช้ GPAX เท่าไหร่?</button>
+                <button type="button" onclick="sendQuickPrompt('วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?')">วศ.บ. กับ ค.อ.บ. ต่างกันอย่างไร?</button>
+                <button type="button" onclick="sendQuickPrompt('ครุศาสตร์ เครื่องกล 5 ปี จบมาได้กี่วุฒิ?')">ครุฯ เครื่องกล 5 ปี ได้กี่วุฒิ?</button>
+                <button type="button" onclick="sendQuickPrompt('เด็กซิ่วยื่นรอบพอร์ตได้ไหม?')">เด็กซิ่วยื่นรอบพอร์ตได้ไหม?</button>
             </div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="ถามคำถามพี่ AI ที่นี่... (เช่น วิศวะ คอม มทส)" onkeydown="handleChatInputKey(event)">
-            <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            <input type="text" id="chatInput" placeholder="ถามคำถามพี่ AI ที่นี่... (เช่น วิศวะ คอม มทส)" onkeydown="handleChatInputKey(event)" aria-label="คำถามถึงพี่ AI">
+            <button type="button" class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()" aria-label="ส่งข้อความ"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
         </div>
     </div>
 
 
 
-    <!-- Image Preview Modal Overlay (For mobile long-press saving) -->
-    <div class="modal-overlay" id="imagePreviewModal" style="z-index: 1200;">
+    <!-- Image Preview Modal Overlay (For mobile long-press saving) - Phase 11 -->
+    <div class="modal-overlay" id="imagePreviewModal" style="z-index: 1200;" role="dialog" aria-modal="true" aria-labelledby="imagePreviewModalTitle">
         <div class="modal-container" style="max-width: 480px; width: 92%; background: #0f172a; border: 1px solid rgba(255,255,255,0.1);">
             <div class="modal-header" style="padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <h3 style="font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-regular fa-image" style="color: var(--primary-light);"></i> รูปภาพเป้าหมายของคุณ
+                <h3 id="imagePreviewModalTitle" style="font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-regular fa-image" style="color: var(--primary-light);" aria-hidden="true"></i> รูปภาพเป้าหมายของคุณ
                 </h3>
-                <button class="modal-close-btn" onclick="toggleImagePreviewModal()"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="modal-close-btn" onclick="toggleImagePreviewModal()" aria-label="ปิดรูปภาพตัวอย่าง"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body" style="padding: 1.25rem; text-align: center; display: flex; flex-direction: column; gap: 1rem;">
                 <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); padding: 0.75rem; border-radius: 8px; font-size: 0.82rem; color: #e2e8f0; line-height: 1.4; text-align: left;">
-                    <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-light);"></i> <strong>วิธีบันทึกภาพลงมือถือ:</strong><br>
+                    <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-light);" aria-hidden="true"></i> <strong>วิธีบันทึกภาพลงมือถือ:</strong><br>
                     แตะค้างที่รูปภาพด้านล่าง แล้วเลือก <strong>"บันทึกรูปภาพ" (Save Image)</strong> หรือ <strong>"คัดลอก/แชร์" (Share)</strong> ลง Line, IG, FB ได้โดยตรงและบันทึกเข้าคลังภาพได้ทันทีครับ
                 </div>
                 
@@ -2130,20 +2835,20 @@
                 </div>
             </div>
             <div class="modal-footer" style="padding: 0.85rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 0.75rem;">
-                <button class="modal-btn btn-secondary" style="flex: 1;" onclick="toggleImagePreviewModal()">ปิด</button>
+                <button type="button" class="modal-btn btn-secondary" style="flex: 1;" onclick="toggleImagePreviewModal()">ปิด</button>
                 <a id="downloadFallbackBtn" href="" download="tcas70_my_targets.png" class="modal-btn btn-primary" style="flex: 1.2; background: var(--gradient-primary); border: none; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem; color: #fff;">
-                    <i class="fa-solid fa-download"></i> ดาวน์โหลดรูปภาพ
+                    <i class="fa-solid fa-download" aria-hidden="true"></i> ดาวน์โหลดรูปภาพ
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- About Modal Overlay (Volunteer Mission Detail) -->
-    <div class="modal-overlay" id="aboutModal">
+    <!-- About Modal Overlay (Volunteer Mission Detail) - Phase 11 -->
+    <div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle">
         <div class="modal-container" style="max-width: 600px;">
             <div class="modal-header">
-                <h2><i class="fa-solid fa-circle-info" style="color: var(--primary-light);"></i> เกี่ยวกับโปรเจกต์ TCAS70 Portfolio Finder</h2>
-                <button class="modal-close-btn" onclick="toggleAboutModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h2 id="aboutModalTitle"><i class="fa-solid fa-circle-info" style="color: var(--primary-light);" aria-hidden="true"></i> เกี่ยวกับโปรเจกต์ TCAS70 Portfolio Finder</h2>
+                <button type="button" class="modal-close-btn" onclick="toggleAboutModal()" aria-label="ปิดหน้าต่างเกี่ยวกับโปรเจกต์"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body" style="line-height: 1.6; font-size: 0.92rem; color: #e2e8f0; text-align: left; display: flex; flex-direction: column; gap: 0.9rem;">
                 <div style="text-align: center; margin-bottom: 0.25rem;">
@@ -2177,23 +2882,23 @@
                 </p>
             </div>
             <div class="modal-footer">
-                <button class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleAboutModal()">ปิดหน้าต่าง</button>
+                <button type="button" class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleAboutModal()">ปิดหน้าต่าง</button>
             </div>
         </div>
     </div>
 
-    <!-- Degree Info Modal Overlay -->
-    <div class="modal-overlay" id="degreeInfoModal">
+    <!-- Degree Info Modal Overlay - Phase 11 -->
+    <div class="modal-overlay" id="degreeInfoModal" role="dialog" aria-modal="true" aria-labelledby="degreeModalTitle">
         <div class="modal-container" style="max-width: 500px;">
             <div class="modal-header">
                 <h2 id="degreeModalTitle"></h2>
-                <button class="modal-close-btn" onclick="toggleDegreeModal()"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="modal-close-btn" onclick="toggleDegreeModal()" aria-label="ปิดกล่องข้อมูลปริญญา"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body" id="degreeModalBody" style="line-height: 1.6; font-size: 0.95rem; color: #e2e8f0; text-align: left;">
                 <!-- Content dynamically populated -->
             </div>
             <div class="modal-footer">
-                <button class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleDegreeModal()">เข้าใจแล้ว</button>
+                <button type="button" class="modal-btn btn-primary" style="background: var(--gradient-primary); border: none;" onclick="toggleDegreeModal()">เข้าใจแล้ว</button>
             </div>
         </div>
     </div>
@@ -2222,9 +2927,912 @@
 
     <!-- Main JS -->
     <script>
+        // Focus recovery strategy (Phase 11)
+        function safeFocus(elementOrId) {
+            window.requestAnimationFrame(() => {
+                const element = typeof elementOrId === 'string'
+                    ? document.getElementById(elementOrId)
+                    : elementOrId;
+
+                if (
+                    element &&
+                    !element.hidden &&
+                    !element.disabled &&
+                    element.style.display !== 'none' &&
+                    element.style.visibility !== 'hidden' &&
+                    !element.closest('[hidden]') &&
+                    typeof element.focus === 'function'
+                ) {
+                    element.focus();
+                }
+            });
+        }
+
         let allData = [];
         let filteredData = [];
         let activeRoundData = [];
+        let currentSortedResults = [];
+        let currentSortedMode = 'default';
+
+        // Searchable dropdowns structure caching variables (Phase 4)
+        let cachedUniStructure = [];
+        let cachedFacultyOptions = [];
+        const specialUniOptions = [
+            { value: 'COTMES', text: '🩺 กลุ่ม กสพท (แพทย์/ทันตะ/เภสัช/สัตวแพทย์)' }
+        ];
+
+        // Read all active filters from UI controls without mutation (Phase 6)
+        function getActiveFiltersFromUI() {
+            const filters = [];
+
+            // 1. searchInput
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && searchInput.value.trim() !== "") {
+                filters.push({
+                    key: 'search',
+                    label: 'ค้นหา',
+                    displayText: searchInput.value.trim()
+                });
+            }
+
+            // 2. uniFilter
+            const uniFilter = document.getElementById('uniFilter');
+            if (uniFilter && uniFilter.value !== "") {
+                let displayText = uniFilter.value;
+                if (uniFilter.value === 'COTMES') {
+                    displayText = 'กลุ่ม กสพท.';
+                } else {
+                    const opt = uniFilter.options[uniFilter.selectedIndex];
+                    if (opt) {
+                        displayText = opt.textContent.trim();
+                    }
+                }
+                filters.push({
+                    key: 'university',
+                    label: 'มหาวิทยาลัย',
+                    displayText: displayText
+                });
+            }
+
+            // 3. facultyFilter
+            const facultyFilter = document.getElementById('facultyFilter');
+            if (facultyFilter && facultyFilter.value !== "") {
+                const opt = facultyFilter.options[facultyFilter.selectedIndex];
+                const displayText = opt ? opt.textContent.trim() : facultyFilter.value;
+                filters.push({
+                    key: 'faculty',
+                    label: 'คณะ / หน่วยงาน',
+                    displayText: displayText
+                });
+            }
+
+            // 4. studentGPAX
+            const studentGPAX = document.getElementById('studentGPAX');
+            if (studentGPAX && studentGPAX.value.trim() !== "" && !isNaN(parseFloat(studentGPAX.value))) {
+                filters.push({
+                    key: 'gpax',
+                    label: 'GPAX',
+                    displayText: studentGPAX.value.trim() + ' ขึ้นไป'
+                });
+            }
+
+            // 5. studentPlan
+            const studentPlan = document.getElementById('studentPlan');
+            if (studentPlan && studentPlan.value !== "") {
+                const opt = studentPlan.options[studentPlan.selectedIndex];
+                const displayText = opt ? opt.textContent.trim() : studentPlan.value;
+                filters.push({
+                    key: 'plan',
+                    label: 'วุฒิ / แผนการเรียน',
+                    displayText: displayText
+                });
+            }
+
+            // 6. hasEnglish
+            const hasEnglish = document.getElementById('hasEnglish');
+            if (hasEnglish && hasEnglish.checked) {
+                filters.push({
+                    key: 'english',
+                    label: 'ภาษาอังกฤษ',
+                    displayText: 'ต้องใช้'
+                });
+            }
+
+            // 7. hasAptitude
+            const hasAptitude = document.getElementById('hasAptitude');
+            if (hasAptitude && hasAptitude.checked) {
+                filters.push({
+                    key: 'aptitude',
+                    label: 'TGAT / TPAT',
+                    displayText: 'ต้องใช้'
+                });
+            }
+
+            // 8. hasALevel
+            const hasALevel = document.getElementById('hasALevel');
+            if (hasALevel && hasALevel.checked) {
+                filters.push({
+                    key: 'alevel',
+                    label: 'A-Level',
+                    displayText: 'ต้องใช้'
+                });
+            }
+
+            return filters;
+        }
+
+        // Render Active Filter Chips (Phase 6)
+        function renderActiveFilterChips() {
+            const containerSection = document.getElementById('activeFiltersSection');
+            const chipsWrapper = document.getElementById('activeFilterChips');
+            if (!containerSection || !chipsWrapper) return;
+
+            const filters = getActiveFiltersFromUI();
+
+            if (filters.length === 0) {
+                containerSection.hidden = true;
+                chipsWrapper.innerHTML = '';
+                return;
+            }
+
+            containerSection.hidden = false;
+            chipsWrapper.innerHTML = '';
+
+            filters.forEach(filter => {
+                const chip = document.createElement('div');
+                chip.className = 'active-filter-chip';
+
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'active-filter-chip-label';
+                labelSpan.textContent = filter.label + ':';
+                chip.appendChild(labelSpan);
+
+                const valueText = document.createTextNode(' ' + filter.displayText);
+                chip.appendChild(valueText);
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'active-filter-chip-remove';
+                removeBtn.dataset.filterKey = filter.key;
+                removeBtn.setAttribute('aria-label', 'ลบตัวกรอง ' + filter.label + ' ' + filter.displayText);
+                
+                const removeIcon = document.createElement('i');
+                removeIcon.className = 'fa-solid fa-xmark';
+                removeIcon.setAttribute('aria-hidden', 'true');
+                
+                removeBtn.appendChild(removeIcon);
+                chip.appendChild(removeBtn);
+
+                chipsWrapper.appendChild(chip);
+            });
+        }
+
+        // Clear single filter control and trigger re-filter (Phase 6)
+        function clearSingleFilter(key) {
+            const searchInput = document.getElementById('searchInput');
+            const uniFilter = document.getElementById('uniFilter');
+            const uniSearch = document.getElementById('uniSearch');
+            const facultyFilter = document.getElementById('facultyFilter');
+            const facultySearch = document.getElementById('facultySearch');
+            const studentGPAX = document.getElementById('studentGPAX');
+            const studentPlan = document.getElementById('studentPlan');
+            const hasEnglish = document.getElementById('hasEnglish');
+            const hasAptitude = document.getElementById('hasAptitude');
+            const hasALevel = document.getElementById('hasALevel');
+
+            switch (key) {
+                case 'search':
+                    if (searchInput) searchInput.value = '';
+                    break;
+                case 'university':
+                    if (uniFilter) {
+                        uniFilter.value = '';
+                        updateFacultyDropdown();
+                    }
+                    break;
+                case 'faculty':
+                    if (facultyFilter) facultyFilter.value = '';
+                    if (facultySearch) facultySearch.value = '';
+                    break;
+                case 'gpax':
+                    if (studentGPAX) studentGPAX.value = '';
+                    break;
+                case 'plan':
+                    if (studentPlan) studentPlan.value = '';
+                    break;
+                case 'english':
+                    if (hasEnglish) hasEnglish.checked = false;
+                    break;
+                case 'aptitude':
+                    if (hasAptitude) hasAptitude.checked = false;
+                    break;
+                case 'alevel':
+                    if (hasALevel) hasALevel.checked = false;
+                    break;
+            }
+
+            filterData();
+
+            // Focus recovery strategy (Phase 11)
+            switch (key) {
+                case 'search':
+                    safeFocus('searchInput');
+                    break;
+                case 'university':
+                    safeFocus('uniFilter');
+                    break;
+                case 'faculty':
+                    safeFocus('facultyFilter');
+                    break;
+                case 'gpax':
+                    safeFocus('studentGPAX');
+                    break;
+                case 'plan':
+                    safeFocus('studentPlan');
+                    break;
+                case 'english':
+                    safeFocus('hasEnglish');
+                    break;
+                case 'aptitude':
+                    safeFocus('hasAptitude');
+                    break;
+                case 'alevel':
+                    safeFocus('hasALevel');
+                    break;
+            }
+        }
+
+        // Clear all optional filters while preserving active round (Phase 6)
+        function clearAllOptionalFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const uniSearch = document.getElementById('uniSearch');
+            const facultySearch = document.getElementById('facultySearch');
+            const uniFilter = document.getElementById('uniFilter');
+            const facultyFilter = document.getElementById('facultyFilter');
+            const studentGPAX = document.getElementById('studentGPAX');
+            const studentPlan = document.getElementById('studentPlan');
+            const hasEnglish = document.getElementById('hasEnglish');
+            const hasAptitude = document.getElementById('hasAptitude');
+            const hasALevel = document.getElementById('hasALevel');
+
+            if (searchInput) searchInput.value = '';
+            if (uniSearch) uniSearch.value = '';
+            if (facultySearch) facultySearch.value = '';
+
+            if (uniFilter) uniFilter.value = '';
+            if (facultyFilter) facultyFilter.value = '';
+
+            if (studentGPAX) studentGPAX.value = '';
+            if (studentPlan) studentPlan.value = '';
+
+            if (hasEnglish) hasEnglish.checked = false;
+            if (hasAptitude) hasAptitude.checked = false;
+            if (hasALevel) hasALevel.checked = false;
+
+            updateFacultyDropdown();
+            filterData();
+
+            // Focus recovery strategy (Phase 11)
+            safeFocus('searchInput');
+        }
+
+        // No-Results Recovery and Diagnostics (Phase 10)
+        function hasOptionalActiveFilters() {
+            return getActiveFiltersFromUI().length > 0;
+        }
+
+        function renderNoResultsRecovery() {
+            const selectedRoundVal = parseInt(document.getElementById('roundFilter').value) || 1;
+            let roundLabel = 'Portfolio';
+            if (selectedRoundVal === 2) roundLabel = 'Quota';
+            if (selectedRoundVal === 3) roundLabel = 'Admission';
+            if (selectedRoundVal === 4) roundLabel = 'Direct Admission';
+
+            const activeFilters = getActiveFiltersFromUI();
+            const hasFilters = activeFilters.length > 0 && activeRoundData.length > 0;
+
+            if (!hasFilters) {
+                // Case 1: No active optional filters
+                cardsGrid.innerHTML = `
+                    <div id="noResultsRecovery" class="no-results-recovery no-results" role="status" aria-live="polite">
+                        <div class="no-results-icon" aria-hidden="true">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+                        <h3 class="no-results-title">ยังไม่พบข้อมูลโครงการในรอบนี้</h3>
+                        <p class="no-results-description">ข้อมูลของรอบที่ ${selectedRoundVal} (${roundLabel}) อาจยังไม่พร้อม หรือยังไม่มีโครงการที่เผยแพร่ในฐานข้อมูล</p>
+                    </div>
+                `;
+            } else {
+                // Case 2: Active optional filters
+                const searchInput = document.getElementById('searchInput');
+                const query = searchInput ? searchInput.value.trim() : '';
+                let queryMsg = '';
+                if (query) {
+                    queryMsg = `ไม่พบคำว่า “${query}” ในโครงการของรอบและตัวกรองปัจจุบัน`;
+                }
+
+                cardsGrid.innerHTML = `
+                    <div id="noResultsRecovery" class="no-results-recovery no-results" role="status" aria-live="polite">
+                        <div class="no-results-icon" aria-hidden="true">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <h3 class="no-results-title">ไม่พบโครงการที่ตรงกับเงื่อนไขนี้</h3>
+                        <div id="noResultsQueryMessage" class="no-results-query-message"></div>
+                        <p class="no-results-description">ลองตรวจสอบคำค้นหา หรือลดตัวกรองบางรายการเพื่อขยายผลลัพธ์</p>
+                        <p class="no-results-tip" style="font-size: 0.82rem; color: var(--text-muted); margin-top: -0.25rem;">คำแนะนำ: ลองใช้คำค้นหาที่สั้นลง เช่น ชื่อสาขา ชื่อคณะ หรือชื่อมหาวิทยาลัย</p>
+                        
+                        <div class="no-results-context">
+                            กำลังดู: รอบที่ ${selectedRoundVal} (${roundLabel})
+                        </div>
+
+                        <div id="noResultsActiveFilters" class="no-results-active-filters" aria-label="ตัวกรองที่กำลังใช้งาน">
+                            <!-- Diagnostic items will be appended here -->
+                        </div>
+
+                        <div class="no-results-actions">
+                            <button type="button" id="clearSearchOnlyBtn" class="no-results-action-btn" style="display: none;">
+                                ล้างคำค้นหา
+                            </button>
+                            <button type="button" id="clearAllFromEmptyBtn" class="no-results-action-btn no-results-action-primary">
+                                ล้างตัวกรองทั้งหมด
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                if (queryMsg) {
+                    const queryMsgEl = document.getElementById('noResultsQueryMessage');
+                    if (queryMsgEl) {
+                        queryMsgEl.textContent = queryMsg;
+                    }
+                }
+
+                // Render active filters list with createElement & textContent (Phase 10)
+                const diagContainer = document.getElementById('noResultsActiveFilters');
+                if (diagContainer) {
+                    activeFilters.forEach(filter => {
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'no-results-filter-item';
+
+                        const labelEl = document.createElement('span');
+                        labelEl.className = 'no-results-filter-label';
+                        
+                        const labelSpan = document.createElement('span');
+                        labelSpan.className = 'no-results-filter-title-part';
+                        labelSpan.textContent = filter.label + ': ';
+                        
+                        const valueSpan = document.createElement('strong');
+                        valueSpan.textContent = filter.displayText;
+                        
+                        labelEl.appendChild(labelSpan);
+                        labelEl.appendChild(valueSpan);
+
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.className = 'no-results-filter-remove';
+                        removeBtn.setAttribute('data-filter-key', filter.key);
+                        removeBtn.setAttribute('aria-label', `ลบตัวกรอง ${filter.label}`);
+                        
+                        const removeIcon = document.createElement('i');
+                        removeIcon.className = 'fa-solid fa-xmark';
+                        removeIcon.setAttribute('aria-hidden', 'true');
+                        
+                        removeBtn.appendChild(removeIcon);
+                        
+                        itemEl.appendChild(labelEl);
+                        itemEl.appendChild(removeBtn);
+                        diagContainer.appendChild(itemEl);
+                    });
+                }
+
+                // Show/hide Clear Search Only button
+                const clearSearchOnlyBtn = document.getElementById('clearSearchOnlyBtn');
+                if (clearSearchOnlyBtn) {
+                    if (query) {
+                        clearSearchOnlyBtn.style.display = 'inline-flex';
+                    } else {
+                        clearSearchOnlyBtn.style.display = 'none';
+                    }
+                }
+            }
+
+            // Hide progressive loading sections as cards are empty
+            const loadMoreSection = document.getElementById('loadMoreSection');
+            if (loadMoreSection) loadMoreSection.hidden = true;
+        }
+
+        // URL Shareable Search State (Phase 9)
+        let isRestoringURLState = false;
+        let hasRestoredURLState = false;
+
+        function getShareableStateFromUI() {
+            return {
+                q: searchInput ? searchInput.value.trim() : "",
+                round: roundFilter ? roundFilter.value : "1",
+                university: uniFilter ? uniFilter.value : "",
+                faculty: facultyFilter ? facultyFilter.value : "",
+                gpax: studentGPAX ? studentGPAX.value.trim() : "",
+                plan: studentPlan ? studentPlan.value : "",
+                english: hasEnglish ? hasEnglish.checked : false,
+                aptitude: hasAptitude ? hasAptitude.checked : false,
+                alevel: hasALevel ? hasALevel.checked : false,
+                sort: sortResults ? sortResults.value : "default"
+            };
+        }
+
+        function buildShareableSearchParams() {
+            const state = getShareableStateFromUI();
+            const params = new URLSearchParams();
+
+            if (state.q) params.set('q', state.q);
+            params.set('round', state.round);
+
+            if (state.university) params.set('university', state.university);
+            if (state.faculty) params.set('faculty', state.faculty);
+            if (state.gpax) params.set('gpax', state.gpax);
+            if (state.plan) params.set('plan', state.plan);
+            
+            if (state.english) params.set('english', '1');
+            if (state.aptitude) params.set('aptitude', '1');
+            if (state.alevel) params.set('alevel', '1');
+
+            if (state.sort && state.sort !== 'default') {
+                params.set('sort', state.sort);
+            }
+
+            return params;
+        }
+
+        function syncURLFromUI() {
+            if (isRestoringURLState) return;
+            const params = buildShareableSearchParams();
+            const query = params.toString();
+
+            const nextURL =
+                window.location.pathname +
+                (query ? '?' + query : '') +
+                window.location.hash;
+
+            const currentURL =
+                window.location.pathname +
+                window.location.search +
+                window.location.hash;
+
+            if (nextURL !== currentURL) {
+                window.history.replaceState(null, '', nextURL);
+            }
+        }
+
+        function readSearchStateFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                q: params.get('q'),
+                round: params.get('round'),
+                university: params.get('university'),
+                faculty: params.get('faculty'),
+                gpax: params.get('gpax'),
+                plan: params.get('plan'),
+                english: params.get('english'),
+                aptitude: params.get('aptitude'),
+                alevel: params.get('alevel'),
+                sort: params.get('sort')
+            };
+        }
+
+        function selectHasValue(selectElement, value) {
+            if (!selectElement || value === null) return false;
+            return Array.from(selectElement.options)
+                .some(option => option.value === value);
+        }
+
+        function parseBooleanParam(value) {
+            return value === '1';
+        }
+
+        function normalizeGPAXParam(value) {
+            if (value === null || value.trim() === '') return '';
+            const number = Number(value);
+            if (!Number.isFinite(number)) return '';
+            if (number < 0 || number > 4) return '';
+            return number.toFixed(2);
+        }
+
+        function restoreStateFromURL() {
+            const state = readSearchStateFromURL();
+            if (!state.round && !state.q && !state.university && !state.faculty && !state.gpax && !state.plan && !state.english && !state.aptitude && !state.alevel && !state.sort) {
+                hasRestoredURLState = true;
+                handleRoundChange();
+                return;
+            }
+
+            isRestoringURLState = true;
+
+            // 1. Restore roundFilter
+            const roundFilter = document.getElementById('roundFilter');
+            if (roundFilter) {
+                if (state.round && selectHasValue(roundFilter, state.round)) {
+                    roundFilter.value = state.round;
+                } else {
+                    roundFilter.value = "1";
+                }
+            }
+
+            // 2. Build activeRoundData
+            const selectedRoundVal = parseInt(roundFilter ? roundFilter.value : "1") || 1;
+            activeRoundData = allData.filter(item => {
+                const matchesRound = (item.round || 1) === selectedRoundVal;
+                if (!matchesRound) return false;
+                if (item.project_name === 'ไม่มีข้อมูลโครงการ' || item.project_name === 'ไม่มีข้อมูลรอบ Portfolio') {
+                    return false;
+                }
+                return true;
+            });
+
+            // 3. populateFilters()
+            populateFilters();
+
+            // 4. Restore university
+            const uniFilter = document.getElementById('uniFilter');
+            if (uniFilter) {
+                if (state.university && selectHasValue(uniFilter, state.university)) {
+                    uniFilter.value = state.university;
+                } else {
+                    uniFilter.value = "";
+                }
+            }
+
+            // 5. updateFacultyDropdown()
+            updateFacultyDropdown();
+
+            // 6. Restore faculty
+            const facultyFilter = document.getElementById('facultyFilter');
+            if (facultyFilter) {
+                if (state.faculty && selectHasValue(facultyFilter, state.faculty)) {
+                    facultyFilter.value = state.faculty;
+                } else {
+                    facultyFilter.value = "";
+                }
+            }
+
+            // 7. Restore searchInput
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                if (state.q !== null) {
+                    searchInput.value = state.q.trim().slice(0, 200);
+                } else {
+                    searchInput.value = "";
+                }
+            }
+
+            // 8. Restore studentGPAX
+            const studentGPAX = document.getElementById('studentGPAX');
+            if (studentGPAX) {
+                if (state.gpax !== null) {
+                    studentGPAX.value = normalizeGPAXParam(state.gpax);
+                } else {
+                    studentGPAX.value = "";
+                }
+            }
+
+            // 9. Restore studentPlan
+            const studentPlan = document.getElementById('studentPlan');
+            if (studentPlan) {
+                if (state.plan && selectHasValue(studentPlan, state.plan)) {
+                    studentPlan.value = state.plan;
+                } else {
+                    studentPlan.value = "";
+                }
+            }
+
+            // 10. Restore checkboxes
+            const hasEnglish = document.getElementById('hasEnglish');
+            const hasAptitude = document.getElementById('hasAptitude');
+            const hasALevel = document.getElementById('hasALevel');
+            if (hasEnglish) hasEnglish.checked = parseBooleanParam(state.english);
+            if (hasAptitude) hasAptitude.checked = parseBooleanParam(state.aptitude);
+            if (hasALevel) hasALevel.checked = parseBooleanParam(state.alevel);
+
+            // 11. Restore sortResults
+            const sortResults = document.getElementById('sortResults');
+            if (sortResults) {
+                if (state.sort && selectHasValue(sortResults, state.sort)) {
+                    sortResults.value = state.sort;
+                } else {
+                    sortResults.value = "default";
+                }
+            }
+
+            // 12. Complete Guard
+            isRestoringURLState = false;
+            hasRestoredURLState = true;
+
+            // 13. Re-render, sync URL (canonicalize)
+            resetVisibleResults();
+            filterData();
+            updateSortStatus();
+            syncURLFromUI();
+        }
+
+        async function copyCurrentSearchLink() {
+            syncURLFromUI();
+            const url = window.location.href;
+            
+            // Attempt clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(url);
+                    showCopyLinkFeedback("คัดลอกลิงก์แล้ว");
+                    return;
+                } catch (err) {
+                    console.warn("navigator.clipboard failed, falling back", err);
+                }
+            }
+
+            // Fallback for non-secure contexts (e.g. mobile testing on HTTP LAN)
+            try {
+                const textArea = document.createElement("textarea");
+                textArea.value = url;
+                textArea.style.top = "0";
+                textArea.style.left = "0";
+                textArea.style.position = "fixed";
+                textArea.style.opacity = "0";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                const successful = document.execCommand("copy");
+                document.body.removeChild(textArea);
+
+                if (successful) {
+                    showCopyLinkFeedback("คัดลอกลิงก์แล้ว");
+                } else {
+                    showCopyLinkFeedback("ไม่สามารถคัดลอกได้ กรุณาคัดลอกจากแถบที่อยู่");
+                }
+            } catch (err) {
+                console.error("Fallback copy failed", err);
+                showCopyLinkFeedback("ไม่สามารถคัดลอกได้ กรุณาคัดลอกจากแถบที่อยู่");
+            }
+        }
+
+        let copyFeedbackTimeout = null;
+        function showCopyLinkFeedback(message) {
+            const statusEl = document.getElementById('copySearchLinkStatus');
+            if (!statusEl) return;
+            statusEl.textContent = message;
+            
+            if (copyFeedbackTimeout) {
+                clearTimeout(copyFeedbackTimeout);
+            }
+            copyFeedbackTimeout = setTimeout(() => {
+                statusEl.textContent = "";
+            }, 3000);
+        }
+
+        // Progressive Results Loading State (Phase 8)
+        let currentVisibleCount = 0;
+
+        function getInitialDisplayLimit() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            return isIOS ? 20 : 150;
+        }
+
+        function getDisplayBatchSize() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            return isIOS ? 20 : 100;
+        }
+
+        function resetVisibleResults() {
+            currentVisibleCount = getInitialDisplayLimit();
+        }
+
+        // Numeric normalization helper (Phase 7)
+        function normalizeSortNumber(value) {
+            if (value === null || value === undefined || value === '') {
+                return null;
+            }
+            const parsed = Number(value);
+            return Number.isFinite(parsed) ? parsed : null;
+        }
+
+        // Compare nullable numbers with null always at the end (Phase 7)
+        function compareNullableNumbers(a, b, direction) {
+            if (a === null && b === null) return 0;
+            if (a === null) return 1;
+            if (b === null) return -1;
+            return direction === 'asc' ? a - b : b - a;
+        }
+
+        // Reusable Intl.Collator instance (Phase 12)
+        const thaiCollator = new Intl.Collator('th', {
+            sensitivity: 'base',
+            numeric: true
+        });
+
+        // Thai text comparator helper (Phase 7)
+        function compareThaiText(a, b) {
+            const strA = String(a || '').trim();
+            const strB = String(b || '').trim();
+            if (strA === '' && strB === '') return 0;
+            if (strA === '') return 1;
+            if (strB === '') return -1;
+            return thaiCollator.compare(strA, strB);
+        }
+
+        // Stable program identity tie-breaker comparator (Phase 7)
+        function compareProgramIdentity(a, b) {
+            return (
+                compareThaiText(a.university_name, b.university_name) ||
+                compareThaiText(a.faculty_name, b.faculty_name) ||
+                compareThaiText(a.program_name, b.program_name) ||
+                compareThaiText(a.project_name, b.project_name) ||
+                compareThaiText(a.program_id, b.program_id) ||
+                compareThaiText(a.project_id, b.project_id)
+            );
+        }
+
+        // Get sorted results without mutating origin data (Phase 7)
+        function getSortedResults(data, sortMode) {
+            const results = [...data];
+            if (sortMode === 'default') {
+                return results;
+            }
+            results.sort((a, b) => {
+                let comparison = 0;
+                switch (sortMode) {
+                    case 'seats-desc': {
+                        const valA = normalizeSortNumber(a.seats);
+                        const valB = normalizeSortNumber(b.seats);
+                        comparison = compareNullableNumbers(valA, valB, 'desc');
+                        break;
+                    }
+                    case 'seats-asc': {
+                        const valA = normalizeSortNumber(a.seats);
+                        const valB = normalizeSortNumber(b.seats);
+                        comparison = compareNullableNumbers(valA, valB, 'asc');
+                        break;
+                    }
+                    case 'gpax-asc': {
+                        const valA = normalizeSortNumber(a.min_gpax);
+                        const valB = normalizeSortNumber(b.min_gpax);
+                        comparison = compareNullableNumbers(valA, valB, 'asc');
+                        break;
+                    }
+                    case 'university-asc': {
+                        comparison = compareThaiText(a.university_name, b.university_name);
+                        break;
+                    }
+                    case 'program-asc': {
+                        comparison = compareThaiText(a.program_name, b.program_name);
+                        break;
+                    }
+                }
+                // Apply stable tie-breaker if values are equal
+                return comparison !== 0 ? comparison : compareProgramIdentity(a, b);
+            });
+            return results;
+        }
+
+        // Refresh sorted results render cache (Phase 12)
+        function refreshSortedResults() {
+            const sortSelect = document.getElementById('sortResults');
+            const sortMode = sortSelect ? sortSelect.value : 'default';
+            currentSortedResults = getSortedResults(filteredData, sortMode);
+            currentSortedMode = sortMode;
+        }
+
+        // Update Sort status hint text feedback (Phase 7)
+        function updateSortStatus() {
+            const hintEl = document.getElementById('resultsSortStatus');
+            const sortSelect = document.getElementById('sortResults');
+            if (!hintEl || !sortSelect) return;
+            
+            const mode = sortSelect.value;
+            switch (mode) {
+                case 'seats-desc':
+                    hintEl.textContent = 'เรียงตาม: จำนวนรับ มาก → น้อย';
+                    break;
+                case 'seats-asc':
+                    hintEl.textContent = 'เรียงตาม: จำนวนรับ น้อย → มาก';
+                    break;
+                case 'gpax-asc':
+                    hintEl.textContent = 'เรียงตาม: GPAX ขั้นต่ำ ต่ำ → สูง';
+                    break;
+                case 'university-asc':
+                    hintEl.textContent = 'เรียงตาม: ชื่อมหาวิทยาลัย ก → ฮ';
+                    break;
+                case 'program-asc':
+                    hintEl.textContent = 'เรียงตาม: ชื่อหลักสูตร ก → ฮ';
+                    break;
+                default:
+                    hintEl.textContent = 'แสดงตามลำดับข้อมูลเริ่มต้น';
+                    break;
+            }
+        }
+
+        // Update Faculty Scope UI Hint below faculty dropdown (Phase 5B)
+        function updateFacultyScopeHint() {
+            const hintEl = document.getElementById('facultyScopeHint');
+            if (!hintEl) return;
+            
+            const selectedUni = uniFilter.value;
+            if (selectedUni) {
+                hintEl.style.display = 'block';
+                if (selectedUni === 'COTMES') {
+                    hintEl.textContent = 'แสดงเฉพาะคณะและหลักสูตรในกลุ่ม กสพท.';
+                } else {
+                    hintEl.textContent = 'แสดงเฉพาะคณะ / หน่วยงานของ ' + selectedUni;
+                }
+            } else {
+                hintEl.style.display = 'none';
+                hintEl.textContent = '';
+            }
+        }
+
+        // Rebuild university select options from cached list based on search query (Phase 4)
+        window.filterUniOptions = function() {
+            const uniSearch = document.getElementById('uniSearch');
+            const uniFilter = document.getElementById('uniFilter');
+            if (!uniSearch || !uniFilter) return;
+
+            const query = uniSearch.value.trim().toLowerCase();
+            const currentSelection = uniFilter.value;
+            
+            uniFilter.innerHTML = '<option value="">เลือกมหาวิทยาลัย (Universities)</option>';
+            
+            // Render special options
+            specialUniOptions.forEach(opt => {
+                if (!query || opt.text.toLowerCase().includes(query)) {
+                    const optEl = document.createElement('option');
+                    optEl.value = opt.value;
+                    optEl.textContent = opt.text;
+                    optEl.style.fontWeight = 'bold';
+                    optEl.style.color = '#c084fc';
+                    uniFilter.appendChild(optEl);
+                }
+            });
+            
+            // Render groups and options dynamically (safari compatible Rebuild)
+            cachedUniStructure.forEach(group => {
+                const filteredOpts = group.options.filter(opt => !query || opt.text.toLowerCase().includes(query));
+                if (filteredOpts.length > 0) {
+                    const groupEl = document.createElement('optgroup');
+                    groupEl.label = group.label;
+                    filteredOpts.forEach(opt => {
+                        const optEl = document.createElement('option');
+                        optEl.value = opt.value;
+                        optEl.textContent = opt.text;
+                        groupEl.appendChild(optEl);
+                    });
+                    uniFilter.appendChild(groupEl);
+                }
+            });
+            
+            // Restore selection state
+            uniFilter.value = currentSelection;
+        };
+
+        // Rebuild faculty select options from cached list based on search query (Phase 4)
+        window.filterFacultyOptions = function() {
+            const facultySearch = document.getElementById('facultySearch');
+            const facultyFilter = document.getElementById('facultyFilter');
+            if (!facultySearch || !facultyFilter) return;
+
+            const query = facultySearch.value.trim().toLowerCase();
+            const currentSelection = facultyFilter.value;
+            
+            facultyFilter.innerHTML = '<option value="">เลือกคณะ / วิทยาลัย / สำนักวิชา</option>';
+            
+            cachedFacultyOptions.forEach(fac => {
+                if (!query || fac.toLowerCase().includes(query)) {
+                    const opt = document.createElement('option');
+                    opt.value = fac;
+                    opt.textContent = fac;
+                    facultyFilter.appendChild(opt);
+                }
+            });
+            
+            // Restore selection state
+            facultyFilter.value = currentSelection;
+        };
 
         // Debounce helper to prevent rapid keypress re-render spikes
         function debounce(func, delay) {
@@ -2269,6 +3877,12 @@
         const hasAptitude = document.getElementById('hasAptitude');
         const hasALevel = document.getElementById('hasALevel');
 
+        // Static Cached DOM References (Phase 12)
+        const sortResults = document.getElementById('sortResults');
+        const loadMoreSection = document.getElementById('loadMoreSection');
+        const visibleResultsStatus = document.getElementById('visibleResultsStatus');
+        const loadMoreResultsBtn = document.getElementById('loadMoreResultsBtn');
+
         // Fetch data on load
         window.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -2279,8 +3893,8 @@
                 }
                 allData = await response.json();
                 
-                // Initialize default round (Round 1 Portfolio)
-                handleRoundChange();
+                // Restore state from URL - Phase 9 (will initialize default round if no parameters exist)
+                restoreStateFromURL();
                  
                 // Update saved targets badge count
                 updateBadgeCount();
@@ -2367,29 +3981,27 @@
                 }
             });
             
-            // Clear existing options except placeholder
-            uniFilter.innerHTML = '<option value="">เลือกมหาวิทยาลัย (Universities)</option>';
+            // Save previous university select value and check validity for the new active round (Phase 5B)
+            const previousUni = uniFilter.value;
+            const isUniValid = universities.includes(previousUni) || previousUni === 'COTMES';
+
+            // Clear select search query inputs on layout reset
+            const uniSearch = document.getElementById('uniSearch');
+            if (uniSearch) uniSearch.value = '';
+            const facultySearch = document.getElementById('facultySearch');
+            if (facultySearch) facultySearch.value = '';
+
+            // Rebuild cached university structure (Phase 4)
+            cachedUniStructure = [];
             
-            // Add COTMES as a special custom option right after the placeholder
-            const cotmesOpt = document.createElement('option');
-            cotmesOpt.value = 'COTMES';
-            cotmesOpt.textContent = '🩺 กลุ่ม กสพท (แพทย์/ทันตะ/เภสัช/สัตวแพทย์)';
-            cotmesOpt.style.fontWeight = 'bold';
-            cotmesOpt.style.color = '#c084fc';
-            uniFilter.appendChild(cotmesOpt);
-            
-            // Helper function to add a group
+            // Helper function to add a group to cache
             function addGroup(label, list) {
                 if (list.length > 0) {
-                    const group = document.createElement('optgroup');
-                    group.label = label;
+                    const groupData = { label: label, options: [] };
                     list.forEach(uni => {
-                        const opt = document.createElement('option');
-                        opt.value = uni;
-                        opt.textContent = uni;
-                        group.appendChild(opt);
+                        groupData.options.push({ value: uni, text: uni });
                     });
-                    uniFilter.appendChild(group);
+                    cachedUniStructure.push(groupData);
                 }
             }
             
@@ -2401,14 +4013,22 @@
             addGroup('🧪 กลุ่มสถาบัน / วิทยาลัย (Institutes & Colleges)', instituteList);
             addGroup('💼 มหาวิทยาลัยเอกชน (Private Universities)', privateList);
 
-            // Populate unique faculty names initially
+            // Rebuild uni filter options dynamically using filterUniOptions (Phase 4)
+            filterUniOptions();
+            
+            // Restore selection if still valid, otherwise reset safely to empty (Phase 5B)
+            if (isUniValid) {
+                uniFilter.value = previousUni;
+            } else {
+                uniFilter.value = '';
+            }
+
+            // Populate unique faculty names initially based on updated university value
             updateFacultyDropdown();
         }
 
         // Update Faculty dropdown based on selected university
         function updateFacultyDropdown() {
-            facultyFilter.innerHTML = '<option value="">เลือกคณะ (Faculties)</option>';
-            
             const selectedUni = uniFilter.value;
             let targetData = activeRoundData;
             
@@ -2427,13 +4047,31 @@
                 }
             }
             
-            const faculties = [...new Set(targetData.map(item => item.faculty_name))].sort();
-            faculties.forEach(fac => {
-                const opt = document.createElement('option');
-                opt.value = fac;
-                opt.textContent = fac;
-                facultyFilter.appendChild(opt);
-            });
+            // Save previous selection state of Faculty Filter before rebuilding options (Phase 5B)
+            const previousFaculty = facultyFilter.value;
+            
+            // Cache faculty options list (Phase 4)
+            cachedFacultyOptions = [...new Set(targetData.map(item => item.faculty_name))].sort();
+            
+            // Check if previousFaculty is still valid under new cached list (Phase 5B)
+            const isFacultyStillValid = cachedFacultyOptions.includes(previousFaculty);
+            
+            if (isFacultyStillValid) {
+                // Restore selection state
+                facultyFilter.value = previousFaculty;
+            } else {
+                // Reset Selection
+                facultyFilter.value = '';
+                // Clear query input if selection became invalid
+                const facultySearch = document.getElementById('facultySearch');
+                if (facultySearch) facultySearch.value = '';
+            }
+            
+            // Build and render faculty option list using filter helper
+            filterFacultyOptions();
+            
+            // Update UI hint below dropdown
+            updateFacultyScopeHint();
         }
 
         // Dynamic GPAX extractor
@@ -2522,60 +4160,82 @@
             const escapedName = name.replace(/'/g, "\\'").replace(/"/g, '\\"');
             
             if (name.includes('ครุศาสตร์อุตสาหกรรม') || name.includes('ค.อ.บ.')) {
-                html += ` <span class="degree-info-btn degree-kob" onclick="showDegreeInfo('kob', '${escapedName}')" title="ข้อมูลปริญญา ค.อ.บ."><i class="fa-solid fa-circle-question"></i> ค.อ.บ.</span>`;
+                html += ` <button type="button" class="degree-info-btn degree-kob" onclick="showDegreeInfo('kob', '${escapedName}')" title="ข้อมูลปริญญา ค.อ.บ." aria-haspopup="dialog" aria-controls="degreeInfoModal" aria-expanded="false"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> ค.อ.บ.</button>`;
             } else if (name.includes('เทคโนโลยีบัณฑิต') || name.includes('ทล.บ.')) {
-                html += ` <span class="degree-info-btn degree-tolob" onclick="showDegreeInfo('tolob', '${escapedName}')" title="ข้อมูลปริญญา ทล.บ."><i class="fa-solid fa-circle-question"></i> ทล.บ.</span>`;
+                html += ` <button type="button" class="degree-info-btn degree-tolob" onclick="showDegreeInfo('tolob', '${escapedName}')" title="ข้อมูลปริญญา ทล.บ." aria-haspopup="dialog" aria-controls="degreeInfoModal" aria-expanded="false"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> ทล.บ.</button>`;
             } else if (name.includes('อุตสาหกรรมศาสตรบัณฑิต') || name.includes('อส.บ.')) {
-                html += ` <span class="degree-info-btn degree-osob" onclick="showDegreeInfo('osob', '${escapedName}')" title="ข้อมูลปริญญา อส.บ."><i class="fa-solid fa-circle-question"></i> อส.บ.</span>`;
+                html += ` <button type="button" class="degree-info-btn degree-osob" onclick="showDegreeInfo('osob', '${escapedName}')" title="ข้อมูลปริญญา อส.บ." aria-haspopup="dialog" aria-controls="degreeInfoModal" aria-expanded="false"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> อส.บ.</button>`;
             } else if (name.includes('วิศวกรรมศาสตรบัณฑิต') || name.includes('วศ.บ.') || (name.includes('วิศวกรรม') && !name.includes('เทคโนโลยีบัณฑิต') && !name.includes('อุตสาหกรรมศาสตรบัณฑิต'))) {
-                html += ` <span class="degree-info-btn degree-wosob" onclick="showDegreeInfo('wosob', '${escapedName}')" title="ข้อมูลปริญญา วศ.บ."><i class="fa-solid fa-circle-question"></i> วศ.บ.</span>`;
+                html += ` <button type="button" class="degree-info-btn degree-wosob" onclick="showDegreeInfo('wosob', '${escapedName}')" title="ข้อมูลปริญญา วศ.บ." aria-haspopup="dialog" aria-controls="degreeInfoModal" aria-expanded="false"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> วศ.บ.</button>`;
             }
             return html;
         }
 
-        // Generate dynamic checklist of requirements from criteria text
-        function getRequirementsHTML(criteria, condition) {
+        // Display status formatter helper for generic requirements (Phase 3B)
+        function getRequirementStatusHTML(label, rawValue, hasKeyword) {
+            let statusText = "ไม่พบข้อมูล";
+            let statusClass = "status-unknown";
+            let iconClass = "fa-circle-question";
+            
+            if (rawValue === true) {
+                statusText = "ต้องใช้";
+                statusClass = "status-required";
+                iconClass = "fa-circle-check";
+            } else if (rawValue === false) {
+                statusText = "ไม่ใช้";
+                statusClass = "status-not-used";
+                iconClass = "fa-circle-xmark";
+            } else {
+                // For values that are null/undefined (like SOP and Portfolio which are parsed client-side)
+                if (hasKeyword) {
+                    statusText = "ต้องใช้";
+                    statusClass = "status-required";
+                    iconClass = "fa-circle-check";
+                } else {
+                    statusText = "ไม่พบข้อมูล";
+                    statusClass = "status-unknown";
+                    iconClass = "fa-circle-question";
+                }
+            }
+            return `<li class="${statusClass}"><i class="fa-solid ${iconClass}"></i> ${label}: <strong>${statusText}</strong></li>`;
+        }
+
+        // Display status formatter helper for GPAX requirements (Phase 3B)
+        function getGPAXStatusHTML(item, combinedText) {
+            const gpaVal = extractGPAX(combinedText);
+            
+            // Check pre-computed database field
+            const dbGpa = item.min_gpax;
+            
+            if (dbGpa !== null && dbGpa !== undefined && dbGpa !== "") {
+                return `<li class="status-required"><i class="fa-solid fa-circle-check"></i> GPAX: <strong>GPAX ≥ ${dbGpa}</strong> (ต้องใช้)</li>`;
+            } else if (gpaVal) {
+                return `<li class="status-required"><i class="fa-solid fa-circle-check"></i> GPAX: <strong>GPAX ≥ ${gpaVal}</strong> (ต้องใช้)</li>`;
+            }
+            
+            // If no numeric GPAX is detected
+            const hasGpaKeywords = combinedText.includes('gpa') || combinedText.includes('เกรด') || combinedText.includes('เฉลี่ย');
+            const explicitlyNoLimit = combinedText.includes('ไม่กำหนดเกรด') || combinedText.includes('ไม่กำหนด gpax') || combinedText.includes('ไม่จำกัดเกรด') || combinedText.includes('ไม่จำกัด gpax') || combinedText.includes('ไม่กำหนดคะแนนเฉลี่ย');
+            
+            if (explicitlyNoLimit) {
+                return `<li class="status-not-used"><i class="fa-solid fa-circle-minus"></i> GPAX: <strong>ไม่กำหนด GPAX ขั้นต่ำ</strong></li>`;
+            } else if (hasGpaKeywords) {
+                return `<li class="status-warning"><i class="fa-solid fa-circle-exclamation"></i> GPAX: <strong>ใช้ GPAX แต่ไม่ระบุคะแนนขั้นต่ำ</strong></li>`;
+            } else if (item.criteria === null || item.criteria === undefined || item.criteria === "") {
+                return `<li class="status-unknown"><i class="fa-solid fa-circle-question"></i> GPAX: <strong>ไม่พบข้อมูล GPAX</strong></li>`;
+            } else {
+                return `<li class="status-unknown"><i class="fa-solid fa-circle-question"></i> GPAX: <strong>ไม่พบข้อมูลที่ยืนยันได้</strong></li>`;
+            }
+        }
+
+        // Generate dynamic checklist of requirements from criteria text (GPAX only in Main Card for Phase 3C)
+        function getRequirementsHTML(criteria, condition, item) {
             const combinedText = ((criteria || '') + ' ' + (condition || '')).toLowerCase();
             const items = [];
             
-            // 1. GPAX
-            const gpaVal = extractGPAX(combinedText);
-            if (gpaVal) {
-                items.push(`<li><i class="fa-solid fa-circle-check"></i> <strong>GPAX ≥ ${gpaVal}</strong></li>`);
-            } else if (combinedText.includes('gpa') || combinedText.includes('เกรด') || combinedText.includes('เฉลี่ย')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> GPAX เกณฑ์ขั้นต่ำ</li>');
-            } else {
-                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> GPAX (ไม่ระบุขั้นต่ำ)</li>');
-            }
+            // Render GPAX only on the main card view
+            items.push(getGPAXStatusHTML(item, combinedText));
             
-            // 2. IELTS / English
-            if (combinedText.includes('ielts') || combinedText.includes('toefl') || combinedText.includes('toeic') || combinedText.includes('ภาษาอังกฤษ') || combinedText.includes('english')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> IELTS / English Req.</li>');
-            } else {
-                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> IELTS (ไม่ระบุเกณฑ์)</li>');
-            }
-
-            // 3. Portfolio
-            if (combinedText.includes('portfolio') || combinedText.includes('พอร์ต') || combinedText.includes('ผลงาน') || combinedText.includes('แฟ้มสะสม')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> Portfolio required</li>');
-            } else {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> Portfolio required</li>');
-            }
-
-            // 4. SAT/ACT
-            if (combinedText.includes('sat') || combinedText.includes('act') || combinedText.includes('tpat') || combinedText.includes('tgat') || combinedText.includes('cutep') || combinedText.includes('tu-get')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> SAT / TGAT / TPAT</li>');
-            } else {
-                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> SAT/ACT (ไม่ใช้คะแนน)</li>');
-            }
-
-            // 5. SOP
-            if (combinedText.includes('sop') || combinedText.includes('เรียงความ') || combinedText.includes('statement') || combinedText.includes('จดหมายแนะนำ')) {
-                items.push('<li><i class="fa-solid fa-circle-check"></i> SOP (เรียงความแนะนำตัว)</li>');
-            } else {
-                items.push('<li class="not-required"><i class="fa-solid fa-circle-check"></i> SOP (ไม่ระบุส่ง)</li>');
-            }
-
             return `<ul class="req-list">${items.join('')}</ul>`;
         }
 
@@ -2592,35 +4252,15 @@
             statsText.innerHTML = `พบทั้งหมด <span>${filteredData.length}</span> โครงการ ในรอบ ${roundLabel}`;
 
             if (filteredData.length === 0) {
-                const roundTotalCount = allData.filter(item => (item.round || 1) === selectedRoundVal && item.project_name !== 'ไม่มีข้อมูลโครงการ' && item.project_name !== 'ไม่มีข้อมูลรอบ Portfolio').length;
-                if (roundTotalCount === 0) {
-                    cardsGrid.innerHTML = `
-                        <div class="no-results" style="padding: 3rem 1.5rem; text-align: center; color: var(--text-muted);">
-                            <i class="fa-solid fa-hourglass-half" style="font-size: 3rem; color: var(--primary-light); margin-bottom: 1rem;"></i>
-                            <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.2rem;">ทปอ. ยังไม่เปิดเผยข้อมูลเกณฑ์ของรอบนี้ในระบบ</h4>
-                            <p style="font-size: 0.9rem; max-width: 400px; margin: 0 auto; line-height: 1.5;">ปัจจุบัน ข้อมูลรอบที่ ${selectedRoundVal} (${roundLabel}) ยังไม่ถูกนำขึ้นในระบบคลังของ ทปอ. ทางเพจจิตอาสาจะทำการเชื่อมโยงข้อมูลให้ทันทีที่ ทปอ. เปิดเผยข้อมูลรอบนี้ครับ</p>
-                        </div>
-                    `;
-                } else {
-                    cardsGrid.innerHTML = `
-                        <div class="no-results">
-                            <i class="fa-solid fa-face-frown"></i>
-                            <h4>ไม่พบข้อมูลการรับสมัคร</h4>
-                            <p>กรุณาลองเปลี่ยนคำค้นหา หรือเปลี่ยนตัวกรองมหาวิทยาลัย/คณะ</p>
-                        </div>
-                    `;
-                }
+                renderNoResultsRecovery();
                 return;
             }
 
-            // Detect iOS/low-memory devices and reduce render limit
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const displayLimit = isIOS ? 20 : 150;
-            const toDisplay = filteredData.slice(0, displayLimit);
-            
-            if (filteredData.length > displayLimit) {
-                statsText.innerHTML += ` (แสดงผลเฉพาะ ${displayLimit} รายการแรก กรุณาค้นหาแบบเจาะจงเพิ่มเติม)`;
+            // Fetch current visible count for progressive results loading (Phase 8)
+            if (currentVisibleCount === 0) {
+                resetVisibleResults();
             }
+            const toDisplay = currentSortedResults.slice(0, currentVisibleCount);
 
             // Dynamic glow classes matching mockup card color highlights
             const glowClasses = ['glow-cyan', 'glow-purple', 'glow-pink', 'glow-orange', 'glow-blue', 'glow-teal'];
@@ -2684,9 +4324,17 @@
                 }
                 specialBadgesHTML += `</div>`;
                 
+                const cleanProgramName = item.program_name.replace(/"/g, '&quot;');
+                const cleanProjectName = item.project_name.replace(/"/g, '&quot;');
+                const cleanUniName = item.university_name.replace(/"/g, '&quot;');
+                const projTitle = `${cleanProgramName} (${cleanProjectName}) ของ ${cleanUniName}`;
+                const bookmarkLabel = isBookmarked 
+                    ? `นำโครงการ ${projTitle} ออกจากรายการเป้าหมาย` 
+                    : `เพิ่มโครงการ ${projTitle} ในรายการเป้าหมาย`;
+
                 card.innerHTML = `
-                    <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" id="bookmark-${item.program_id}-${item.project_id}" title="บันทึกคณะเป้าหมาย">
-                        <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                    <button type="button" class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" id="bookmark-${item.program_id}-${item.project_id}" title="${isBookmarked ? 'นำออกจากเป้าหมาย' : 'บันทึกคณะเป้าหมาย'}" aria-pressed="${isBookmarked ? 'true' : 'false'}" aria-label="${bookmarkLabel}">
+                        <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-heart" aria-hidden="true"></i>
                     </button>
                     <div class="card-header">
                         <img class="uni-logo" src="${logoUrl}" alt="${item.university_name} Logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
@@ -2702,7 +4350,7 @@
                         
                         <div class="project-details">
                             <div class="project-title">
-                                <i class="fa-solid fa-star-of-life"></i>
+                                <i class="fa-solid fa-star-of-life" aria-hidden="true"></i>
                                 <span>${item.project_name}</span>
                             </div>
                             <!-- Focus Highlight Badge -->
@@ -2711,59 +4359,57 @@
 
                         <!-- Intake Badge Centered -->
                         <div class="seats-badge">
-                            จำนวนรับ: <span class="seats-count">&nbsp;${item.seats}&nbsp;</span> คน
+                            <i class="fa-solid fa-user-group" aria-hidden="true"></i> รับจำนวน <span class="seats-count">${item.seats}</span> คน
                         </div>
                         
                         <!-- Checklist Requirements dynamically parsed -->
-                        ${getRequirementsHTML(item.criteria, item.condition)}
+                        ${getRequirementsHTML(item.criteria, item.condition, item)}
 
                         <!-- High School Curriculum Eligibility Tags (Match official site style) -->
                         <div class="eligibility-box">
-                            <div class="eligibility-title"><i class="fa-solid fa-graduation-cap"></i> แผนการเรียนที่รับสมัคร:</div>
+                            <div class="eligibility-title"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> แผนการเรียนที่รับสมัคร:</div>
                             <div class="eligibility-tags">
                                 <span class="tag ${item.only_formal === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ม.ปลายสามัญ
+                                    <i class="fa-solid ${item.only_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> ม.ปลายสามัญ
                                 </span>
                                 <span class="tag ${item.only_vocational === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_vocational === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> อาชีวะ / สายอาชีพ
+                                    <i class="fa-solid ${item.only_vocational === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> อาชีวะ / สายอาชีพ
                                 </span>
                                 <span class="tag ${item.only_ged === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_ged === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> GED เทียบเท่า
+                                    <i class="fa-solid ${item.only_ged === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> GED เทียบเท่า
                                 </span>
                                 <span class="tag ${item.only_international === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_international === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> นานาชาติ
+                                    <i class="fa-solid ${item.only_international === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> นานาชาติ
                                 </span>
                                 <span class="tag ${item.only_non_formal === 1 ? 'tag-yes' : 'tag-no'}">
-                                    <i class="fa-solid ${item.only_non_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> กศน.
+                                    <i class="fa-solid ${item.only_non_formal === 1 ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> กศน.
                                 </span>
                             </div>
                         </div>
 
-                        <!-- Collapsible Conditions detail -->
-                        ${item.has_condition ? `
+                        <!-- Collapsible Conditions detail (Rendered unconditionally in Phase 3C) -->
                         <div class="criteria-accordion" style="margin-bottom: 0.5rem;">
-                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'cond', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})">
-                                <span><i class="fa-solid fa-circle-info"></i> เงื่อนไขการรับสมัคร (Conditions)</span>
-                                <i class="fa-solid fa-chevron-down"></i>
+                            <button type="button" class="criteria-trigger" onclick="toggleCriteria(this, 'cond', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})" aria-expanded="false" aria-controls="crit-content-cond-${index}">
+                                <span><i class="fa-solid fa-circle-info" aria-hidden="true"></i> เกณฑ์คุณสมบัติและเงื่อนไข (Requirements)</span>
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
                             </button>
-                            <div class="criteria-content" id="crit-content-cond-${index}">
+                            <div class="criteria-content" id="crit-content-cond-${index}" aria-hidden="true">
                                 <div class="criteria-inner" style="border-top: 1px solid rgba(255, 255, 255, 0.05); color: #f8fafc; background-color: rgba(99, 102, 241, 0.03);">
-                                    <i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+                                    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> กำลังโหลดข้อมูล...
                                 </div>
                             </div>
                         </div>
-                        ` : ''}
                         
                         <!-- Collapsible Criteria detail -->
                         ${item.has_criteria ? `
                         <div class="criteria-accordion">
-                            <button class="criteria-trigger" onclick="toggleCriteria(this, 'crit', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})">
-                                <span><i class="fa-solid fa-list-check"></i> เกณฑ์พอร์ตโฟลิโอแบบเต็ม (Criteria)</span>
-                                <i class="fa-solid fa-chevron-down"></i>
+                            <button type="button" class="criteria-trigger" onclick="toggleCriteria(this, 'crit', '${item.university_id}', '${item.program_id}', '${item.project_id}', ${index})" aria-expanded="false" aria-controls="crit-content-crit-${index}">
+                                <span><i class="fa-solid fa-list-check" aria-hidden="true"></i> เกณฑ์พอร์ตโฟลิโอแบบเต็ม (Criteria)</span>
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
                             </button>
-                            <div class="criteria-content" id="crit-content-crit-${index}">
+                            <div class="criteria-content" id="crit-content-crit-${index}" aria-hidden="true">
                                 <div class="criteria-inner">
-                                    <i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+                                    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> กำลังโหลดข้อมูล...
                                 </div>
                             </div>
                         </div>
@@ -2779,34 +4425,71 @@
                                 return 'https://admission.psu.ac.th/';
                             }
                             return url;
-                        })() : 'https://www.mytcas.com'}" target="_blank" class="btn-apply">
+                        })() : 'https://www.mytcas.com'}" target="_blank" class="btn-apply" aria-label="รายละเอียดเพิ่มเติมโครงการ ${cleanProgramName} ของ ${cleanUniName}">
                             <span>รายละเอียดเพิ่มเติม</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
                         </a>
                     </div>
                 `;
                 cardsGrid.appendChild(card);
             });
+
+            // Progressive Results Loading UI update (Phase 8)
+            if (loadMoreSection && visibleResultsStatus && loadMoreResultsBtn) {
+                const total = filteredData.length;
+                const shown = toDisplay.length;
+
+                if (total === 0 || shown === 0) {
+                    loadMoreSection.hidden = true;
+                } else if (shown >= total) {
+                    loadMoreSection.hidden = false;
+                    loadMoreResultsBtn.style.display = 'none';
+                    visibleResultsStatus.textContent = `แสดงครบทั้งหมด ${total} โครงการ`;
+                } else {
+                    loadMoreSection.hidden = false;
+                    loadMoreResultsBtn.style.display = 'inline-flex';
+                    visibleResultsStatus.textContent = `แสดง ${shown} จาก ${total} โครงการ`;
+                }
+            }
+
+            // Sync URL State (Phase 9)
+            syncURLFromUI();
         }
 
         // Toggle collapsible criteria section with dynamic chunk loading
         let cachedUniDetails = {};
+        const criteriaRequestCache = new Map();
+
         window.toggleCriteria = async function(button, type, uniId, programId, projectId, index) {
             const contentContainer = document.getElementById(`crit-content-${type}-${index}`);
             button.classList.toggle('active');
             
             if (button.classList.contains('active')) {
+                button.setAttribute('aria-expanded', 'true');
+                if (contentContainer) contentContainer.setAttribute('aria-hidden', 'false');
                 const innerDiv = contentContainer.querySelector('.criteria-inner');
                 
                 // If details are not loaded for this university, fetch the chunk
                 if (!cachedUniDetails[uniId]) {
+                    // Check if there is already a pending fetch request for this university (Phase 12)
+                    if (!criteriaRequestCache.has(uniId)) {
+                        const fetchPromise = (async () => {
+                            const res = await fetch(`data_chunks/uni_${uniId}.json`);
+                            if (!res.ok) throw new Error("Failed to load chunk");
+                            const data = await res.json();
+                            cachedUniDetails[uniId] = data;
+                            criteriaRequestCache.delete(uniId); // Cleanup pending promise from cache on success
+                            return data;
+                        })();
+                        criteriaRequestCache.set(uniId, fetchPromise);
+                    }
+                    
                     try {
-                        const res = await fetch(`data_chunks/uni_${uniId}.json`);
-                        if (!res.ok) throw new Error("Failed to load chunk");
-                        cachedUniDetails[uniId] = await res.json();
+                        await criteriaRequestCache.get(uniId);
                     } catch (err) {
                         console.error("Error loading chunk:", err);
-                        innerDiv.innerHTML = '<span style="color:var(--accent);"><i class="fa-solid fa-triangle-exclamation"></i> ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง</span>';
+                        criteriaRequestCache.delete(uniId); // Cleanup failed promise from cache so user can retry
+                        innerDiv.innerHTML = '<span style="color:var(--accent);"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง</span>';
                         return;
                     }
                 }
@@ -2815,8 +4498,42 @@
                 const items = cachedUniDetails[uniId];
                 const match = items.find(item => item.program_id === programId && item.project_id === projectId);
                 if (match) {
-                    const text = type === 'cond' ? match.condition : match.criteria;
-                    innerDiv.innerHTML = text || 'ไม่มีรายละเอียดเงื่อนไข';
+                    let text = type === 'cond' ? match.condition : match.criteria;
+                    
+                    // Generate secondary requirements checklist for this card
+                    let secondaryReqsHTML = '';
+                    if (type === 'cond') {
+                        // Gather secondary requirements from loaded chunk data
+                        const combinedText = ((match.criteria || '') + ' ' + (match.condition || '')).toLowerCase();
+                        const itemsList = [];
+                        
+                        // 2. IELTS / English
+                        const hasEngKeyword = combinedText.includes('ielts') || combinedText.includes('toefl') || combinedText.includes('toeic') || combinedText.includes('ภาษาอังกฤษ') || combinedText.includes('english');
+                        itemsList.push(getRequirementStatusHTML('IELTS / อังกฤษ', match.req_english, hasEngKeyword));
+
+                        // 3. Portfolio
+                        const hasPortKeyword = combinedText.includes('portfolio') || combinedText.includes('พอร์ต') || combinedText.includes('ผลงาน') || combinedText.includes('แฟ้มสะสม');
+                        itemsList.push(getRequirementStatusHTML('Portfolio (พอร์ต)', null, hasPortKeyword));
+
+                        // 4. SAT/ACT
+                        const hasSatKeyword = combinedText.includes('sat') || combinedText.includes('act') || combinedText.includes('tpat') || combinedText.includes('tgat') || combinedText.includes('cutep') || combinedText.includes('tu-get');
+                        itemsList.push(getRequirementStatusHTML('SAT / TGAT / TPAT', match.req_aptitude, hasSatKeyword));
+
+                        // 5. SOP
+                        const hasSopKeyword = combinedText.includes('sop') || combinedText.includes('เรียงความ') || combinedText.includes('statement') || combinedText.includes('จดหมายแนะนำ');
+                        itemsList.push(getRequirementStatusHTML('SOP (เรียงความ)', null, hasSopKeyword));
+                        
+                        secondaryReqsHTML = `
+                            <div class="secondary-requirements-box">
+                                <div class="secondary-requirements-title">
+                                    <i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> เกณฑ์คุณสมบัติเพิ่มเติม:
+                                </div>
+                                <ul class="req-list">${itemsList.join('')}</ul>
+                            </div>
+                        `;
+                    }
+                    
+                    innerDiv.innerHTML = secondaryReqsHTML + (text || 'ไม่มีรายละเอียดเงื่อนไขเพิ่มเติม');
                 } else {
                     innerDiv.innerHTML = 'ไม่พบรายละเอียดในระบบ';
                 }
@@ -2824,6 +4541,8 @@
                 // Force layout update for heights
                 contentContainer.style.maxHeight = contentContainer.scrollHeight + "px";
             } else {
+                button.setAttribute('aria-expanded', 'false');
+                if (contentContainer) contentContainer.setAttribute('aria-hidden', 'true');
                 contentContainer.style.maxHeight = "0px";
             }
         };
@@ -2857,6 +4576,12 @@
 
         // Degree Info Modal controllers
         window.showDegreeInfo = function(type, programName) {
+            // Track trigger button and update ARIA state
+            window.lastActiveDegreeBtn = document.activeElement;
+            if (window.lastActiveDegreeBtn && typeof window.lastActiveDegreeBtn.setAttribute === 'function') {
+                window.lastActiveDegreeBtn.setAttribute('aria-expanded', 'true');
+            }
+
             const title = document.getElementById('degreeModalTitle');
             const body = document.getElementById('degreeModalBody');
             
@@ -2869,7 +4594,7 @@
             const dualNotice = isDualQ ? `
                 <div style="background: rgba(99, 102, 241, 0.12); padding: 0.85rem; border-radius: 8px; font-size: 0.82rem; border: 1px solid rgba(99, 102, 241, 0.35); margin-bottom: 1.25rem; text-align: left; color: #a5b4fc; line-height: 1.5;">
                     <strong style="color: #c7d2fe; display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.4rem;">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> 🌟 หลักสูตรควบ 2 คุณวุฒิวิชาชีพ (Dual Qualification):
+                        <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> 🌟 หลักสูตรควบ 2 คุณวุฒิวิชาชีพ (Dual Qualification):
                     </strong>
                     หลักสูตรครุศาสตร์อุตสาหกรรม 5 ปี นี้ ได้รับการรับรองให้ผู้สำเร็จการศึกษาได้รับสิทธิ์วิชาชีพ 2 ด้านพร้อมกัน:<br>
                     1. ⚙️ <strong>สิทธิ์สอบใบ กว. (สภาวิศวกร):</strong> เพื่อทำงานเป็นวิศวกรวิชาชีพควบคุม (กว. เครื่องกล, ไฟฟ้า, โยธา ตามสาขา)<br>
@@ -2878,7 +4603,7 @@
             ` : '';
             
             if (type === 'kob') {
-                title.innerHTML = `<i class="fa-solid fa-user-tie" style="color: var(--secondary-light);"></i> ปริญญา ค.อ.บ. คืออะไร?`;
+                title.innerHTML = `<i class="fa-solid fa-user-tie" style="color: var(--secondary-light);" aria-hidden="true"></i> ปริญญา ค.อ.บ. คืออะไร?`;
                 body.innerHTML = `
                     ${dualNotice}
                     <p style="margin-bottom: 1rem;"><strong>ค.อ.บ. (ครุศาสตร์อุตสาหกรรมบัณฑิต)</strong> คือ ปริญญาตรีที่ผสานระหว่าง <strong>"วิศวกรรมศาสตร์สายปฏิบัติการ"</strong> และ <strong>"จิตวิทยาการสอน/ครูช่าง"</strong> เข้าไว้ด้วยกันครับ</p>
@@ -2892,7 +4617,7 @@
                     </div>
                 `;
             } else if (type === 'tolob') {
-                title.innerHTML = `<i class="fa-solid fa-microchip" style="color: #34d399;"></i> ปริญญา ทล.บ. คืออะไร?`;
+                title.innerHTML = `<i class="fa-solid fa-microchip" style="color: #34d399;" aria-hidden="true"></i> ปริญญา ทล.บ. คืออะไร?`;
                 body.innerHTML = `
                     <p style="margin-bottom: 1rem;"><strong>ทล.บ. (เทคโนโลยีบัณฑิต / Bachelor of Technology)</strong> คือ ปริญญาตรีที่มุ่งเน้น <strong>"การประยุกต์ใช้เทคโนโลยีและการลงมือปฏิบัติการเชิงวิชาชีพขั้นสูง"</strong> เพื่อพัฒนากำลังคนในอุตสาหกรรมเทคโนโลยีสมัยใหม่ครับ</p>
                     <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
@@ -2905,7 +4630,7 @@
                     </div>
                 `;
             } else if (type === 'osob') {
-                title.innerHTML = `<i class="fa-solid fa-industry" style="color: #fbbf24;"></i> ปริญญา อส.บ. คืออะไร?`;
+                title.innerHTML = `<i class="fa-solid fa-industry" style="color: #fbbf24;" aria-hidden="true"></i> ปริญญา อส.บ. คืออะไร?`;
                 body.innerHTML = `
                     <p style="margin-bottom: 1rem;"><strong>อส.บ. (อุตสาหกรรมศาสตรบัณฑิต / Bachelor of Industrial Technology)</strong> คือ ปริญญาตรีที่เน้น <strong>"เทคโนโลยีและกระบวนการทำงานในโรงงานอุตสาหกรรม"</strong> ผสมผสานกับการบริหารจัดการงานผลิตครับ</p>
                     <ul style="margin-left: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
@@ -2918,7 +4643,7 @@
                     </div>
                 `;
             } else if (type === 'wosob') {
-                title.innerHTML = `<i class="fa-solid fa-helmet-safety" style="color: var(--primary-light);"></i> ปริญญา วศ.บ. คืออะไร?`;
+                title.innerHTML = `<i class="fa-solid fa-helmet-safety" style="color: var(--primary-light);" aria-hidden="true"></i> ปริญญา วศ.บ. คืออะไร?`;
                 body.innerHTML = `
                     ${dualNotice}
                     <p style="margin-bottom: 1rem;"><strong>วศ.บ. (วิศวกรรมศาสตรบัณฑิต)</strong> คือ ปริญญาตรีสายวิชาชีพวิศวกรรมศาสตร์โดยตรง มุ่งเน้นการคิดค้น วิเคราะห์ ออกแบบคำนวณ และควบคุมดูแลโครงการด้านวิศวกรรมครับ</p>
@@ -2934,10 +4659,25 @@
             }
             
             document.getElementById('degreeInfoModal').classList.add('active');
+            
+            // Focus Close button inside modal (first focusable element inside the modal header)
+            const modalCloseBtn = document.querySelector('#degreeInfoModal .modal-close-btn');
+            if (modalCloseBtn) {
+                safeFocus(modalCloseBtn);
+            }
         };
         
         window.toggleDegreeModal = function() {
             document.getElementById('degreeInfoModal').classList.remove('active');
+            
+            // Set trigger button aria-expanded back to false and recover focus
+            if (window.lastActiveDegreeBtn) {
+                if (typeof window.lastActiveDegreeBtn.setAttribute === 'function') {
+                    window.lastActiveDegreeBtn.setAttribute('aria-expanded', 'false');
+                }
+                safeFocus(window.lastActiveDegreeBtn);
+                window.lastActiveDegreeBtn = null;
+            }
         };
 
         // Helper to check study plan eligibility dynamically (optimized to avoid string scanning on load)
@@ -2998,6 +4738,7 @@
 
         // Filter Logic
         function filterData() {
+            resetVisibleResults(); // Reset progressive loading visible count when filters change (Phase 8)
             const query = searchInput.value.toLowerCase().trim();
             const selectedUni = uniFilter.value;
             const selectedFaculty = facultyFilter.value;
@@ -3065,7 +4806,13 @@
                 return matchesQuery && matchesUni && matchesFaculty;
             });
 
+            refreshSortedResults();
             renderCards();
+            
+            // Sync active filter chips UI representation (Phase 6)
+            if (typeof renderActiveFilterChips === 'function') {
+                renderActiveFilterChips();
+            }
         }
 
         // Event listeners
@@ -3086,6 +4833,86 @@
         hasAptitude.addEventListener('change', filterData);
         hasALevel.addEventListener('change', filterData);
 
+
+        // Active Filter Chips Event Delegation & Clear All (Phase 6)
+        const activeFilterChips = document.getElementById('activeFilterChips');
+        if (activeFilterChips) {
+            activeFilterChips.addEventListener('click', event => {
+                const button = event.target.closest('[data-filter-key]');
+                if (!button) return;
+                clearSingleFilter(button.dataset.filterKey);
+            });
+        }
+        const clearAllFiltersBtn = document.getElementById('clearAllFiltersBtn');
+        if (clearAllFiltersBtn) {
+            clearAllFiltersBtn.addEventListener('click', clearAllOptionalFilters);
+        }
+
+        // Progressive Results Load More Event (Phase 8)
+        if (loadMoreResultsBtn) {
+            loadMoreResultsBtn.addEventListener('click', () => {
+                const batchSize = getDisplayBatchSize();
+                currentVisibleCount = Math.min(
+                    currentVisibleCount + batchSize,
+                    filteredData.length
+                );
+                renderCards();
+                
+                // Focus recovery strategy (Phase 11)
+                if (currentVisibleCount >= filteredData.length) {
+                    safeFocus('visibleResultsStatus');
+                }
+            });
+        }
+
+        // Popstate history listener (Phase 9)
+        window.addEventListener('popstate', () => {
+            if (isRestoringURLState) return;
+            restoreStateFromURL();
+        });
+
+        // Copy Search Link Button Event (Phase 9)
+        const copySearchLinkBtn = document.getElementById('copySearchLinkBtn');
+        if (copySearchLinkBtn) {
+            copySearchLinkBtn.addEventListener('click', copyCurrentSearchLink);
+        }
+
+        // Empty State Diagnostics Event Delegation (Phase 10)
+        const cardsGridEl = document.getElementById('cardsGrid');
+        if (cardsGridEl) {
+            cardsGridEl.addEventListener('click', event => {
+                // 1. Per-filter remove button clicked
+                const removeBtn = event.target.closest('.no-results-filter-remove');
+                if (removeBtn && removeBtn.dataset.filterKey) {
+                    clearSingleFilter(removeBtn.dataset.filterKey);
+                    return;
+                }
+
+                // 2. Clear Search Only clicked
+                const clearSearchBtn = event.target.closest('#clearSearchOnlyBtn');
+                if (clearSearchBtn) {
+                    clearSingleFilter('search');
+                    return;
+                }
+
+                // 3. Clear All from Empty State clicked
+                const clearAllBtn = event.target.closest('#clearAllFromEmptyBtn');
+                if (clearAllBtn) {
+                    clearAllOptionalFilters();
+                    return;
+                }
+            });
+        }
+
+        // Sorting Dropdown Change Listener (Phase 7)
+        if (sortResults) {
+            sortResults.addEventListener('change', () => {
+                resetVisibleResults(); // Reset progressive loading visible count when sorting changes (Phase 8)
+                refreshSortedResults();
+                renderCards();
+                updateSortStatus();
+            });
+        }
 
         // Collapsible Personalized panel helper
         window.togglePersonalizedPanel = function() {
@@ -3135,6 +4962,12 @@
             if (!item) return;
 
             const idx = savedTargets.findIndex(t => t.program_id === programId && t.project_id === projectId);
+            
+            const cleanProgramName = item.program_name.replace(/"/g, '&quot;');
+            const cleanProjectName = item.project_name.replace(/"/g, '&quot;');
+            const cleanUniName = item.university_name.replace(/"/g, '&quot;');
+            const projTitle = `${cleanProgramName} (${cleanProjectName}) ของ ${cleanUniName}`;
+
             if (idx > -1) {
                 // Remove target
                 savedTargets.splice(idx, 1);
@@ -3143,6 +4976,9 @@
                 if (btn) {
                     btn.classList.remove('active');
                     btn.querySelector('i').className = 'fa-regular fa-heart';
+                    btn.setAttribute('aria-pressed', 'false');
+                    btn.setAttribute('aria-label', `เพิ่มโครงการ ${projTitle} ในรายการเป้าหมาย`);
+                    btn.setAttribute('title', 'บันทึกคณะเป้าหมาย');
                 }
             } else {
                 // Add target
@@ -3152,6 +4988,9 @@
                 if (btn) {
                     btn.classList.add('active');
                     btn.querySelector('i').className = 'fa-solid fa-heart';
+                    btn.setAttribute('aria-pressed', 'true');
+                    btn.setAttribute('aria-label', `นำโครงการ ${projTitle} ออกจากรายการเป้าหมาย`);
+                    btn.setAttribute('title', 'นำออกจากเป้าหมาย');
                 }
             }
 
@@ -3176,7 +5015,7 @@
             if (savedTargets.length === 0) {
                 body.innerHTML = `
                     <div class="empty-saved">
-                        <i class="fa-solid fa-folder-open"></i>
+                        <i class="fa-solid fa-folder-open" aria-hidden="true"></i>
                         <p style="font-size: 0.95rem; font-weight: 600;">ยังไม่มีคณะเป้าหมายที่บันทึกไว้</p>
                         <p style="font-size: 0.8rem; margin-top: 0.5rem;">กดรูปหัวใจ 💖 บนการ์ดวิชาที่ชอบเพื่อเก็บรวบรวมเข้า Target List</p>
                     </div>
@@ -3188,17 +5027,22 @@
                 const logoUrl = `https://assets.mytcas.com/i/logo/${item.university_id}.png`;
                 const div = document.createElement('div');
                 div.className = 'saved-item';
+                
+                const cleanProgramName = item.program_name.replace(/"/g, '&quot;');
+                const cleanProjectName = item.project_name.replace(/"/g, '&quot;');
+                const cleanUniName = item.university_name.replace(/"/g, '&quot;');
+
                 div.innerHTML = `
                     <div class="saved-item-info">
-                        <img class="saved-item-logo" src="${logoUrl}" alt="logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
+                        <img class="saved-item-logo" src="${logoUrl}" alt="${item.university_name} Logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
                         <div class="saved-item-details">
                             <h4>${item.program_name}</h4>
                             <p>${item.university_name} | ${item.faculty_name} | <span style="color:var(--primary-light); font-weight:600;">รอบที่ ${item.round || 1}</span></p>
                             <p style="font-size: 0.75rem; color: var(--secondary-light); margin-top: 0.15rem;">${item.project_name} (รับ ${item.seats} คน)</p>
                         </div>
                     </div>
-                    <button class="remove-target-btn" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" title="ลบออก">
-                        <i class="fa-solid fa-trash-can"></i>
+                    <button type="button" class="remove-target-btn" onclick="toggleBookmark(event, '${item.program_id}', '${item.project_id}')" title="ลบออก" aria-label="นำโครงการ ${cleanProgramName} (${cleanProjectName}) ของ ${cleanUniName} ออกจากรายการเป้าหมาย">
+                        <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
                     </button>
                 `;
                 body.appendChild(div);
@@ -3303,12 +5147,16 @@
 
         window.toggleChatWindow = function() {
             const win = document.getElementById('chatWindow');
+            const btn = document.getElementById('floatingChatBtn');
             isChatOpen = !isChatOpen;
             if (isChatOpen) {
                 win.classList.add('active');
-                document.getElementById('chatInput').focus();
+                if (btn) btn.setAttribute('aria-expanded', 'true');
+                safeFocus('chatInput');
             } else {
                 win.classList.remove('active');
+                if (btn) btn.setAttribute('aria-expanded', 'false');
+                safeFocus('floatingChatBtn');
             }
         };
 
