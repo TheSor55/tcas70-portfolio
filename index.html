@@ -4357,10 +4357,32 @@
                             ${getFocusBadgeHTML(item.project_name, item.criteria)}
                         </div>
 
-                        <!-- Intake Badge Centered -->
-                        <div class="seats-badge">
-                            <i class="fa-solid fa-user-group" aria-hidden="true"></i> รับจำนวน <span class="seats-count">${item.seats}</span> คน
+                        <!-- Intake Badge Centered with Seats Change Indicator -->
+                        <div class="seats-badge" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
+                            <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+                            <span>รับจำนวน <span class="seats-count">${item.seats}</span> คน</span>
+                            ${item.seats_diff && item.seats_diff !== 0 ? (() => {
+                                const diff = item.seats_diff;
+                                if (diff > 0) {
+                                    return `<span class="seat-diff-badge up" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.15rem;"><i class="fa-solid fa-caret-up"></i> เพิ่มขึ้น ${diff}</span>`;
+                                } else {
+                                    return `<span class="seat-diff-badge down" style="background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.15rem;"><i class="fa-solid fa-caret-down"></i> ลดลง ${Math.abs(diff)}</span>`;
+                                }
+                            })() : ''}
                         </div>
+
+                        <!-- Deadline Badge -->
+                        ${item.closed_date ? (() => {
+                            const d = new Date(item.closed_date);
+                            if (!isNaN(d.getTime())) {
+                                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                                const formattedDate = d.toLocaleDateString('th-TH', options);
+                                return `<div class="deadline-badge" style="background: rgba(244,63,94,0.06); color: #f43f5e; border: 1px solid rgba(244,63,94,0.15); font-size: 0.82rem; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.5rem; justify-content: center; width: 100%;">
+                                    <i class="fa-solid fa-hourglass-half"></i> ปิดรับสมัคร: ${formattedDate}
+                                </div>`;
+                            }
+                            return '';
+                        })() : ''}
                         
                         <!-- Checklist Requirements dynamically parsed -->
                         ${getRequirementsHTML(item.criteria, item.condition, item)}

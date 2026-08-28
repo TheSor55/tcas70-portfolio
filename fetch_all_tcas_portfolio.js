@@ -202,7 +202,8 @@ async function main() {
                             no_limit_text: flags.no_limit_text,
                             req_english: flags.req_english,
                             req_aptitude: flags.req_aptitude,
-                            req_alevel: flags.req_alevel
+                            req_alevel: flags.req_alevel,
+                            closed_date: (round.folio && round.folio.closed_date) ? round.folio.closed_date : ''
                         });
                     }
                 } else {
@@ -235,7 +236,8 @@ async function main() {
                         no_limit_text: false,
                         req_english: false,
                         req_aptitude: false,
-                        req_alevel: false
+                        req_alevel: false,
+                        closed_date: ''
                     });
                 }
             } catch (error) {
@@ -265,6 +267,30 @@ async function main() {
     console.log(`Successfully processed: ${processedCount - errors.length} programs.`);
     console.log(`Errors encountered: ${errors.length} programs.`);
     
+    // Compare with Git HEAD to populate seats_diff
+    console.log("Comparing with Git HEAD to calculate seats_diff...");
+    let oldMap = new Map();
+    try {
+        const cp = require('child_process');
+        const rawOld = cp.execSync(`git show HEAD:tcas_portfolio_admission_details.json`, { cwd: baseDir, encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 });
+        const oldData = JSON.parse(rawOld);
+        for (const r of oldData) {
+            const key = `${r.program_id}_${r.project_id}`;
+            oldMap.set(key, r.seats || 0);
+        }
+    } catch (e) {
+        console.log("Could not load old database from HEAD. Setting seats_diff to 0.");
+    }
+
+    for (const r of results) {
+        const key = `${r.program_id}_${r.project_id}`;
+        if (oldMap.has(key)) {
+            r.seats_diff = r.seats - oldMap.get(key);
+        } else {
+            r.seats_diff = 0;
+        }
+    }
+
     // Write JSON file
     const outJsonPath = path.join(baseDir, 'tcas_portfolio_admission_details.json');
     fs.writeFileSync(outJsonPath, JSON.stringify(results, null, 2), 'utf8');
