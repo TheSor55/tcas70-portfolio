@@ -4307,7 +4307,34 @@
             return `<ul class="req-list">${items.join('')}</ul>`;
         }
 
-        // Render cards with dynamic glows matching mockup image colors
+        // Official University Brand Color Mapping
+        function getUniBrandColor(uniName, uniId) {
+            const name = (uniName || '').toLowerCase();
+            const id = String(uniId || '');
+
+            if (name.includes('จุฬา') || id === '001') return '#f43f5e'; // Chula Pink
+            if (name.includes('ธรรมศาสตร์') || id === '002') return '#ef4444'; // TU Red
+            if (name.includes('เกษตรศาสตร์') || id === '003') return '#10b981'; // KU Emerald Green
+            if (name.includes('มหิดล') || id === '004') return '#38bdf8'; // Mahidol Royal Sky Blue
+            if (name.includes('ขอนแก่น') || id === '005') return '#ea580c'; // KKU Brick Red/Orange
+            if (name.includes('เชียงใหม่') || id === '006') return '#c084fc'; // CMU Purple
+            if (name.includes('พระจอมเกล้า') || name.includes('ลาดกระบัง') || name.includes('บางมด') || name.includes('พระนครเหนือ')) return '#f97316'; // King Mongkut Orange
+            if (name.includes('สงขลานครินทร์') || id === '008') return '#0284c7'; // PSU Blue
+            if (name.includes('ศรีนครินทรวิโรฒ') || id === '009') return '#ec4899'; // SWU Fuchsia Pink
+            if (name.includes('ศิลปากร') || id === '010') return '#059669'; // Silpakorn Green
+            if (name.includes('บูรพา') || id === '011') return '#eab308'; // Burapha Gold
+            if (name.includes('นเรศวร') || id === '012') return '#f97316'; // Naresuan Orange
+            if (name.includes('แม่ฟ้าหลวง') || id === '013') return '#eab308'; // MFU Gold
+            if (name.includes('สุรนารี') || id === '014') return '#f97316'; // SUT Orange
+            if (name.includes('วลัยลักษณ์') || id === '015') return '#a855f7'; // WU Purple
+            if (name.includes('พะเยา') || id === '016') return '#c084fc'; // UP Purple
+            if (name.includes('สวนดุสิต')) return '#06b6d4'; // Suan Dusit Cyan
+            if (name.includes('ราชภัฏ') || name.includes('ราชมงคล')) return '#10b981'; // Rajabhat Emerald
+
+            return '#818cf8'; // Default Indigo/Purple accent
+        }
+
+        // Render cards with dynamic glows matching university brand colors
         function renderCards() {
             cardsGrid.innerHTML = '';
             
@@ -4330,13 +4357,17 @@
             }
             const toDisplay = currentSortedResults.slice(0, currentVisibleCount);
 
-            // Dynamic glow classes matching mockup card color highlights
             const glowClasses = ['glow-cyan', 'glow-purple', 'glow-pink', 'glow-orange', 'glow-blue', 'glow-teal'];
 
             toDisplay.forEach((item, index) => {
+                const brandColor = getUniBrandColor(item.university_name, item.university_id);
                 const card = document.createElement('div');
                 const glowClass = glowClasses[index % glowClasses.length];
                 card.className = `card ${glowClass}`;
+                
+                // Dynamically style card border & glow according to official university brand color
+                card.style.borderColor = brandColor;
+                card.style.boxShadow = `4px 4px 0px #000000, 0 0 20px ${brandColor}77, inset 0 0 12px ${brandColor}15`;
                 
                 // Get university logo from assets.mytcas.com
                 const logoUrl = `https://assets.mytcas.com/i/logo/${item.university_id}.png`;
@@ -4405,9 +4436,9 @@
                         <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-heart" aria-hidden="true"></i>
                     </button>
                     <div class="card-header">
-                        <img class="uni-logo" src="${logoUrl}" alt="${item.university_name} Logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
+                        <img class="uni-logo" style="border: 2px solid ${brandColor} !important; box-shadow: 0 0 10px ${brandColor}66 !important;" src="${logoUrl}" alt="${item.university_name} Logo" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=${item.university_name.substring(0, 2)}'">
                         <div class="card-header-text">
-                            <h3>${item.university_name}</h3>
+                            <h3 style="color: ${brandColor} !important; text-shadow: 0 0 12px ${brandColor}44 !important; font-weight: 700;">${item.university_name}</h3>
                             <p>${item.faculty_name}</p>
                         </div>
                     </div>
