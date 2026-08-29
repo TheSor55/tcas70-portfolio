@@ -34,19 +34,19 @@
             --primary-dark: #4f46e5;
             --secondary: #00a896;
             --secondary-light: #02c39a;
-            --background: #0b0f19;
-            --surface: rgba(22, 28, 45, 0.55);
-            --surface-hover: rgba(30, 41, 59, 0.7);
+            --background: #030712; /* Gen Z Dark Mode: Deep Slate-950 */
+            --surface: rgba(15, 23, 42, 0.7);
+            --surface-hover: rgba(30, 41, 59, 0.85);
             --text: #f8fafc;
             --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.12);
             --accent: #f43f5e;
             --accent-success: #10b981;
             --radius-sm: 10px;
-            --radius-md: 20px;
-            --radius-lg: 28px;
-            --shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.7);
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --radius-md: 18px;
+            --radius-lg: 24px;
+            --shadow: 4px 4px 0px #000000, 0 10px 30px rgba(0, 0, 0, 0.8);
+            --transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         * {
@@ -238,14 +238,14 @@
 
         /* Controls Panel (Search Panel matching image) */
         .controls-panel {
-            background: rgba(22, 28, 45, 0.45);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 2px solid rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 2px solid #1e293b;
             border-radius: var(--radius-md);
             padding: 1.75rem;
             margin-bottom: 3.5rem;
-            box-shadow: var(--shadow);
+            box-shadow: 4px 4px 0px #000000, 0 12px 35px rgba(6, 182, 212, 0.15);
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
@@ -267,20 +267,21 @@
 
         .search-input {
             flex-grow: 1;
-            background-color: rgba(11, 15, 25, 0.6);
-            border: 1px solid var(--border);
+            background-color: rgba(3, 7, 18, 0.75);
+            border: 2px solid #1e293b;
             color: var(--text);
             padding: 1.1rem 1.5rem;
             border-radius: 12px;
             font-size: 1rem;
             transition: var(--transition);
             font-family: inherit;
+            box-shadow: 2px 2px 0px #000000;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 25px rgba(99, 102, 241, 0.15);
+            border-color: #06b6d4;
+            box-shadow: 4px 4px 0px #000000, 0 0 25px rgba(6, 182, 212, 0.3);
         }
 
         /* Circular/Rounded buttons next to search */
@@ -288,7 +289,7 @@
             width: 54px;
             height: 54px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid #000000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -296,6 +297,7 @@
             transition: var(--transition);
             color: white;
             font-size: 1.15rem;
+            box-shadow: 3px 3px 0px #000000;
         }
 
         .btn-search {
@@ -304,16 +306,18 @@
 
         .btn-search:hover {
             background-color: #a07b6c;
-            transform: scale(1.03);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 5px 5px 0px #000000;
         }
 
         .btn-location {
-            background-color: rgba(30, 41, 59, 0.6);
+            background-color: rgba(30, 41, 59, 0.8);
         }
 
         .btn-location:hover {
-            background-color: rgba(47, 55, 69, 0.8);
-            transform: scale(1.03);
+            background-color: rgba(47, 55, 69, 0.95);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 5px 5px 0px #000000;
         }
 
         /* Filters Row (3 Select Dropdowns) */
@@ -837,15 +841,16 @@
         }
 
         /* Glassmorphic Card with Neon glow borders */
+        /* Glassmorphic Card with Cyberpunk Neon Glow & Neo-Brutalism Hard Shadow */
         .card {
-            background: var(--surface);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 2px solid #1e293b;
             border-radius: var(--radius-md);
             padding: 1.75rem;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
+            box-shadow: 4px 4px 0px #000000;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             flex-direction: column;
             position: relative;
@@ -853,62 +858,63 @@
         }
 
         .card:hover {
-            transform: translateY(-8px);
+            transform: scale(1.02) translateY(-4px);
+            box-shadow: 6px 6px 0px #000000;
         }
 
-        /* Dynamic Glow Colors matching mockup image */
+        /* Gen Z Cyberpunk Glow Colors + Neo-Brutalism Hard Shadow */
         .glow-cyan {
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.15), inset 0 0 15px rgba(6, 182, 212, 0.05);
-            border: 1px solid rgba(6, 182, 212, 0.3);
+            box-shadow: 4px 4px 0px #000000, 0 0 20px rgba(6, 182, 212, 0.35), inset 0 0 15px rgba(6, 182, 212, 0.1);
+            border: 2px solid #06b6d4;
         }
         .glow-cyan:hover {
-            box-shadow: 0 0 30px rgba(6, 182, 212, 0.55), inset 0 0 20px rgba(6, 182, 212, 0.15);
-            border-color: rgba(6, 182, 212, 0.6);
+            box-shadow: 6px 6px 0px #000000, 0 0 35px rgba(6, 182, 212, 0.7), inset 0 0 20px rgba(6, 182, 212, 0.25);
+            border-color: #22d3ee;
         }
 
         .glow-purple {
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.15), inset 0 0 15px rgba(139, 92, 246, 0.05);
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 4px 4px 0px #000000, 0 0 20px rgba(129, 140, 248, 0.35), inset 0 0 15px rgba(129, 140, 248, 0.1);
+            border: 2px solid #818cf8;
         }
         .glow-purple:hover {
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.55), inset 0 0 20px rgba(139, 92, 246, 0.15);
-            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 6px 6px 0px #000000, 0 0 35px rgba(129, 140, 248, 0.7), inset 0 0 20px rgba(129, 140, 248, 0.25);
+            border-color: #a5b4fc;
         }
 
         .glow-pink {
-            box-shadow: 0 0 15px rgba(236, 72, 153, 0.15), inset 0 0 15px rgba(236, 72, 153, 0.05);
-            border: 1px solid rgba(236, 72, 153, 0.3);
+            box-shadow: 4px 4px 0px #000000, 0 0 20px rgba(236, 72, 153, 0.35), inset 0 0 15px rgba(236, 72, 153, 0.1);
+            border: 2px solid #ec4899;
         }
         .glow-pink:hover {
-            box-shadow: 0 0 30px rgba(236, 72, 153, 0.55), inset 0 0 20px rgba(236, 72, 153, 0.15);
-            border-color: rgba(236, 72, 153, 0.6);
+            box-shadow: 6px 6px 0px #000000, 0 0 35px rgba(236, 72, 153, 0.7), inset 0 0 20px rgba(236, 72, 153, 0.25);
+            border-color: #f472b6;
         }
 
         .glow-orange {
-            box-shadow: 0 0 15px rgba(249, 115, 22, 0.15), inset 0 0 15px rgba(249, 115, 22, 0.05);
-            border: 1px solid rgba(249, 115, 22, 0.3);
+            box-shadow: 4px 4px 0px #000000, 0 0 20px rgba(249, 115, 22, 0.35), inset 0 0 15px rgba(249, 115, 22, 0.1);
+            border: 2px solid #f97316;
         }
         .glow-orange:hover {
-            box-shadow: 0 0 30px rgba(249, 115, 22, 0.55), inset 0 0 20px rgba(249, 115, 22, 0.15);
-            border-color: rgba(249, 115, 22, 0.6);
+            box-shadow: 6px 6px 0px #000000, 0 0 35px rgba(249, 115, 22, 0.7), inset 0 0 20px rgba(249, 115, 22, 0.25);
+            border-color: #fb923c;
         }
 
         .glow-blue {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.15), inset 0 0 15px rgba(59, 130, 246, 0.05);
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 4px 4px 0px #000000, 0 0 20px rgba(59, 130, 246, 0.35), inset 0 0 15px rgba(59, 130, 246, 0.1);
+            border: 2px solid #3b82f6;
         }
         .glow-blue:hover {
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.55), inset 0 0 20px rgba(59, 130, 246, 0.15);
-            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 6px 6px 0px #000000, 0 0 35px rgba(59, 130, 246, 0.7), inset 0 0 20px rgba(59, 130, 246, 0.25);
+            border-color: #60a5fa;
         }
 
         .glow-teal {
-            box-shadow: 0 0 15px rgba(20, 184, 166, 0.15), inset 0 0 15px rgba(20, 184, 166, 0.05);
-            border: 1px solid rgba(20, 184, 166, 0.3);
+            box-shadow: 4px 4px 0px #000000, 0 0 20px rgba(20, 184, 166, 0.35), inset 0 0 15px rgba(20, 184, 166, 0.1);
+            border: 2px solid #14b8a6;
         }
         .glow-teal:hover {
-            box-shadow: 0 0 30px rgba(20, 184, 166, 0.55), inset 0 0 20px rgba(20, 184, 166, 0.15);
-            border-color: rgba(20, 184, 166, 0.6);
+            box-shadow: 6px 6px 0px #000000, 0 0 35px rgba(20, 184, 166, 0.7), inset 0 0 20px rgba(20, 184, 166, 0.25);
+            border-color: #2dd4bf;
         }
 
         /* Card Header Layout */
@@ -1087,15 +1093,15 @@
             font-weight: 700;
             font-size: 0.95rem;
             text-decoration: none;
-            transition: var(--transition);
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 139, 139, 0.25);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid #000000;
+            box-shadow: 3px 3px 0px #000000, 0 4px 15px rgba(0, 139, 139, 0.25);
         }
 
         .btn-apply:hover {
             background-color: #00a896;
-            box-shadow: 0 6px 20px rgba(0, 139, 139, 0.45);
-            transform: translateY(-2px);
+            box-shadow: 5px 5px 0px #000000, 0 6px 20px rgba(0, 168, 150, 0.45);
+            transform: scale(1.02) translateY(-2px);
         }
 
         /* Loading Screen */
@@ -1275,39 +1281,45 @@
         }
 
         /* Bookmark button inside card */
+        /* Bookmark button inside card with Gen Z Spring Animation */
         .bookmark-btn {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid #1e293b;
             color: rgba(255, 255, 255, 0.6);
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 10;
+            box-shadow: 2px 2px 0px #000000;
         }
         .bookmark-btn:hover {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.15);
+            border-color: #ef4444;
             color: #ef4444;
-            transform: scale(1.1);
+            transform: scale(1.15) translateY(-2px);
+            box-shadow: 3px 3px 0px #000000, 0 0 15px rgba(239, 68, 68, 0.4);
         }
         .bookmark-btn.active {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.25);
+            border-color: #ef4444;
             color: #ef4444;
-            animation: pulse-heart 0.3s ease-out;
+            box-shadow: 3px 3px 0px #000000, 0 0 20px rgba(239, 68, 68, 0.6);
+            animation: springBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes pulse-heart {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
+        @keyframes springBounce {
+            0% { transform: scale(1) rotate(0deg); }
+            30% { transform: scale(1.45) rotate(-12deg); }
+            60% { transform: scale(0.88) rotate(6deg); }
+            80% { transform: scale(1.1) rotate(-3deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
 
         /* Floating Target Badge */
@@ -1315,11 +1327,11 @@
             position: fixed;
             bottom: 2rem;
             left: 2rem;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 2px solid rgba(99, 102, 241, 0.5);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 2px solid #818cf8;
+            box-shadow: 4px 4px 0px #000000, 0 0 25px rgba(129, 140, 248, 0.4);
             border-radius: 50%;
             width: 64px;
             height: 64px;
@@ -1328,7 +1340,7 @@
             justify-content: center;
             cursor: pointer;
             z-index: 999;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             color: #ef4444;
             font-size: 1.5rem;
             /* Reset button defaults */
@@ -1338,9 +1350,9 @@
             font-family: inherit;
         }
         .floating-targets-badge:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
-            border-color: rgba(99, 102, 241, 0.8);
+            transform: scale(1.12) translateY(-4px);
+            box-shadow: 6px 6px 0px #000000, 0 0 35px rgba(129, 140, 248, 0.7);
+            border-color: #a5b4fc;
         }
         .floating-targets-badge .badge-count {
             position: absolute;
@@ -1357,19 +1369,20 @@
             align-items: center;
             justify-content: center;
             padding: 2px;
-            border: 2px solid #0f172a;
+            border: 2px solid #000000;
+            box-shadow: 1px 1px 0px #000000;
         }
 
         /* Personalized Filter Panel */
         .personalized-panel {
-            background: rgba(30, 41, 59, 0.45);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(99, 102, 241, 0.25);
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 2px solid #818cf8;
             border-radius: var(--radius-lg);
             padding: 1.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 4px 4px 0px #000000, 0 10px 30px rgba(129, 140, 248, 0.2);
             transition: var(--transition);
         }
         .personalized-panel:hover {
