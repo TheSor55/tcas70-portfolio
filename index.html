@@ -11,6 +11,9 @@
       gtag('config', 'G-C0KPZLKCK6');
     </script>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -2259,19 +2262,19 @@
             .card {
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
-                background: #131927 !important; /* Solid fallback background matching dark theme */
-                box-shadow: none !important; /* Disable heavy shadows to save GPU memory on iOS WebKit */
+                background: #0f172a !important; /* Solid fallback background matching dark theme */
+                box-shadow: 3px 3px 0px #000000 !important; /* Retain lightweight Neo-Brutalism hard shadow on mobile */
             }
             .card:hover {
                 transform: none !important; /* Disable hover movement on mobile to save layout repaints */
             }
             
-            /* Level 3 overrides: disable backdrop blur on fixed components on mobile sizes */
+            /* Level 3 overrides: disable backdrop blur on fixed components on mobile sizes while keeping Neo-Brutalism shadow */
             .controls-panel, .chat-window, .modal-overlay, .modal-container, .chat-toggle-btn {
                 background: #0f172a !important; /* Solid dark background fallback */
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
-                box-shadow: none !important;
+                box-shadow: 3px 3px 0px #000000 !important;
             }
         }
 
