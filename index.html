@@ -2686,7 +2686,7 @@
                 </div>
                 <div class="checkbox-group">
                     <label class="checkbox-label" style="border: 1px dashed #ec4899; background: rgba(236,72,153,0.08); padding: 0.4rem 0.75rem; border-radius: 8px; font-weight: 600;">
-                        <input type="checkbox" id="onlyGapYear">
+                        <input type="checkbox" id="onlyGapYear" onchange="filterData()">
                         <span style="color: #f472b6;"><i class="fa-solid fa-rotate-left"></i> แสดงเฉพาะโครงการที่ <strong>เด็กซิ่ว / Gap Year (จบ ม.6)</strong> ยื่นได้</span>
                     </label>
                     <label class="checkbox-label">
@@ -3303,6 +3303,8 @@
             if (hasEnglish) hasEnglish.checked = false;
             if (hasAptitude) hasAptitude.checked = false;
             if (hasALevel) hasALevel.checked = false;
+            const onlyGapYear = document.getElementById('onlyGapYear');
+            if (onlyGapYear) onlyGapYear.checked = false;
 
             updateFacultyDropdown();
             filterData();
@@ -4992,6 +4994,8 @@
         hasEnglish.addEventListener('change', filterData);
         hasAptitude.addEventListener('change', filterData);
         hasALevel.addEventListener('change', filterData);
+        const onlyGapYearEl = document.getElementById('onlyGapYear');
+        if (onlyGapYearEl) onlyGapYearEl.addEventListener('change', filterData);
 
 
         // Active Filter Chips Event Delegation & Clear All (Phase 6)
