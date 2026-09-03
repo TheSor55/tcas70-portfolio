@@ -2681,9 +2681,14 @@
                         <option value="ged">GED เทียบเท่า</option>
                         <option value="inter">นานาชาติ</option>
                         <option value="nonformal">กศน.</option>
+                        <option value="gapyear">🔄 ผู้สำเร็จการศึกษา ม.6 (เด็กซิ่ว / Gap Year)</option>
                     </select>
                 </div>
                 <div class="checkbox-group">
+                    <label class="checkbox-label" style="border: 1px dashed #ec4899; background: rgba(236,72,153,0.08); padding: 0.4rem 0.75rem; border-radius: 8px; font-weight: 600;">
+                        <input type="checkbox" id="onlyGapYear">
+                        <span style="color: #f472b6;"><i class="fa-solid fa-rotate-left"></i> แสดงเฉพาะโครงการที่ <strong>เด็กซิ่ว / Gap Year (จบ ม.6)</strong> ยื่นได้</span>
+                    </label>
                     <label class="checkbox-label">
                         <input type="checkbox" id="hasEnglish">
                         <span>มีคะแนนภาษาอังกฤษ (IELTS / TOEIC / TOEFL)</span>
@@ -3134,6 +3139,16 @@
                 });
             }
 
+            // 9. onlyGapYear
+            const onlyGapYear = document.getElementById('onlyGapYear');
+            if (onlyGapYear && onlyGapYear.checked) {
+                filters.push({
+                    key: 'gapyear',
+                    label: 'คุณสมบัติ',
+                    displayText: 'เด็กซิ่ว / Gap Year ยื่นได้'
+                });
+            }
+
             return filters;
         }
 
@@ -3195,6 +3210,7 @@
             const hasEnglish = document.getElementById('hasEnglish');
             const hasAptitude = document.getElementById('hasAptitude');
             const hasALevel = document.getElementById('hasALevel');
+            const onlyGapYear = document.getElementById('onlyGapYear');
 
             switch (key) {
                 case 'search':
@@ -3224,6 +3240,9 @@
                     break;
                 case 'alevel':
                     if (hasALevel) hasALevel.checked = false;
+                    break;
+                case 'gapyear':
+                    if (onlyGapYear) onlyGapYear.checked = false;
                     break;
             }
 
@@ -3422,6 +3441,7 @@
         let hasRestoredURLState = false;
 
         function getShareableStateFromUI() {
+            const onlyGapYear = document.getElementById('onlyGapYear');
             return {
                 q: searchInput ? searchInput.value.trim() : "",
                 round: roundFilter ? roundFilter.value : "1",
@@ -3432,6 +3452,7 @@
                 english: hasEnglish ? hasEnglish.checked : false,
                 aptitude: hasAptitude ? hasAptitude.checked : false,
                 alevel: hasALevel ? hasALevel.checked : false,
+                gapyear: onlyGapYear ? onlyGapYear.checked : false,
                 sort: sortResults ? sortResults.value : "default"
             };
         }
@@ -3451,6 +3472,7 @@
             if (state.english) params.set('english', '1');
             if (state.aptitude) params.set('aptitude', '1');
             if (state.alevel) params.set('alevel', '1');
+            if (state.gapyear) params.set('gapyear', '1');
 
             if (state.sort && state.sort !== 'default') {
                 params.set('sort', state.sort);
@@ -3491,6 +3513,7 @@
                 english: params.get('english'),
                 aptitude: params.get('aptitude'),
                 alevel: params.get('alevel'),
+                gapyear: params.get('gapyear'),
                 sort: params.get('sort')
             };
         }
@@ -3515,7 +3538,7 @@
 
         function restoreStateFromURL() {
             const state = readSearchStateFromURL();
-            if (!state.round && !state.q && !state.university && !state.faculty && !state.gpax && !state.plan && !state.english && !state.aptitude && !state.alevel && !state.sort) {
+            if (!state.round && !state.q && !state.university && !state.faculty && !state.gpax && !state.plan && !state.english && !state.aptitude && !state.alevel && !state.gapyear && !state.sort) {
                 hasRestoredURLState = true;
                 handleRoundChange();
                 return;
@@ -3604,9 +3627,11 @@
             const hasEnglish = document.getElementById('hasEnglish');
             const hasAptitude = document.getElementById('hasAptitude');
             const hasALevel = document.getElementById('hasALevel');
+            const onlyGapYear = document.getElementById('onlyGapYear');
             if (hasEnglish) hasEnglish.checked = parseBooleanParam(state.english);
             if (hasAptitude) hasAptitude.checked = parseBooleanParam(state.aptitude);
             if (hasALevel) hasALevel.checked = parseBooleanParam(state.alevel);
+            if (onlyGapYear) onlyGapYear.checked = parseBooleanParam(state.gapyear);
 
             // 11. Restore sortResults
             const sortResults = document.getElementById('sortResults');
@@ -4397,7 +4422,8 @@
                     .replace(/กำลังจะจบ/g, '')
                     .replace(/ผู้กำลังศึกษา/g, '');
                     
-                const isGapYearAllowed = cleanText.includes('สำเร็จการศึกษา') || 
+                const isGapYearAllowed = item.is_gapyear === 1 || 
+                                         cleanText.includes('สำเร็จการศึกษา') || 
                                          combinedStr.includes('เด็กซิ่ว') || 
                                          combinedStr.includes('ผู้ซิ่ว') || 
                                          combinedStr.includes('ซิ่ว') || 
@@ -4817,6 +4843,7 @@
             if (plan === 'ged') return item.only_ged === 1;
             if (plan === 'inter') return item.only_international === 1;
             if (plan === 'nonformal') return item.only_non_formal === 1;
+            if (plan === 'gapyear') return item.is_gapyear === 1;
             
             // For M.6 general plans
             if (item.only_formal !== 1) return false;
@@ -4930,7 +4957,11 @@
                     return false;
                 }
 
-
+                // 7. Gap Year Filter (uses pre-computed is_gapyear flag)
+                const onlyGap = document.getElementById('onlyGapYear');
+                if (onlyGap && onlyGap.checked && item.is_gapyear !== 1) {
+                    return false;
+                }
 
                 return matchesQuery && matchesUni && matchesFaculty;
             });

@@ -289,6 +289,24 @@ async function main() {
         } else {
             r.seats_diff = 0;
         }
+
+        // Calculate is_gapyear flag
+        const combinedStr = ((r.condition || '') + ' ' + (r.criteria || '')).toLowerCase();
+        const cleanText = combinedStr
+            .replace(/เกณฑ์การสำเร็จการศึกษา/g, '')
+            .replace(/ระดับการสำเร็จการศึกษา/g, '')
+            .replace(/กำลังจะสำเร็จการศึกษา/g, '')
+            .replace(/กำลังศึกษา/g, '')
+            .replace(/กำลังจะจบ/g, '')
+            .replace(/ผู้กำลังศึกษา/g, '');
+
+        r.is_gapyear = (cleanText.includes('สำเร็จการศึกษา') || 
+                        combinedStr.includes('เด็กซิ่ว') || 
+                        combinedStr.includes('ผู้ซิ่ว') || 
+                        combinedStr.includes('ซิ่ว') || 
+                        combinedStr.includes('จบ ม.6') || 
+                        combinedStr.includes('จบม.6') || 
+                        combinedStr.includes('ผู้ที่สำเร็จการศึกษาแล้ว')) ? 1 : 0;
     }
 
     // Write JSON file
