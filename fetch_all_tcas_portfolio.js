@@ -174,6 +174,23 @@ async function main() {
                         const combinedInfo = (cleanUniversityName + ' ' + faculty_name_th + ' ' + fullProgramName + ' ' + (round.project_name_th || '') + ' ' + condText + ' ' + critText).toLowerCase();
                         const flags = extractFlags(combinedInfo);
 
+                        const rawLink = round.link || '';
+                        let cleanLink = '';
+                        if (rawLink && typeof rawLink === 'string') {
+                            let s = rawLink.trim().replace(/^["']+|["']+$/g, '').trim().replace(/^httpp:\/\//i, 'https://');
+                            if (/^https?:\/\/[^\s]+$/i.test(s)) {
+                                cleanLink = s.replace(/\/\/\/.*$/, '/').replace(/[.,;)]+$/, '');
+                            } else {
+                                const httpMatch = s.match(/https?:\/\/[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;=%]+/i);
+                                const domainMatch = s.match(/(?:^|[\s:()[\]"'])(?:www\.[a-zA-Z0-9-]+|[a-zA-Z0-9-]+\.(?:ac\.th|in\.th|or\.th|go\.th|co\.th|com|org|net|edu))(?:\/[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;=%]*)?/i);
+                                if (httpMatch) cleanLink = httpMatch[0].replace(/\/\/\/.*$/, '/').replace(/[.,;)]+$/, '');
+                                else if (domainMatch) cleanLink = ('https://' + domainMatch[0].replace(/^[\s:()[\]"']+/, '')).replace(/[.,;)]+$/, '');
+                            }
+                        }
+                        if (!cleanLink) {
+                            cleanLink = `https://course.mytcas.com/programs/${program_id}`;
+                        }
+
                         results.push({
                             university_id: course.university_id,
                             university_name: cleanUniversityName,
@@ -185,7 +202,7 @@ async function main() {
                             project_name: round.project_name_th || 'โครงการทั่วไป / โครงการหลัก',
                             seats: round.receive_student_number || 0,
                             criteria: critText,
-                            link: round.link || '',
+                            link: cleanLink,
                             only_formal: round.only_formal || 2,
                             only_international: round.only_international || 2,
                             only_vocational: round.only_vocational || 2,

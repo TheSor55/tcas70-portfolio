@@ -4574,15 +4574,31 @@
                     </div>
                     
                     <div class="card-footer">
-                        <a href="${item.link ? (() => { 
-                            let url = item.link.trim().startsWith('http') ? item.link.trim() : 'https://' + item.link.trim();
-                            // Safeguard: admission.psu.ac.th/project/ currently has an Nginx infinite 308 redirect loop bug.
-                            // We redirect to the working main admission page instead of the crashing deep link.
+                        <a href="${(() => { 
+                            const fallback = item.program_id ? 'https://course.mytcas.com/programs/' + item.program_id : 'https://www.mytcas.com';
+                            if (!item.link || typeof item.link !== 'string') return fallback;
+                            let s = item.link.trim().replace(/^["']+|["']+$/g, '').trim();
+                            if (!s || s === '-') return fallback;
+                            s = s.replace(/^httpp:\/\//i, 'https://');
+                            let url = null;
+                            if (/^https?:\/\/[^\s]+$/i.test(s)) {
+                                url = s.replace(/\/\/\/.*$/, '/');
+                            } else {
+                                const httpMatch = s.match(/https?:\/\/[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;=%]+/i);
+                                const domainMatch = s.match(/(?:^|[\s:()[\]"'])(?:www\.[a-zA-Z0-9-]+|[a-zA-Z0-9-]+\.(?:ac\.th|in\.th|or\.th|go\.th|co\.th|com|org|net|edu))(?:\/[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;=%]*)?/i);
+                                if (httpMatch) {
+                                    url = httpMatch[0].replace(/\/\/\/.*$/, '/');
+                                } else if (domainMatch) {
+                                    url = 'https://' + domainMatch[0].replace(/^[\s:()[\]"']+/, '');
+                                }
+                            }
+                            if (!url) return fallback;
+                            url = url.replace(/[.,;)]+$/, '');
                             if (url.includes('admission.psu.ac.th/project')) {
                                 return 'https://admission.psu.ac.th/';
                             }
                             return url;
-                        })() : 'https://www.mytcas.com'}" target="_blank" class="btn-apply" aria-label="รายละเอียดเพิ่มเติมโครงการ ${cleanProgramName} ของ ${cleanUniName}">
+                        })()}" target="_blank" class="btn-apply" aria-label="รายละเอียดเพิ่มเติมโครงการ ${cleanProgramName} ของ ${cleanUniName}">
                             <span>รายละเอียดเพิ่มเติม</span>
                             <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
                         </a>
